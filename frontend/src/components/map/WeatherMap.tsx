@@ -272,6 +272,16 @@ export const WeatherMap: React.FC<WeatherMapProps> = ({
             </g>
           )}
 
+          {activeLayer === "satellite" && (
+            <g opacity="0.8">
+              {/* Simulated INSAT-3D IR Brightness Temp Convective Complex */}
+              <ellipse cx="390" cy="250" rx="150" ry="110" fill="#FFFFFF" fillOpacity="0.55" />
+              <ellipse cx="420" cy="260" rx="90" ry="70" fill="#E2E8F0" fillOpacity="0.65" />
+              <circle cx="430" cy="250" r="45" fill="#CBD5E1" fillOpacity="0.75" />
+              <ellipse cx="320" cy="390" rx="110" ry="80" fill="#FFFFFF" fillOpacity="0.45" />
+            </g>
+          )}
+
           {activeLayer === "risk" && (
             <g>
               <ellipse cx="370" cy="230" rx="130" ry="100" fill="url(#riskGrad)" />
@@ -290,6 +300,61 @@ export const WeatherMap: React.FC<WeatherMapProps> = ({
           )}
         </svg>
       </div>
+
+      {/* Animated Wind Particles Canvas */}
+      {activeLayer === "wind" && (
+        <canvas
+          id="wind-particles-canvas"
+          className="pointer-events-none absolute inset-0 z-10 h-full w-full opacity-75"
+          ref={(canvas) => {
+            if (!canvas) return;
+            const ctx = canvas.getContext("2d");
+            if (!ctx) return;
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+
+            const particles: Array<{ x: number; y: number; speed: number; length: number; opacity: number }> = [];
+            for (let i = 0; i < 90; i++) {
+              particles.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                speed: 1.0 + Math.random() * 2.2,
+                length: 8 + Math.random() * 12,
+                opacity: 0.2 + Math.random() * 0.6,
+              });
+            }
+
+            let animId: number;
+            const render = () => {
+              ctx.clearRect(0, 0, canvas.width, canvas.height);
+              ctx.lineWidth = 1.2;
+              ctx.strokeStyle = "#49006a";
+
+              particles.forEach((p) => {
+                ctx.beginPath();
+                ctx.globalAlpha = p.opacity;
+                ctx.moveTo(p.x, p.y);
+                // Southwesterly monsoon flow: dx > 0, dy < 0
+                ctx.lineTo(p.x + p.length * 0.8, p.y - p.length * 0.5);
+                ctx.stroke();
+
+                p.x += p.speed * 0.8;
+                p.y -= p.speed * 0.5;
+
+                if (p.x > canvas.width || p.y < 0) {
+                  p.x = Math.random() * (canvas.width * 0.7);
+                  p.y = canvas.height + Math.random() * 20;
+                }
+              });
+
+              animId = requestAnimationFrame(render);
+            };
+
+            render();
+            return () => cancelAnimationFrame(animId);
+          }}
+        />
+      )}
 
       {/* Floating Selected Station Label */}
       <div className="absolute top-16 right-3 z-20 rounded-md border border-slate-200 bg-white/95 px-3 py-2 shadow-xs backdrop-blur-xs text-xs pointer-events-auto max-w-[220px]">

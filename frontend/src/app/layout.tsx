@@ -3,7 +3,7 @@ import "./globals.css";
 import { Navbar } from "../components/Navbar";
 import { AetherDataProvider } from "../context/AetherDataContext";
 import { ForecastTraceDrawer } from "../components/ForecastTraceDrawer";
-import { AnimatedAtmosphereHeader } from "../components/common/AnimatedAtmosphereHeader";
+import { AtmosphericBackground } from "../components/common/Backgrounds";
 
 export const metadata: Metadata = {
   title: "AETHER — Adaptive Hybrid Weather Intelligence",
@@ -17,8 +17,8 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="bg-white text-slate-900 min-h-screen flex flex-col antialiased relative selection:bg-sky-100 selection:text-sky-900">
-        <AnimatedAtmosphereHeader />
+      <body className="bg-[#F8FAFC] text-slate-900 min-h-screen flex flex-col antialiased relative selection:bg-sky-100 selection:text-sky-900">
+        <AtmosphericBackground />
         <AetherDataProvider>
           <Navbar />
           <main className="relative z-10 flex-1 max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6 mb-12 lg:mb-0">

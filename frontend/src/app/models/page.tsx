@@ -74,23 +74,23 @@ export default function ModelIntelligencePage() {
             <span>Explainable Model Trust</span>
           </div>
           <h1 className="text-2xl font-bold text-slate-950 tracking-tight mt-1">
-            Model Intelligence — Why AETHER Trusts AIFS
+            Model Skill & Adaptive Trust
           </h1>
-          <p className="text-xs text-slate-500">
+          <p className="text-xs text-slate-500 font-medium">
             Understand model performance, dynamic weights, and empirical SHAP key drivers
           </p>
         </div>
 
         {/* Sub-Tabs with Motion active indicator */}
         <div className="flex items-center gap-1 border border-slate-200 bg-slate-100/70 p-0.5 rounded-md text-xs">
-          {(["performance", "weights", "shap"] as const).map((tab) => {
+          {(["weights", "performance", "shap"] as const).map((tab) => {
             const isActive = activeTab === tab;
             return (
               <button
                 key={tab}
                 type="button"
                 onClick={() => setActiveTab(tab)}
-                className={`relative px-3 py-1 rounded-sm text-xs font-semibold capitalize transition-all ${
+                className={`relative px-3 py-1 rounded-sm text-xs font-semibold transition-all ${
                   isActive ? "text-sky-900" : "text-slate-600 hover:text-slate-900"
                 }`}
               >
@@ -102,7 +102,7 @@ export default function ModelIntelligencePage() {
                   />
                 )}
                 <span className="relative z-10">
-                  {tab === "shap" ? "SHAP Explanation" : tab === "weights" ? "Model Weights" : "Performance"}
+                  {tab === "shap" ? "SHAP Attribution" : tab === "weights" ? "Adaptive Model Weights" : "Model Skill (30d)"}
                 </span>
               </button>
             );
@@ -122,7 +122,7 @@ export default function ModelIntelligencePage() {
           <Card className="shadow-xs border-slate-200">
             <CardHeader className="p-4 pb-2 border-b border-slate-100">
               <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider block">
-                Current Model Weights
+                Adaptive Model Weights
               </span>
               <CardTitle className="text-sm font-bold text-slate-900">
                 Dynamic Softmax Consensus

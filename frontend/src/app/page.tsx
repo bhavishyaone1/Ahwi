@@ -19,6 +19,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { NumberTicker } from "@/components/common/NumberTicker";
+import { WeatherContourHeader } from "@/components/common/Backgrounds";
 import { pageVariants, fadeUp } from "@/lib/motion";
 
 export default function OverviewPage() {
@@ -51,18 +52,19 @@ export default function OverviewPage() {
       exit="exit"
       className="space-y-4"
     >
-      {/* Overview Top Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b border-slate-200">
+      {/* Overview Top Header with WeatherContourHeader */}
+      <div className="relative flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b border-slate-200">
+        <WeatherContourHeader />
         <div>
           <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-sky-50 text-sky-800 border border-sky-200 text-[11px] font-semibold">
             <Sparkles className="h-3 w-3 text-sky-600" />
             <span>Operational Situation Room</span>
           </div>
-          <h1 className="text-2xl font-bold tracking-tight text-slate-950 mt-1">
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-950 mt-1">
             AETHER Weather Intelligence
           </h1>
-          <p className="text-xs text-slate-500">
-            Real-time synoptic analysis · Dynamic multi-model confidence and risk fusion
+          <p className="text-xs text-slate-500 font-medium">
+            Adaptive multi-model forecasting for a changing atmosphere.
           </p>
         </div>
 
@@ -110,14 +112,17 @@ export default function OverviewPage() {
           />
         </motion.div>
 
-        {/* Right 35%: Operational Intelligence Panel */}
+        {/* Right 35%: Operational Situation Panel */}
         <motion.div variants={fadeUp} className="lg:col-span-4 space-y-3">
-          <Card className="shadow-xs border-slate-200">
+          <Card className="shadow-xs border-slate-200 bg-white">
             <CardHeader className="p-4 pb-2 border-b border-slate-100 flex flex-row items-start justify-between space-y-0">
               <div>
-                <div className="flex items-center gap-1.5">
+                <span className="text-[10px] font-mono uppercase tracking-wider text-slate-400 block">
+                  SELECTED STATION
+                </span>
+                <div className="flex items-center gap-1.5 mt-0.5">
                   <MapPin className="h-4 w-4 text-sky-600" />
-                  <CardTitle className="text-sm font-bold text-slate-900">
+                  <CardTitle className="text-base font-bold text-slate-950">
                     {data?.location.name || selectedLocation.name}
                   </CardTitle>
                 </div>
@@ -131,14 +136,14 @@ export default function OverviewPage() {
             </CardHeader>
 
             <CardContent className="p-4 space-y-4">
-              {/* AETHER Forecast Value */}
+              {/* AETHER Blended Forecast Value */}
               <div className="flex items-baseline justify-between">
                 <div>
                   <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">
-                    AETHER FORECAST
+                    AETHER BLENDED FORECAST
                   </span>
                   <div className="flex items-baseline gap-1.5 mt-0.5">
-                    <span className="text-3xl font-black font-mono text-slate-950 tracking-tight">
+                    <span className="text-4xl font-bold font-mono text-slate-950 tracking-tight">
                       {data?.aether_forecast.calibrated_value ? (
                         <NumberTicker
                           value={data.aether_forecast.calibrated_value}
@@ -152,11 +157,14 @@ export default function OverviewPage() {
                       {data?.aether_forecast.unit || getUnit()}
                     </span>
                   </div>
+                  <span className="text-[10px] text-slate-400 block font-mono mt-0.5">
+                    Next 24 hours
+                  </span>
                 </div>
 
                 <div className="text-right">
                   <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">
-                    Weather Regime
+                    WEATHER REGIME
                   </span>
                   <Badge
                     variant={
@@ -166,16 +174,18 @@ export default function OverviewPage() {
                     }
                     className="mt-1 font-bold"
                   >
-                    {data?.weather_regime.detected || "NORMAL"}
+                    {data?.weather_regime.detected || "HEAVY RAIN"}
                   </Badge>
                 </div>
               </div>
 
-              {/* Confidence Meter */}
+              {/* Forecast Confidence Meter */}
               <div className="pt-3 border-t border-slate-100 space-y-1.5">
                 <div className="flex justify-between items-center text-xs">
-                  <span className="text-slate-600 font-medium">Confidence:</span>
-                  <span className="font-mono font-bold text-emerald-600">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                    FORECAST CONFIDENCE:
+                  </span>
+                  <span className="font-mono font-bold text-emerald-600 text-xs">
                     {data?.confidence.pct ? (
                       <NumberTicker value={data.confidence.pct} decimals={0} suffix="%" />
                     ) : (
@@ -190,10 +200,10 @@ export default function OverviewPage() {
                 />
               </div>
 
-              {/* Top Model Trust Breakdown */}
+              {/* Adaptive Model Trust Breakdown */}
               <div className="pt-3 border-t border-slate-100 space-y-2">
                 <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">
-                  Top Model Trust
+                  ADAPTIVE MODEL TRUST
                 </span>
                 <div className="space-y-2">
                   {Object.entries(
@@ -230,10 +240,10 @@ export default function OverviewPage() {
                 </div>
               </div>
 
-              {/* Extreme Risk Summary */}
+              {/* Extreme Weather Risk */}
               <div className="pt-3 border-t border-slate-100">
                 <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-2">
-                  Extreme Risk (AETHER Model Risk)
+                  EXTREME WEATHER RISK
                 </span>
                 <div className="grid grid-cols-3 gap-2 text-center">
                   <div className="p-2 rounded-md bg-rose-50/70 border border-rose-200">
@@ -257,7 +267,7 @@ export default function OverviewPage() {
                       High Wind
                     </span>
                     <span className="font-bold font-mono text-amber-800 text-xs">
-                      {data?.risk.high_wind.level || "MEDIUM"}
+                      {data?.risk.high_wind.level || "WATCH"}
                     </span>
                   </div>
                 </div>
@@ -267,7 +277,7 @@ export default function OverviewPage() {
               <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
                 <span className="text-slate-400 font-mono text-[10px] flex items-center gap-1">
                   <Clock className="h-3 w-3" />
-                  {data?.data_freshness.AIFS || "Updated 18 min ago"}
+                  {data?.data_freshness.AIFS || "Updated 2 min ago"}
                 </span>
                 <Button
                   variant="ghost"

@@ -21,6 +21,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { NumberTicker } from "@/components/common/NumberTicker";
 import { pageVariants, fadeUp } from "@/lib/motion";
+import { WeatherContourHeader } from "@/components/common/Backgrounds";
 
 export default function ForecastPage() {
   const {
@@ -51,18 +52,19 @@ export default function ForecastPage() {
       exit="exit"
       className="space-y-4"
     >
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 pb-3">
+      {/* Header with WeatherContourHeader */}
+      <div className="relative flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 pb-3">
+        <WeatherContourHeader />
         <div>
           <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-sky-50 text-sky-800 border border-sky-200 text-[11px] font-semibold">
             <Activity className="h-3 w-3 text-sky-600" />
             <span>Multi-Model Synthesis</span>
           </div>
-          <h1 className="text-2xl font-bold text-slate-950 tracking-tight mt-1">
+          <h1 className="text-2xl sm:text-3xl font-bold text-slate-950 tracking-tight mt-1">
             Forecast Exploration
           </h1>
-          <p className="text-xs text-slate-500">
-            Compare model forecasts and AETHER blended prediction
+          <p className="text-xs text-slate-500 font-medium">
+            Compare physical, AI and blended forecasts across lead times.
           </p>
         </div>
 
@@ -313,8 +315,8 @@ export default function ForecastPage() {
               <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">
                 Key Forecast (24h)
               </span>
-              <CardTitle className="text-base font-extrabold text-slate-900">
-                AETHER
+              <CardTitle className="text-sm font-extrabold text-slate-900 uppercase tracking-tight">
+                AETHER BLENDED FORECAST
               </CardTitle>
             </CardHeader>
             <CardContent className="p-4 space-y-4">
@@ -334,38 +336,55 @@ export default function ForecastPage() {
               {/* Models Breakdown */}
               <div className="space-y-2 pt-3 border-t border-slate-100 text-xs">
                 <div className="flex justify-between items-center">
-                  <span className="text-slate-600">ECMWF IFS:</span>
+                  <span className="text-slate-600 font-medium">ECMWF IFS:</span>
                   <span className="font-mono font-semibold text-slate-900">
                     {data?.forecasts?.["ECMWF_IFS"] ?? 39.1} {getUnit()}
                   </span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-slate-600">ECMWF AIFS:</span>
+                  <span className="text-slate-600 font-medium">ECMWF AIFS:</span>
                   <span className="font-mono font-semibold text-sky-700">
                     {data?.forecasts?.["ECMWF_AIFS"] ?? 44.8} {getUnit()}
                   </span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-slate-600">NOAA GFS:</span>
+                  <span className="text-slate-600 font-medium">NOAA GFS:</span>
                   <span className="font-mono font-semibold text-slate-700">
                     {data?.forecasts?.["GFS"] ?? 42.9} {getUnit()}
                   </span>
                 </div>
               </div>
 
-              {/* Confidence */}
-              <div className="pt-3 border-t border-slate-100 space-y-1">
+              {/* Confidence & Agreement */}
+              <div className="pt-3 border-t border-slate-100 space-y-2.5">
                 <div className="flex justify-between items-center text-xs">
-                  <span className="text-slate-600 font-medium">Confidence:</span>
+                  <span className="text-slate-600 font-medium">Forecast Confidence:</span>
                   <span className="font-mono font-bold text-emerald-600">
                     {data?.confidence.pct ?? 78}%
                   </span>
                 </div>
-                <div className="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+                <div className="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
                   <div
                     className="bg-emerald-500 h-full rounded-full"
                     style={{ width: `${data?.confidence.pct ?? 78}%` }}
                   />
+                </div>
+
+                <div className="flex justify-between items-center text-xs pt-1">
+                  <span className="text-slate-600 font-medium">Model Agreement:</span>
+                  <span className={`px-2 py-0.5 rounded text-[11px] font-semibold border ${
+                    (data?.confidence.spread_sigma ?? 2.8) < 3.0
+                      ? "text-emerald-700 bg-emerald-50 border-emerald-200"
+                      : (data?.confidence.spread_sigma ?? 2.8) < 6.0
+                      ? "text-amber-700 bg-amber-50 border-amber-200"
+                      : "text-rose-700 bg-rose-50 border-rose-200"
+                  }`}>
+                    {(data?.confidence.spread_sigma ?? 2.8) < 3.0
+                      ? "High"
+                      : (data?.confidence.spread_sigma ?? 2.8) < 6.0
+                      ? "Moderate"
+                      : "Low"}
+                  </span>
                 </div>
               </div>
 

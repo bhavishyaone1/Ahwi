@@ -59,9 +59,9 @@ export default function BenchmarkPage() {
             <span>SIH Problem Statement 26081 Verification</span>
           </div>
           <h1 className="text-2xl font-bold text-slate-950 tracking-tight mt-1">
-            Benchmark & Evaluation
+            Verification & Benchmarking
           </h1>
-          <p className="text-xs text-slate-500">
+          <p className="text-xs text-slate-500 font-medium">
             Chronological out-of-sample verification (2018–2022 train, 2023 val, 2024–2025 test)
           </p>
         </div>

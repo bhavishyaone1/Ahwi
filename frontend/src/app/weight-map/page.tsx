@@ -52,12 +52,12 @@ export default function WeightMapPage() {
         <div>
           <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-sky-50 text-sky-800 border border-sky-200 text-[11px] font-semibold">
             <Layers className="h-3 w-3 text-sky-600" />
-            <span>Spatial Model Contribution</span>
+            <span>0.25° Regional Dominance</span>
           </div>
           <h1 className="text-2xl font-bold text-slate-950 tracking-tight mt-1">
-            Model Weight Map
+            Spatial Model Contribution
           </h1>
-          <p className="text-xs text-slate-500">
+          <p className="text-xs text-slate-500 font-medium">
             See which model AETHER trusts across different regions and lead times (0.25° grid)
           </p>
         </div>

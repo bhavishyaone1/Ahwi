@@ -1,11 +1,9 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { INDIAN_STATIONS, StationLocation } from "../../components/WeatherMap";
-import { BlendedForecast } from "../../lib/types";
-import { fetchForecast } from "../../lib/api";
+import React, { useState } from "react";
+import { useAetherData } from "../../context/AetherDataContext";
+import { INDIAN_STATIONS } from "../../components/WeatherMap";
 import {
-  LineChart,
   Line,
   XAxis,
   YAxis,
@@ -13,182 +11,325 @@ import {
   Tooltip,
   Legend,
   ResponsiveContainer,
+  Area,
+  ComposedChart
 } from "recharts";
-import { Activity, CloudRain, Thermometer, Wind } from "lucide-react";
+import { Activity, ChevronRight } from "lucide-react";
 
 export default function ForecastPage() {
-  const [station, setStation] = useState<StationLocation>(INDIAN_STATIONS[0]);
-  const [variable, setVariable] = useState<string>("rainfall_mm");
-  const [chartData, setChartData] = useState<any[]>([]);
-  const [currentForecast, setCurrentForecast] = useState<BlendedForecast | null>(null);
+  const {
+    data,
+    selectedLocation,
+    setSelectedLocation,
+    variable,
+    setVariable,
+    leadTimeHours,
+    setLeadTimeHours,
+    openTraceDrawer
+  } = useAetherData();
 
-  useEffect(() => {
-    const horizons = [6, 12, 24, 48, 72];
-    Promise.all(
-      horizons.map((h) => fetchForecast(station.lat, station.lon, variable, h, station.name))
-    )
-      .then((results) => {
-        setCurrentForecast(results[2]); // 24h default
-        const points = results.map((r) => ({
-          horizon: `${r.lead_time_hours}h`,
-          AETHER: r.calibrated_forecast,
-          ECMWF: r.raw_model_forecasts?.["ECMWF_IFS"],
-          AIFS: r.raw_model_forecasts?.["ECMWF_AIFS"],
-          GFS: r.raw_model_forecasts?.["GFS"],
-          spread: r.spread,
-        }));
-        setChartData(points);
-      })
-      .catch((err) => console.error(err));
-  }, [station, variable]);
+  const [activeTab, setActiveTab] = useState<"forecast" | "table" | "uncertainty">("forecast");
 
   const getUnit = () =>
     variable === "rainfall_mm" ? "mm" : variable === "temperature_c" ? "°C" : "m/s";
 
+  const chartData = data?.multi_horizon || [];
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900 tracking-tight flex items-center space-x-2">
-            <Activity className="w-6 h-6 text-sky-600" />
-            <span>Multi-Model Forecast Synthesis</span>
+          <div className="inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full bg-sky-50 text-sky-700 border border-sky-200 text-[11px] font-bold">
+            <Activity className="w-3 h-3 text-sky-600" />
+            <span>Multi-Model Synthesis</span>
+          </div>
+          <h1 className="text-2xl font-black text-slate-900 tracking-tight mt-1">
+            Forecast Exploration
           </h1>
-          <p className="text-xs text-slate-500 mt-1">
-            Compare individual NWP/AI forecasts with AETHER's dynamically blended prediction
+          <p className="text-xs text-slate-500">
+            Compare model forecasts and AETHER blended prediction
           </p>
         </div>
 
-        {/* Station Select */}
-        <select
-          value={station.name}
-          onChange={(e) => {
-            const st = INDIAN_STATIONS.find((s) => s.name === e.target.value);
-            if (st) setStation(st);
-          }}
-          className="bg-white border border-slate-300 rounded-xl px-3 py-2 text-xs font-semibold text-slate-800 shadow-xs focus:ring-2 focus:ring-sky-500 focus:outline-none"
-        >
-          {INDIAN_STATIONS.map((s) => (
-            <option key={s.name} value={s.name}>
-              {s.name} ({s.region})
-            </option>
-          ))}
-        </select>
+        {/* Global Controls */}
+        <div className="flex flex-wrap items-center gap-2">
+          {/* Variable */}
+          <select
+            value={variable}
+            onChange={(e) => setVariable(e.target.value)}
+            className="bg-white border border-slate-200 rounded-xl px-3 py-1.5 text-xs font-bold text-slate-800 shadow-xs focus:ring-1 focus:ring-sky-500 focus:outline-none"
+          >
+            <option value="rainfall_mm">Rainfall (mm)</option>
+            <option value="temperature_c">Temperature (°C)</option>
+            <option value="wind_speed_ms">Wind Speed (m/s)</option>
+          </select>
+
+          {/* Location */}
+          <select
+            value={selectedLocation.name}
+            onChange={(e) => {
+              const st = INDIAN_STATIONS.find((s) => s.name === e.target.value);
+              if (st) {
+                setSelectedLocation({
+                  name: st.name,
+                  latitude: st.lat,
+                  longitude: st.lon,
+                  region: st.region,
+                });
+              }
+            }}
+            className="bg-white border border-slate-200 rounded-xl px-3 py-1.5 text-xs font-bold text-slate-800 shadow-xs focus:ring-1 focus:ring-sky-500 focus:outline-none"
+          >
+            {INDIAN_STATIONS.map((s) => (
+              <option key={s.name} value={s.name}>
+                {s.name} ({s.region})
+              </option>
+            ))}
+          </select>
+
+          {/* Lead Time */}
+          <select
+            value={leadTimeHours}
+            onChange={(e) => setLeadTimeHours(Number(e.target.value))}
+            className="bg-white border border-slate-200 rounded-xl px-3 py-1.5 text-xs font-bold text-slate-800 shadow-xs focus:ring-1 focus:ring-sky-500 focus:outline-none"
+          >
+            <option value={6}>6 hours</option>
+            <option value={12}>12 hours</option>
+            <option value={24}>24 hours</option>
+            <option value={48}>48 hours</option>
+            <option value={72}>72 hours</option>
+          </select>
+        </div>
       </div>
 
-      {/* Controls */}
-      <div className="flex bg-slate-100 p-1.5 rounded-xl border border-slate-200 self-start w-fit text-xs font-semibold">
+      {/* Sub-Tabs */}
+      <div className="flex items-center space-x-2 border-b border-slate-200">
         <button
-          onClick={() => setVariable("rainfall_mm")}
-          className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg transition ${
-            variable === "rainfall_mm" ? "bg-white text-sky-700 shadow-xs" : "text-slate-600"
+          onClick={() => setActiveTab("forecast")}
+          className={`px-3.5 py-2 text-xs font-bold border-b-2 transition ${
+            activeTab === "forecast"
+              ? "border-sky-600 text-sky-700"
+              : "border-transparent text-slate-500 hover:text-slate-800"
           }`}
         >
-          <CloudRain className="w-3.5 h-3.5" />
-          <span>Precipitation (mm)</span>
+          Forecast
         </button>
         <button
-          onClick={() => setVariable("temperature_c")}
-          className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg transition ${
-            variable === "temperature_c" ? "bg-white text-amber-700 shadow-xs" : "text-slate-600"
+          onClick={() => setActiveTab("table")}
+          className={`px-3.5 py-2 text-xs font-bold border-b-2 transition ${
+            activeTab === "table"
+              ? "border-sky-600 text-sky-700"
+              : "border-transparent text-slate-500 hover:text-slate-800"
           }`}
         >
-          <Thermometer className="w-3.5 h-3.5" />
-          <span>Temperature (°C)</span>
+          Table
         </button>
         <button
-          onClick={() => setVariable("wind_speed_ms")}
-          className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg transition ${
-            variable === "wind_speed_ms" ? "bg-white text-teal-700 shadow-xs" : "text-slate-600"
+          onClick={() => setActiveTab("uncertainty")}
+          className={`px-3.5 py-2 text-xs font-bold border-b-2 transition ${
+            activeTab === "uncertainty"
+              ? "border-sky-600 text-sky-700"
+              : "border-transparent text-slate-500 hover:text-slate-800"
           }`}
         >
-          <Wind className="w-3.5 h-3.5" />
-          <span>Wind Speed (m/s)</span>
+          Uncertainty
         </button>
       </div>
 
-      {/* Primary Forecast Chart */}
-      <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs">
-        <div className="flex items-center justify-between mb-4">
-          <div>
-            <h3 className="text-base font-bold text-slate-900">
-              Forecast Trajectory across Horizons (6h – 72h)
-            </h3>
-            <p className="text-xs text-slate-500">
-              {station.name} &bull; Blended AETHER vs ECMWF vs AIFS vs GFS
-            </p>
+      {/* Main Content Layout: Chart + Right Summary Panel */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
+        {/* Left 8 Cols: Chart / Table View */}
+        <div className="lg:col-span-8 bg-white rounded-2xl border border-slate-200 p-5 shadow-xs">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h2 className="text-sm font-extrabold text-slate-900">
+                {variable === "rainfall_mm" ? "Rainfall" : variable === "temperature_c" ? "Temperature" : "Wind"}{" "}
+                Forecast ({selectedLocation.name})
+              </h2>
+              <p className="text-[11px] text-slate-400">
+                Comparison of NWP & AI models with AETHER dynamic softmax blend
+              </p>
+            </div>
+            <span className="text-[11px] font-mono font-bold px-2 py-0.5 bg-slate-100 rounded text-slate-700">
+              +{leadTimeHours}h Horizon
+            </span>
           </div>
-          <span className="text-xs font-mono font-semibold px-2.5 py-1 bg-sky-50 text-sky-800 border border-sky-200 rounded-lg">
-            24h Calibrated: {currentForecast?.calibrated_forecast} {getUnit()}
-          </span>
+
+          {activeTab === "forecast" && (
+            <div className="w-full h-80">
+              <ResponsiveContainer width="100%" height="100%">
+                <ComposedChart data={chartData} margin={{ top: 10, right: 20, left: 0, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#F1F5F9" />
+                  <XAxis dataKey="lead_time" tick={{ fill: "#64748B", fontSize: 11, fontWeight: 600 }} />
+                  <YAxis tick={{ fill: "#64748B", fontSize: 11 }} unit={` ${getUnit()}`} />
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: "#FFFFFF",
+                      borderColor: "#CBD5E1",
+                      borderRadius: "12px",
+                      fontSize: "12px",
+                      boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)",
+                    }}
+                  />
+                  <Legend wrapperStyle={{ fontSize: "11px", fontWeight: 600 }} />
+                  <Area
+                    type="monotone"
+                    dataKey="upper"
+                    stroke="none"
+                    fill="#38BDF8"
+                    fillOpacity={0.15}
+                    name="Uncertainty Range"
+                  />
+                  <Line type="monotone" dataKey="ECMWF" stroke="#0284C7" strokeWidth={1.8} dot={{ r: 3 }} />
+                  <Line type="monotone" dataKey="AIFS" stroke="#6366F1" strokeWidth={1.8} dot={{ r: 3 }} />
+                  <Line type="monotone" dataKey="GFS" stroke="#14B8A6" strokeWidth={1.8} dot={{ r: 3 }} />
+                  <Line
+                    type="monotone"
+                    dataKey="AETHER"
+                    stroke="#0F172A"
+                    strokeWidth={3}
+                    dot={{ r: 5, fill: "#0F172A" }}
+                  />
+                </ComposedChart>
+              </ResponsiveContainer>
+            </div>
+          )}
+
+          {activeTab === "table" && (
+            <div className="overflow-x-auto">
+              <table className="w-full text-xs text-left">
+                <thead className="bg-slate-50 text-slate-500 uppercase text-[10px] font-bold border-b border-slate-200">
+                  <tr>
+                    <th className="p-2.5">Horizon</th>
+                    <th className="p-2.5">ECMWF IFS</th>
+                    <th className="p-2.5">ECMWF AIFS</th>
+                    <th className="p-2.5">NOAA GFS</th>
+                    <th className="p-2.5 font-extrabold text-slate-900">AETHER Blend</th>
+                    <th className="p-2.5">Range (Lower - Upper)</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100 font-mono">
+                  {chartData.map((pt, i) => (
+                    <tr key={i} className="hover:bg-slate-50">
+                      <td className="p-2.5 font-bold text-slate-700">{pt.lead_time}</td>
+                      <td className="p-2.5 text-sky-700">{pt.ECMWF} {getUnit()}</td>
+                      <td className="p-2.5 text-indigo-700">{pt.AIFS} {getUnit()}</td>
+                      <td className="p-2.5 text-teal-700">{pt.GFS} {getUnit()}</td>
+                      <td className="p-2.5 font-extrabold text-slate-900 bg-sky-50/50">
+                        {pt.AETHER} {getUnit()}
+                      </td>
+                      <td className="p-2.5 text-slate-500">
+                        {pt.lower} - {pt.upper} {getUnit()}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+
+          {activeTab === "uncertainty" && (
+            <div className="space-y-3 py-4 text-xs">
+              <div className="bg-slate-50 rounded-xl p-4 border border-slate-200">
+                <h3 className="font-bold text-slate-900 text-sm mb-1">
+                  Empirical Uncertainty & Model Spread
+                </h3>
+                <p className="text-slate-600 text-xs leading-relaxed">
+                  AETHER quantifies uncertainty directly from physical ensemble divergence,
+                  rolling multi-window error memory, and regime stability.
+                </p>
+                <div className="grid grid-cols-3 gap-3 mt-3 pt-3 border-t border-slate-200 font-mono">
+                  <div>
+                    <span className="text-[10px] text-slate-400 block">Model Spread (sigma)</span>
+                    <span className="text-base font-bold text-slate-900">{data?.uncertainty.spread} {getUnit()}</span>
+                  </div>
+                  <div>
+                    <span className="text-[10px] text-slate-400 block">Confidence Tier</span>
+                    <span className="text-base font-bold text-emerald-600">{data?.confidence.tier}</span>
+                  </div>
+                  <div>
+                    <span className="text-[10px] text-slate-400 block">Lead Time Decay</span>
+                    <span className="text-base font-bold text-slate-700">+{leadTimeHours}h</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
 
-        <div className="w-full h-80">
-          <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={chartData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#F1F5F9" />
-              <XAxis dataKey="horizon" tick={{ fill: "#64748B", fontSize: 12 }} />
-              <YAxis tick={{ fill: "#64748B", fontSize: 12 }} unit={` ${getUnit()}`} />
-              <Tooltip
-                contentStyle={{
-                  backgroundColor: "#FFFFFF",
-                  borderColor: "#E2E8F0",
-                  borderRadius: "12px",
-                  fontSize: "12px",
-                }}
-              />
-              <Legend wrapperStyle={{ fontSize: "12px" }} />
-              {/* Individual NWP & AI models */}
-              <Line type="monotone" dataKey="ECMWF" stroke="#0284C7" strokeWidth={1.5} strokeDasharray="4 4" dot={{ r: 3 }} />
-              <Line type="monotone" dataKey="AIFS" stroke="#6366F1" strokeWidth={1.5} strokeDasharray="4 4" dot={{ r: 3 }} />
-              <Line type="monotone" dataKey="GFS" stroke="#14B8A6" strokeWidth={1.5} strokeDasharray="4 4" dot={{ r: 3 }} />
-              {/* Bold AETHER Blended Forecast */}
-              <Line type="monotone" dataKey="AETHER" stroke="#0F172A" strokeWidth={3} dot={{ r: 5 }} />
-            </LineChart>
-          </ResponsiveContainer>
-        </div>
-      </div>
+        {/* Right 4 Cols: Key Forecast Card */}
+        <div className="lg:col-span-4 space-y-4">
+          <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs space-y-4">
+            <div className="border-b border-slate-100 pb-3">
+              <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider block">
+                Key Forecast ({leadTimeHours}h)
+              </span>
+              <span className="text-xs text-slate-500 font-medium">{selectedLocation.name}</span>
+            </div>
 
-      {/* Model Breakdown Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
-        <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
-          <span className="text-xs text-slate-500 block">AETHER Dynamic Blend</span>
-          <span className="text-2xl font-bold font-mono text-slate-900 mt-1 block">
-            {currentForecast?.calibrated_forecast ?? "--"} {getUnit()}
-          </span>
-          <span className="text-[11px] text-emerald-600 font-medium mt-1 block">
-            Confidence: {currentForecast?.confidence_pct}%
-          </span>
-        </div>
+            {/* AETHER Prominent Value */}
+            <div>
+              <span className="text-[10px] uppercase font-bold text-slate-400 block">
+                AETHER
+              </span>
+              <div className="flex items-baseline space-x-1.5 mt-0.5">
+                <span className="text-4xl font-black text-slate-900 font-mono tracking-tight">
+                  {data?.aether_forecast.calibrated_value ?? "--"}
+                </span>
+                <span className="text-base font-bold text-slate-500 font-mono">
+                  {data?.aether_forecast.unit || getUnit()}
+                </span>
+              </div>
+            </div>
 
-        <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
-          <span className="text-xs text-slate-500 block">ECMWF / IFS (Physics)</span>
-          <span className="text-2xl font-bold font-mono text-sky-700 mt-1 block">
-            {currentForecast?.raw_model_forecasts?.["ECMWF_IFS"] ?? "--"} {getUnit()}
-          </span>
-          <span className="text-[11px] text-slate-500 mt-1 block">
-            Weight: {Math.round((currentForecast?.model_weights?.["ECMWF_IFS"] || 0.33) * 100)}%
-          </span>
-        </div>
+            {/* Individual Models exact comparison */}
+            <div className="space-y-2 pt-2 border-t border-slate-100 text-xs">
+              <div className="flex justify-between items-center py-1 border-b border-slate-50">
+                <span className="text-slate-600 font-semibold">ECMWF</span>
+                <span className="font-mono font-bold text-slate-900">
+                  {data?.forecasts["ECMWF_IFS"] ?? "--"} {getUnit()}
+                </span>
+              </div>
+              <div className="flex justify-between items-center py-1 border-b border-slate-50">
+                <span className="text-slate-600 font-semibold">AIFS</span>
+                <span className="font-mono font-bold text-slate-900">
+                  {data?.forecasts["ECMWF_AIFS"] ?? "--"} {getUnit()}
+                </span>
+              </div>
+              <div className="flex justify-between items-center py-1 border-b border-slate-50">
+                <span className="text-slate-600 font-semibold">GFS</span>
+                <span className="font-mono font-bold text-slate-900">
+                  {data?.forecasts["GFS"] ?? "--"} {getUnit()}
+                </span>
+              </div>
+            </div>
 
-        <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
-          <span className="text-xs text-slate-500 block">ECMWF / AIFS (AI Model)</span>
-          <span className="text-2xl font-bold font-mono text-indigo-700 mt-1 block">
-            {currentForecast?.raw_model_forecasts?.["ECMWF_AIFS"] ?? "--"} {getUnit()}
-          </span>
-          <span className="text-[11px] text-slate-500 mt-1 block">
-            Weight: {Math.round((currentForecast?.model_weights?.["ECMWF_AIFS"] || 0.33) * 100)}%
-          </span>
-        </div>
+            {/* Confidence Progress Bar */}
+            <div className="pt-2 border-t border-slate-100 space-y-1.5">
+              <div className="flex justify-between items-center text-xs">
+                <span className="text-slate-600 font-medium">Confidence:</span>
+                <span className="font-extrabold text-emerald-600 font-mono">
+                  {data?.confidence.pct ?? 78}%
+                </span>
+              </div>
+              <div className="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+                <div
+                  className="bg-emerald-500 h-full rounded-full transition-all duration-500"
+                  style={{ width: `${data?.confidence.pct ?? 78}%` }}
+                />
+              </div>
+            </div>
 
-        <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
-          <span className="text-xs text-slate-500 block">NOAA GFS (NWP)</span>
-          <span className="text-2xl font-bold font-mono text-teal-700 mt-1 block">
-            {currentForecast?.raw_model_forecasts?.["GFS"] ?? "--"} {getUnit()}
-          </span>
-          <span className="text-[11px] text-slate-500 mt-1 block">
-            Weight: {Math.round((currentForecast?.model_weights?.["GFS"] || 0.33) * 100)}%
-          </span>
+            {/* View Details / Forecast Trace Button */}
+            <button
+              onClick={openTraceDrawer}
+              className="w-full py-2.5 px-4 bg-slate-900 text-white rounded-xl text-xs font-bold hover:bg-slate-800 transition flex items-center justify-center space-x-1.5 shadow-xs"
+            >
+              <span>View Details & Trace</span>
+              <ChevronRight className="w-4 h-4" />
+            </button>
+          </div>
         </div>
       </div>
     </div>

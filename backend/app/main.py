@@ -6,6 +6,7 @@ from datetime import datetime
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from backend.app.api.benchmark import router as benchmark_router
+from backend.app.api.canonical import router as canonical_router
 from backend.app.api.climate import router as climate_router
 from backend.app.api.explanation import router as explanation_router
 from backend.app.api.forecast import router as forecast_router
@@ -59,6 +60,7 @@ def get_system_status():
 
 
 # Include all modular routers
+app.include_router(canonical_router, prefix=settings.API_PREFIX)
 app.include_router(forecast_router, prefix=settings.API_PREFIX)
 app.include_router(models_router, prefix=settings.API_PREFIX)
 app.include_router(weights_router, prefix=settings.API_PREFIX)

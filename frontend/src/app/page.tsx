@@ -1,221 +1,235 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { WeatherMap, INDIAN_STATIONS, StationLocation } from "../components/WeatherMap";
-import { ModelWeightBars } from "../components/ModelWeightBars";
-import { ConfidenceIndicator } from "../components/ConfidenceIndicator";
-import { ExtremeRiskCard } from "../components/ExtremeRiskCard";
-import { BlendedForecast, ExtremeRiskAssessment } from "../lib/types";
-import { fetchForecast, fetchExtremeRisk } from "../lib/api";
-import { CloudRain, Thermometer, Wind, RefreshCw } from "lucide-react";
+import React from "react";
+import { useAetherData } from "../context/AetherDataContext";
+import { WeatherMap } from "../components/WeatherMap";
+import {
+  Sparkles,
+  MapPin,
+  CheckCircle2,
+  ShieldAlert,
+  HelpCircle,
+  Layers,
+  ChevronRight,
+  TrendingUp,
+  Cpu,
+  RefreshCw,
+  Activity
+} from "lucide-react";
 
 export default function OverviewPage() {
-  const [station, setStation] = useState<StationLocation>(INDIAN_STATIONS[0]); // Delhi default
-  const [variable, setVariable] = useState<string>("rainfall_mm");
-  const [horizon, setHorizon] = useState<number>(24);
-  const [forecast, setForecast] = useState<BlendedForecast | null>(null);
-  const [riskAssessment, setRiskAssessment] = useState<ExtremeRiskAssessment | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+  const {
+    data,
+    loading,
+    selectedLocation,
+    setSelectedLocation,
+    variable,
+    leadTimeHours,
+    setLeadTimeHours,
+    activeLayer,
+    setActiveLayer,
+    openTraceDrawer,
+    refresh
+  } = useAetherData();
 
-  const loadData = () => {
-    setLoading(true);
-    Promise.all([
-      fetchForecast(station.lat, station.lon, variable, horizon, station.name),
-      fetchExtremeRisk(station.lat, station.lon, horizon, station.name),
-    ])
-      .then(([fData, rData]) => {
-        setForecast(fData);
-        setRiskAssessment(rData);
-      })
-      .catch((err) => {
-        console.error("API fetch error:", err);
-      })
-      .finally(() => setLoading(false));
-  };
-
-  useEffect(() => {
-    loadData();
-  }, [station, variable, horizon]);
-
-  const getUnit = () =>
-    variable === "rainfall_mm" ? "mm" : variable === "temperature_c" ? "°C" : "m/s";
+  const getUnit = () => (variable === "rainfall_mm" ? "mm" : variable === "temperature_c" ? "°C" : "m/s");
 
   return (
-    <div className="space-y-6">
-      {/* Top Controls Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-slate-50 p-4 rounded-2xl border border-slate-200">
-        {/* Variable Switcher */}
-        <div className="flex items-center space-x-1.5">
-          <button
-            onClick={() => setVariable("rainfall_mm")}
-            className={`flex items-center space-x-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold transition ${
-              variable === "rainfall_mm"
-                ? "bg-white text-sky-700 shadow-xs border border-slate-200"
-                : "text-slate-600 hover:text-slate-900"
-            }`}
-          >
-            <CloudRain className="w-3.5 h-3.5 text-sky-600" />
-            <span>Rainfall</span>
-          </button>
-
-          <button
-            onClick={() => setVariable("temperature_c")}
-            className={`flex items-center space-x-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold transition ${
-              variable === "temperature_c"
-                ? "bg-white text-amber-700 shadow-xs border border-slate-200"
-                : "text-slate-600 hover:text-slate-900"
-            }`}
-          >
-            <Thermometer className="w-3.5 h-3.5 text-amber-600" />
-            <span>Temperature</span>
-          </button>
-
-          <button
-            onClick={() => setVariable("wind_speed_ms")}
-            className={`flex items-center space-x-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold transition ${
-              variable === "wind_speed_ms"
-                ? "bg-white text-teal-700 shadow-xs border border-slate-200"
-                : "text-slate-600 hover:text-slate-900"
-            }`}
-          >
-            <Wind className="w-3.5 h-3.5 text-teal-600" />
-            <span>Wind Speed</span>
-          </button>
+    <div className="space-y-4">
+      {/* Overview Top Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-1 border-b border-slate-100">
+        <div>
+          <div className="inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full bg-sky-50 text-sky-700 border border-sky-200 text-[11px] font-bold">
+            <Sparkles className="w-3 h-3 text-sky-600" />
+            <span>Operational Situation Room</span>
+          </div>
+          <h1 className="text-2xl font-black tracking-tight text-slate-900 mt-1">
+            AETHER Weather Intelligence
+          </h1>
+          <p className="text-xs text-slate-500">
+            Real-time synoptic analysis · Dynamic multi-model confidence and risk fusion
+          </p>
         </div>
 
-        {/* Lead Time Horizon Switcher */}
         <div className="flex items-center space-x-2">
-          <span className="text-xs text-slate-500 font-medium hidden sm:inline">
-            Horizon:
-          </span>
-          <div className="flex bg-white p-1 rounded-xl border border-slate-200 text-xs font-semibold">
-            {[6, 12, 24, 48, 72].map((h) => (
-              <button
-                key={h}
-                onClick={() => setHorizon(h)}
-                className={`px-2.5 py-1 rounded-lg transition ${
-                  horizon === h
-                    ? "bg-slate-900 text-white"
-                    : "text-slate-600 hover:text-slate-900"
-                }`}
-              >
-                {h}h
-              </button>
-            ))}
-          </div>
+          <button
+            onClick={openTraceDrawer}
+            className="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-sky-50 text-sky-700 border border-sky-200 hover:bg-sky-100 text-xs font-bold transition shadow-xs"
+          >
+            <Activity className="w-3.5 h-3.5 text-sky-600" />
+            <span>Forecast Trace</span>
+          </button>
 
           <button
-            onClick={loadData}
-            title="Refresh active pipeline inference"
-            className="p-2 rounded-xl bg-white border border-slate-200 text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition"
+            onClick={refresh}
+            title="Refresh pipeline computation"
+            className="p-1.5 rounded-xl border border-slate-200 text-slate-500 hover:text-slate-800 hover:bg-slate-50 transition"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${loading ? "animate-spin text-sky-600" : ""}`} />
           </button>
         </div>
       </div>
 
-      {/* Main 12-Column Responsive Dashboard Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* Left 7 Columns: Primary Interactive Synoptic Map */}
-        <div className="lg:col-span-7 flex flex-col space-y-4">
+      {/* Main Grid: ~60% Map + ~40% Intelligence Panel */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
+        {/* Left ~60%: Interactive Map */}
+        <div className="lg:col-span-7 flex flex-col space-y-3">
           <WeatherMap
-            selectedStation={station}
-            onSelectStation={setStation}
+            selectedStation={selectedLocation}
+            onSelectStation={setSelectedLocation}
             variable={variable}
-            currentValue={forecast?.calibrated_forecast}
-            confidence={forecast?.confidence_pct}
-            dominantModel={forecast?.dominant_model}
-            regime={forecast?.detected_regime}
+            currentValue={data?.aether_forecast.calibrated_value}
+            confidence={data?.confidence.pct}
+            dominantModel={data?.explanations.model}
+            regime={data?.weather_regime.detected}
+            leadTimeHours={leadTimeHours}
+            onLeadTimeChange={setLeadTimeHours}
+            activeLayer={activeLayer}
+            onLayerChange={setActiveLayer}
           />
-
-          {/* Quick Station Bar */}
-          <div className="flex items-center space-x-2 overflow-x-auto pb-1 text-xs">
-            <span className="text-slate-400 text-[11px] font-medium shrink-0">
-              Quick Select:
-            </span>
-            {INDIAN_STATIONS.map((st) => (
-              <button
-                key={st.name}
-                onClick={() => setStation(st)}
-                className={`px-2.5 py-1 rounded-lg shrink-0 font-medium transition border ${
-                  station.name === st.name
-                    ? "bg-sky-50 text-sky-800 border-sky-300 font-semibold"
-                    : "bg-white text-slate-600 border-slate-200 hover:bg-slate-50"
-                }`}
-              >
-                {st.name}
-              </button>
-            ))}
-          </div>
         </div>
 
-        {/* Right 5 Columns: Meteorological Decision Support Cards */}
-        <div className="lg:col-span-5 space-y-5">
-          {/* Situation Hero Summary Card */}
+        {/* Right ~40%: Meteorological Intelligence Panel */}
+        <div className="lg:col-span-5 space-y-4">
+          {/* Station Card */}
           <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs relative overflow-hidden">
-            <div className="flex items-center justify-between">
+            {/* Header */}
+            <div className="flex items-start justify-between border-b border-slate-100 pb-3">
               <div>
-                <span className="text-[11px] uppercase tracking-wider text-slate-500 font-semibold block">
-                  {station.name} &bull; Next {horizon} Hours
+                <div className="flex items-center space-x-1.5">
+                  <MapPin className="w-4 h-4 text-sky-600" />
+                  <h2 className="text-base font-extrabold text-slate-900">
+                    {data?.location.name || selectedLocation.name}
+                  </h2>
+                </div>
+                <span className="text-[11px] text-slate-400 font-mono">
+                  {selectedLocation.latitude.toFixed(1)}°N, {selectedLocation.longitude.toFixed(1)}°E
                 </span>
-                <div className="flex items-baseline space-x-2 mt-1">
-                  <span className="text-4xl font-extrabold text-slate-900 font-mono tracking-tight">
-                    {forecast?.calibrated_forecast ?? "--"}
+              </div>
+
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-700">
+                +{leadTimeHours}h Horizon
+              </span>
+            </div>
+
+            {/* AETHER Forecast Value */}
+            <div className="mt-4 flex items-baseline justify-between">
+              <div>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">
+                  AETHER FORECAST
+                </span>
+                <div className="flex items-baseline space-x-2 mt-0.5">
+                  <span className="text-4xl font-black text-slate-900 font-mono tracking-tight">
+                    {data?.aether_forecast.calibrated_value ?? "--"}
                   </span>
                   <span className="text-lg font-bold text-slate-500 font-mono">
-                    {getUnit()}
+                    {data?.aether_forecast.unit || getUnit()}
                   </span>
                 </div>
               </div>
+
               <div className="text-right">
-                <span className="text-[10px] uppercase tracking-wider font-semibold text-slate-400 block">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">
                   Weather Regime
                 </span>
-                <span className="text-sm font-bold text-slate-800 bg-slate-100 px-2.5 py-1 rounded-lg inline-block mt-1">
-                  {forecast?.detected_regime || "NORMAL"}
+                <span className="inline-block mt-1 px-2.5 py-1 rounded-lg text-xs font-extrabold bg-rose-50 text-rose-700 border border-rose-200">
+                  {data?.weather_regime.detected || "NORMAL"}
                 </span>
               </div>
             </div>
 
-            {/* Individual NWP vs AETHER Comparison Pill */}
-            <div className="mt-4 pt-3 border-t border-slate-100 grid grid-cols-3 gap-2 text-center text-xs">
-              <div className="bg-slate-50 p-2 rounded-lg">
-                <span className="text-[10px] text-slate-500 block">ECMWF</span>
-                <span className="font-bold text-slate-800 font-mono">
-                  {forecast?.raw_model_forecasts?.["ECMWF_IFS"] ?? "--"} {getUnit()}
+            {/* Confidence Bar */}
+            <div className="mt-4 pt-3 border-t border-slate-100 space-y-1.5">
+              <div className="flex justify-between items-center text-xs">
+                <span className="text-slate-600 font-medium">Confidence:</span>
+                <span className="font-extrabold text-emerald-600 font-mono">
+                  {data?.confidence.pct ?? 78}%
                 </span>
               </div>
-              <div className="bg-slate-50 p-2 rounded-lg">
-                <span className="text-[10px] text-slate-500 block">AIFS</span>
-                <span className="font-bold text-slate-800 font-mono">
-                  {forecast?.raw_model_forecasts?.["ECMWF_AIFS"] ?? "--"} {getUnit()}
-                </span>
+              <div className="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+                <div
+                  className="bg-emerald-500 h-full rounded-full transition-all duration-500"
+                  style={{ width: `${data?.confidence.pct ?? 78}%` }}
+                />
               </div>
-              <div className="bg-slate-50 p-2 rounded-lg">
-                <span className="text-[10px] text-slate-500 block">GFS</span>
-                <span className="font-bold text-slate-800 font-mono">
-                  {forecast?.raw_model_forecasts?.["GFS"] ?? "--"} {getUnit()}
-                </span>
+            </div>
+
+            {/* Top Model Trust Breakdown */}
+            <div className="mt-4 pt-3 border-t border-slate-100 space-y-2">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 block">
+                Top Model Trust
+              </span>
+              <div className="space-y-2 text-xs font-semibold">
+                {Object.entries(data?.weights || { ECMWF_AIFS: 0.46, ECMWF_IFS: 0.32, GFS: 0.22 })
+                  .sort((a, b) => b[1] - a[1])
+                  .map(([mName, w]) => {
+                    const pct = Math.round(w * 100);
+                    const cleanName = mName.replace("ECMWF_", "");
+                    return (
+                      <div key={mName} className="space-y-1">
+                        <div className="flex justify-between text-[11px]">
+                          <span className="text-slate-700">{cleanName}</span>
+                          <span className="font-mono text-slate-900 font-bold">{pct}%</span>
+                        </div>
+                        <div className="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
+                          <div
+                            className={`h-full rounded-full transition-all duration-500 ${
+                              cleanName === "AIFS"
+                                ? "bg-sky-600"
+                                : cleanName === "IFS"
+                                ? "bg-indigo-600"
+                                : "bg-teal-600"
+                            }`}
+                            style={{ width: `${pct}%` }}
+                          />
+                        </div>
+                      </div>
+                    );
+                  })}
               </div>
+            </div>
+
+            {/* Extreme Risk Summary */}
+            <div className="mt-4 pt-3 border-t border-slate-100">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 block mb-2">
+                Extreme Risk (AETHER Model Risk)
+              </span>
+              <div className="grid grid-cols-3 gap-2 text-center text-xs">
+                <div className="p-2 rounded-xl bg-rose-50 border border-rose-200">
+                  <span className="text-[10px] text-rose-600 font-medium block">Heavy Rain</span>
+                  <span className="font-extrabold text-rose-700 text-xs">
+                    {data?.risk.heavy_rain.level || "HIGH"}
+                  </span>
+                </div>
+                <div className="p-2 rounded-xl bg-emerald-50 border border-emerald-200">
+                  <span className="text-[10px] text-emerald-600 font-medium block">Heat</span>
+                  <span className="font-extrabold text-emerald-700 text-xs">
+                    {data?.risk.heat.level || "LOW"}
+                  </span>
+                </div>
+                <div className="p-2 rounded-xl bg-slate-50 border border-slate-200">
+                  <span className="text-[10px] text-slate-600 font-medium block">High Wind</span>
+                  <span className="font-extrabold text-slate-700 text-xs">
+                    {data?.risk.high_wind.level || "LOW"}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Open Trace Link */}
+            <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
+              <span className="text-slate-400 font-mono text-[10px]">
+                {data?.data_freshness.AIFS || "Updated 18 min ago"}
+              </span>
+              <button
+                onClick={openTraceDrawer}
+                className="inline-flex items-center space-x-1 text-sky-700 font-bold hover:text-sky-900 transition"
+              >
+                <span>Inspect Trace</span>
+                <ChevronRight className="w-3.5 h-3.5" />
+              </button>
             </div>
           </div>
-
-          {/* Dynamic Model Trust Bar */}
-          <ModelWeightBars
-            weights={forecast?.model_weights || {}}
-            dominantModel={forecast?.dominant_model || "ECMWF_AIFS"}
-            regime={forecast?.detected_regime}
-          />
-
-          {/* Calibrated Confidence Indicator */}
-          <ConfidenceIndicator
-            confidencePct={forecast?.confidence_pct || 82}
-            confidenceTier={forecast?.confidence_tier || "High"}
-            drivers={forecast?.confidence_drivers || ["High model agreement"]}
-          />
-
-          {/* Extreme Risk Alert */}
-          <ExtremeRiskCard assessment={riskAssessment} />
         </div>
       </div>
     </div>

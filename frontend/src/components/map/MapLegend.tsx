@@ -86,12 +86,12 @@ export function MapLegend({ activeLayer }: MapLegendProps) {
   const legend = LEGEND_CONFIGS[activeLayer] || LEGEND_CONFIGS.rainfall;
 
   return (
-    <div className="absolute bottom-16 left-3 z-20 rounded-md border border-slate-200 bg-white/95 px-3 py-2 shadow-xs backdrop-blur-xs text-xs pointer-events-auto max-w-[170px]">
-      <div className="flex items-center justify-between border-b border-slate-100 pb-1 mb-1.5">
-        <span className="font-semibold text-slate-800 text-[11px] truncate">
+    <div className="absolute bottom-16 left-3 z-20 rounded-xl border border-border bg-surface/95 dark:bg-surface/95 px-3 py-2.5 shadow-md backdrop-blur-md text-xs pointer-events-auto max-w-[180px] transition-colors">
+      <div className="flex items-center justify-between border-b border-border pb-1 mb-1.5">
+        <span className="font-semibold text-text-primary text-[11px] truncate">
           {legend.title}
         </span>
-        <span className="text-[10px] font-mono text-slate-400 ml-1">
+        <span className="text-[10px] font-mono text-text-muted ml-1">
           {legend.unit}
         </span>
       </div>
@@ -108,10 +108,10 @@ export function MapLegend({ activeLayer }: MapLegendProps) {
           {legend.stops.map((stop, idx) => (
             <div key={idx} className="flex items-center gap-2 text-[10px]">
               <span
-                className="h-2.5 w-3.5 shrink-0 rounded-xs border border-slate-300/60"
+                className="h-2.5 w-3.5 shrink-0 rounded-xs border border-border"
                 style={{ backgroundColor: stop.color }}
               />
-              <span className="text-slate-600 font-mono truncate">
+              <span className="text-text-secondary font-mono truncate">
                 {stop.label}
               </span>
             </div>

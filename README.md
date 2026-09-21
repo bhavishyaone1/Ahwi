@@ -75,15 +75,15 @@ Unlike traditional static averaging or single-model reliance, AETHER dynamically
 
 ### 1. Clone & Setup Backend
 ```bash
-git clone https://github.com/bhavishyaone1/Ather.git
-cd Ather
+git clone https://github.com/bhavishyaone1/Ahwi.git
+cd Ahwi
 
 # Setup Python virtual environment
 python -m venv venv
 .\venv\Scripts\Activate.ps1
 pip install -r backend/requirements.txt
 
-# Run full ML & API test suite (16 tests)
+# Run full ML & API test suite (18 tests)
 pytest backend/tests
 
 # Launch FastAPI Backend

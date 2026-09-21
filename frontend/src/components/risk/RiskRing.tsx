@@ -8,7 +8,7 @@ interface RiskRingProps {
   type: "rain" | "heat" | "wind";
   label: string;
   probability: number; // 0 to 100
-  tier: "LOW" | "WATCH" | "HIGH" | "EXTREME" | "MEDIUM";
+  tier: "LOW" | "WATCH" | "HIGH" | "EXTREME" | "MEDIUM" | "NORMAL";
   className?: string;
 }
 
@@ -23,15 +23,16 @@ export function RiskRing({
   const getTierColors = () => {
     switch (tier) {
       case "EXTREME":
-        return { stroke: "#DC2626", text: "text-rose-600", bg: "bg-rose-50", badge: "bg-rose-100 text-rose-800 border-rose-200" };
+        return { stroke: "#DC2626", text: "text-rose-500", bg: "bg-rose-500/10", badge: "bg-rose-500/10 text-rose-500 border-rose-500/20" };
       case "HIGH":
-        return { stroke: "#EF4444", text: "text-rose-500", bg: "bg-rose-50", badge: "bg-rose-100 text-rose-700 border-rose-200" };
+        return { stroke: "#EF4444", text: "text-rose-500", bg: "bg-rose-500/10", badge: "bg-rose-500/10 text-rose-500 border-rose-500/20" };
       case "WATCH":
       case "MEDIUM":
-        return { stroke: "#F59E0B", text: "text-amber-500", bg: "bg-amber-50", badge: "bg-amber-100 text-amber-700 border-amber-200" };
+        return { stroke: "#F59E0B", text: "text-amber-500", bg: "bg-amber-500/10", badge: "bg-amber-500/10 text-amber-500 border-amber-500/20" };
       case "LOW":
+      case "NORMAL":
       default:
-        return { stroke: "#10B981", text: "text-emerald-500", bg: "bg-emerald-50", badge: "bg-emerald-100 text-emerald-700 border-emerald-200" };
+        return { stroke: "#10B981", text: "text-emerald-500", bg: "bg-emerald-500/10", badge: "bg-emerald-500/10 text-emerald-500 border-emerald-500/20" };
     }
   };
 
@@ -43,9 +44,9 @@ export function RiskRing({
   const Icon = type === "rain" ? CloudRain : type === "heat" ? Flame : Wind;
 
   return (
-    <div className={`flex flex-col items-center rounded-lg border border-slate-200 bg-white p-4 shadow-xs text-center ${className}`}>
-      <div className="flex items-center gap-1.5 mb-2 text-slate-700 font-medium text-xs">
-        <Icon className="h-3.5 w-3.5 text-slate-500" />
+    <div className={`flex flex-col items-center rounded-lg border border-border bg-surface p-4 shadow-xs text-center ${className}`}>
+      <div className="flex items-center gap-1.5 mb-2 text-text-secondary font-medium text-xs">
+        <Icon className="h-3.5 w-3.5 text-text-muted" />
         <span>{label}</span>
       </div>
 
@@ -57,7 +58,7 @@ export function RiskRing({
             cx="48"
             cy="48"
             r={radius}
-            stroke="#E2E8F0"
+            className="stroke-slate-200 dark:stroke-slate-800"
             strokeWidth="6"
             fill="none"
           />
@@ -79,7 +80,7 @@ export function RiskRing({
 
         {/* Center text */}
         <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <span className="text-xl font-bold font-mono tracking-tight text-slate-900 leading-none">
+          <span className="text-xl font-bold font-mono tracking-tight text-text-primary leading-none">
             {probability}%
           </span>
         </div>

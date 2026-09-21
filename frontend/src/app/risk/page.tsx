@@ -50,11 +50,11 @@ export default function ExtremeRiskPage() {
             <ShieldAlert className="h-3 w-3 text-rose-600" />
             <span>High-Impact Hazard Guidance</span>
           </div>
-          <h1 className="text-2xl font-bold text-slate-950 tracking-tight mt-1">
+          <h1 className="text-2xl sm:text-3xl font-bold text-slate-950 tracking-tight mt-1">
             Extreme Weather Risk
           </h1>
-          <p className="text-xs text-slate-500">
-            Probabilistic risk assessment from AETHER model (Not an official warning)
+          <p className="text-xs text-slate-500 font-medium">
+            Probabilistic guidance for high-impact weather conditions.
           </p>
         </div>
 
@@ -78,7 +78,7 @@ export default function ExtremeRiskPage() {
       {/* Main Layout: Map on Left (7 cols) + Risk Gauges on Right (5 cols) */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
         {/* Left: Map */}
-        <motion.div variants={fadeUp} className="lg:col-span-7">
+        <motion.div variants={fadeUp} className="lg:col-span-7 min-w-0">
           <WeatherMap
             selectedStation={selectedLocation}
             onSelectStation={setSelectedLocation}
@@ -95,7 +95,7 @@ export default function ExtremeRiskPage() {
         </motion.div>
 
         {/* Right: Risk Assessment Card */}
-        <motion.div variants={fadeUp} className="lg:col-span-5 space-y-3">
+        <motion.div variants={fadeUp} className="lg:col-span-5 min-w-0 space-y-3">
           <Card className="shadow-xs border-slate-200">
             <CardHeader className="p-4 pb-2 border-b border-slate-100 flex flex-row items-center justify-between space-y-0">
               <div>
@@ -107,7 +107,7 @@ export default function ExtremeRiskPage() {
                 </span>
               </div>
               <Badge variant="destructive" className="font-bold text-[10px]">
-                {data?.risk.overall_level || "HIGH"} RISK
+                {data?.risk?.overall_level || "ELEVATED"} RISK
               </Badge>
             </CardHeader>
 
@@ -117,20 +117,20 @@ export default function ExtremeRiskPage() {
                 <RiskRing
                   type="rain"
                   label="Heavy Rain"
-                  probability={rainRisk}
-                  tier="HIGH"
+                  probability={data?.risk?.heavy_rain?.probability_pct ?? 0}
+                  tier={data?.risk?.heavy_rain?.level || "NORMAL"}
                 />
                 <RiskRing
                   type="heat"
                   label="Heat"
-                  probability={heatRisk}
-                  tier="LOW"
+                  probability={data?.risk?.heat?.probability_pct ?? 0}
+                  tier={data?.risk?.heat?.level || "LOW"}
                 />
                 <RiskRing
                   type="wind"
                   label="High Wind"
-                  probability={windRisk}
-                  tier="WATCH"
+                  probability={data?.risk?.high_wind?.probability_pct ?? 0}
+                  tier={data?.risk?.high_wind?.level || "NORMAL"}
                 />
               </div>
 

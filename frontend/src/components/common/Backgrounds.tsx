@@ -4,13 +4,88 @@ import React from "react";
 import { motion } from "motion/react";
 
 /**
+ * CoordinateGrid:
+ * Subtle latitude/longitude coordinate ticks and intersecting lines.
+ */
+export function CoordinateGrid({ className = "" }: { className?: string }) {
+  return (
+    <svg
+      className={`pointer-events-none absolute inset-0 h-full w-full opacity-[0.035] ${className}`}
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <defs>
+        <pattern id="coord-grid-pattern" width="120" height="120" patternUnits="userSpaceOnUse">
+          <path d="M 120 0 L 0 0 0 120" fill="none" stroke="#0284C7" strokeWidth="0.75" />
+          <text x="4" y="14" fill="#0284C7" fontSize="8" fontFamily="monospace" opacity="0.6">
+            +0.25°
+          </text>
+        </pattern>
+      </defs>
+      <rect width="100%" height="100%" fill="url(#coord-grid-pattern)" />
+    </svg>
+  );
+}
+
+/**
+ * ContourLines:
+ * Stylized atmospheric pressure isobars.
+ */
+export function ContourLines({ className = "" }: { className?: string }) {
+  return (
+    <svg
+      className={`pointer-events-none absolute inset-0 h-full w-full opacity-[0.04] ${className}`}
+      viewBox="0 0 1440 600"
+      fill="none"
+      preserveAspectRatio="xMidYMid slice"
+    >
+      <path
+        d="M -100 200 C 300 120, 650 320, 1000 180 C 1250 80, 1400 220, 1600 170"
+        stroke="#0284C7"
+        strokeWidth="1.5"
+      />
+      <path
+        d="M -100 340 C 250 260, 680 440, 1080 300 C 1320 200, 1450 320, 1600 290"
+        stroke="#0369A1"
+        strokeWidth="1.2"
+      />
+      <path
+        d="M -100 480 C 380 400, 800 550, 1180 420 C 1360 340, 1480 430, 1600 400"
+        className="stroke-slate-900 dark:stroke-slate-300"
+        strokeWidth="1"
+        strokeDasharray="4 4"
+      />
+    </svg>
+  );
+}
+
+/**
+ * WeatherGrid:
+ * Fine dot matrix representing observational sampling nodes.
+ */
+export function WeatherGrid({ className = "" }: { className?: string }) {
+  return (
+    <svg
+      className={`pointer-events-none absolute inset-0 h-full w-full opacity-[0.03] ${className}`}
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <defs>
+        <pattern id="weather-dot-grid" width="32" height="32" patternUnits="userSpaceOnUse">
+          <circle cx="2" cy="2" r="1" fill="#0284C7" />
+        </pattern>
+      </defs>
+      <rect width="100%" height="100%" fill="url(#weather-dot-grid)" />
+    </svg>
+  );
+}
+
+/**
  * AtmosphericBackground:
- * Very subtle meteorological background consisting of:
- * - Fine coordinate grid (lat/lon)
- * - Slow-moving synoptic isobar contour curves
- * - Soft radial ambient blue glow
- * - Tiny observation station pulses
- * Opacity remains strictly 0.02–0.06 to ensure zero interference with data.
+ * Global meteorological background combining:
+ * - Subtle ambient blue atmospheric glow
+ * - Coordinate grid
+ * - Isobar contour lines
+ * - Observation station pulses
+ * Opacity remains strictly 0.02–0.06 behind all content.
  */
 export function AtmosphericBackground({ className = "" }: { className?: string }) {
   return (
@@ -18,66 +93,19 @@ export function AtmosphericBackground({ className = "" }: { className?: string }
       className={`pointer-events-none fixed inset-0 overflow-hidden select-none -z-10 ${className}`}
       aria-hidden="true"
     >
-      {/* Soft radial blue atmosphere glow */}
-      <div className="absolute -top-[10%] left-1/2 -translate-x-1/2 w-[900px] h-[500px] bg-gradient-to-b from-sky-100/40 via-sky-50/20 to-transparent blur-3xl rounded-full" />
+      {/* Soft ambient atmospheric glow */}
+      <div className="absolute -top-[12%] left-1/2 -translate-x-1/2 w-[1100px] h-[550px] bg-gradient-to-b from-sky-100/40 via-sky-50/15 to-transparent blur-3xl rounded-full" />
 
+      {/* Coordinate & dot grid */}
+      <CoordinateGrid />
+      <ContourLines />
+
+      {/* Observation nodes with subtle pulses */}
       <svg
         className="absolute inset-0 h-full w-full opacity-[0.045]"
-        xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 1440 900"
         preserveAspectRatio="xMidYMid slice"
       >
-        <defs>
-          <pattern
-            id="global-meteo-grid"
-            width="90"
-            height="90"
-            patternUnits="userSpaceOnUse"
-          >
-            <path
-              d="M 90 0 L 0 0 0 90"
-              fill="none"
-              stroke="#0284C7"
-              strokeWidth="0.8"
-              strokeDasharray="2,6"
-            />
-            <circle cx="90" cy="0" r="1.5" fill="#0284C7" opacity="0.5" />
-          </pattern>
-        </defs>
-
-        <rect width="100%" height="100%" fill="url(#global-meteo-grid)" />
-
-        {/* Slow-moving Synoptic Pressure Isobar Waves */}
-        <motion.path
-          d="M -150 280 C 250 160, 580 380, 920 220 C 1180 120, 1380 270, 1650 220"
-          fill="none"
-          stroke="#0369A1"
-          strokeWidth="1.5"
-          initial={{ pathLength: 0.9, opacity: 0.3 }}
-          animate={{ pathLength: [0.9, 1, 0.9], opacity: [0.3, 0.6, 0.3] }}
-          transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
-        />
-        <motion.path
-          d="M -150 420 C 200 320, 620 500, 1020 360 C 1280 260, 1460 380, 1650 340"
-          fill="none"
-          stroke="#0284C7"
-          strokeWidth="1.3"
-          initial={{ pathLength: 0.85, opacity: 0.25 }}
-          animate={{ pathLength: [0.85, 1, 0.85], opacity: [0.25, 0.5, 0.25] }}
-          transition={{ duration: 22, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-        />
-        <motion.path
-          d="M -150 560 C 350 460, 780 620, 1140 480 C 1340 400, 1480 490, 1650 460"
-          fill="none"
-          stroke="#0F172A"
-          strokeWidth="1.2"
-          strokeDasharray="4,4"
-          initial={{ opacity: 0.2 }}
-          animate={{ opacity: [0.2, 0.45, 0.2] }}
-          transition={{ duration: 20, repeat: Infinity, ease: "easeInOut", delay: 4 }}
-        />
-
-        {/* Observation Station Coordinates */}
         <g>
           <circle cx="280" cy="220" r="2.5" fill="#0284C7" />
           <circle cx="280" cy="220" r="8" fill="none" stroke="#0284C7" strokeWidth="0.75" opacity="0.4" />
@@ -93,7 +121,7 @@ export function AtmosphericBackground({ className = "" }: { className?: string }
 
 /**
  * WeatherContourHeader:
- * Isobar contour lines that appear directly behind page title headers.
+ * Isobar contour lines placed behind page headers.
  */
 export function WeatherContourHeader({ className = "" }: { className?: string }) {
   return (
@@ -101,7 +129,7 @@ export function WeatherContourHeader({ className = "" }: { className?: string })
       <svg width="360" height="120" viewBox="0 0 360 120" fill="none">
         <path d="M 0 60 Q 90 20 180 60 T 360 60" stroke="#0284C7" strokeWidth="1.5" />
         <path d="M 0 85 Q 90 45 180 85 T 360 85" stroke="#0369A1" strokeWidth="1.5" />
-        <path d="M 0 110 Q 90 70 180 110 T 360 110" stroke="#0F172A" strokeWidth="1.2" strokeDasharray="3 3" />
+        <path d="M 0 110 Q 90 70 180 110 T 360 110" className="stroke-slate-900 dark:stroke-slate-300" strokeWidth="1.2" strokeDasharray="3 3" />
       </svg>
     </div>
   );

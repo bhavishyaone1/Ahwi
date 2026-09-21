@@ -1,12 +1,13 @@
 "use client";
 
-import React, { useEffect, useRef, useState, useCallback } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Map as MapLibreMap, Marker } from "maplibre-gl";
 import { LocationInfo } from "@/lib/types";
 import { MapControls } from "./MapControls";
 import { MapLegend } from "./MapLegend";
 import { MapTimeline, TIME_STEPS } from "./MapTimeline";
-import { MapPin, Navigation, Sparkles } from "lucide-react";
+import { MapPin, CloudRain, Thermometer, Wind, Sparkles, ShieldAlert } from "lucide-react";
+import { useTheme } from "@/context/ThemeContext";
 
 export interface StationLocation {
   name: string;
@@ -46,8 +47,8 @@ export const WeatherMap: React.FC<WeatherMapProps> = ({
   selectedStation,
   onSelectStation,
   variable,
-  currentValue = 42.3,
-  confidence = 78,
+  currentValue,
+  confidence,
   dominantModel = "ECMWF_AIFS",
   regime = "HEAVY_RAIN",
   leadTimeHours,
@@ -55,13 +56,18 @@ export const WeatherMap: React.FC<WeatherMapProps> = ({
   activeLayer,
   onLayerChange,
 }) => {
+  const { theme } = useTheme();
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<MapLibreMap | null>(null);
-  const markersRef = useRef<Marker[]>([]);
+  const markersRef = useRef<Map<string, { marker: Marker; dotEl: HTMLElement }>>(new Map());
+  const onSelectStationRef = useRef(onSelectStation);
+  onSelectStationRef.current = onSelectStation;
+
+  const windCanvasRef = useRef<HTMLCanvasElement>(null);
   const [mapLoaded, setMapLoaded] = useState(false);
   const [webglSupported, setWebglSupported] = useState(true);
-  const [searchQuery, setSearchQuery] = useState("");
   const [isPlaying, setIsPlaying] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   // Time playback loop
   useEffect(() => {
@@ -87,12 +93,13 @@ export const WeatherMap: React.FC<WeatherMapProps> = ({
     }
   }, []);
 
-  // Initialize MapLibre GL
+  // Initialize MapLibre GL once
   useEffect(() => {
     if (!mapContainerRef.current || mapRef.current || !webglSupported) return;
 
     try {
-      // MapLibre default light basemap
+      const isDark = document.documentElement.classList.contains("dark");
+
       const map = new MapLibreMap({
         container: mapContainerRef.current,
         style: {
@@ -117,8 +124,10 @@ export const WeatherMap: React.FC<WeatherMapProps> = ({
               maxzoom: 18,
               paint: {
                 "raster-opacity": 0.85,
-                "raster-saturation": -0.6,
-                "raster-contrast": 0.1,
+                "raster-saturation": isDark ? -0.95 : -0.6,
+                "raster-contrast": isDark ? 0.4 : 0.1,
+                "raster-brightness-max": isDark ? 0.45 : 1.0,
+                "raster-brightness-min": isDark ? 0.05 : 0.0,
               },
             },
           ],
@@ -139,21 +148,31 @@ export const WeatherMap: React.FC<WeatherMapProps> = ({
 
           const el = document.createElement("div");
           el.className = "station-marker group cursor-pointer";
-          el.innerHTML = `
-            <div class="relative flex items-center justify-center">
-              <div class="h-3.5 w-3.5 rounded-full ${isSelected ? "bg-sky-600 ring-4 ring-sky-200" : "bg-slate-700 ring-2 ring-white"} shadow-md transition-transform group-hover:scale-125"></div>
-              <span class="absolute -bottom-5 whitespace-nowrap rounded bg-slate-900/90 px-1.5 py-0.5 text-[10px] font-semibold text-white shadow-xs pointer-events-none">
-                ${st.name}
-              </span>
-            </div>
-          `;
+
+          const dot = document.createElement("div");
+          dot.className = `h-3.5 w-3.5 rounded-full shadow-md transition-transform group-hover:scale-125 ${
+            isSelected
+              ? "bg-sky-500 ring-4 ring-sky-300 dark:ring-sky-800"
+              : "bg-slate-700 dark:bg-slate-300 ring-2 ring-white dark:ring-slate-900"
+          }`;
+
+          const label = document.createElement("span");
+          label.className =
+            "absolute -bottom-5 whitespace-nowrap rounded bg-slate-900/90 dark:bg-slate-100/90 px-1.5 py-0.5 text-[10px] font-semibold text-white dark:text-slate-900 shadow-xs pointer-events-none";
+          label.textContent = st.name;
+
+          const wrapper = document.createElement("div");
+          wrapper.className = "relative flex items-center justify-center";
+          wrapper.appendChild(dot);
+          wrapper.appendChild(label);
+          el.appendChild(wrapper);
 
           el.addEventListener("click", () => {
-            onSelectStation({
+            onSelectStationRef.current({
               name: st.name,
               latitude: st.lat,
               longitude: st.lon,
-              state: st.region,
+              region: st.region,
               station_id: `STN_${st.name.toUpperCase().replace(/\s+/g, "_")}`,
             });
             map.flyTo({ center: [st.lon, st.lat], zoom: 6, duration: 800 });
@@ -163,7 +182,7 @@ export const WeatherMap: React.FC<WeatherMapProps> = ({
             .setLngLat([st.lon, st.lat])
             .addTo(map);
 
-          markersRef.current.push(marker);
+          markersRef.current.set(st.name, { marker, dotEl: dot });
         });
       });
 
@@ -171,9 +190,17 @@ export const WeatherMap: React.FC<WeatherMapProps> = ({
         console.warn("MapLibre GL Notice:", e);
       });
 
+      const resizeObserver = new ResizeObserver(() => {
+        if (mapRef.current) {
+          mapRef.current.resize();
+        }
+      });
+      resizeObserver.observe(mapContainerRef.current);
+
       return () => {
-        markersRef.current.forEach((m) => m.remove());
-        markersRef.current = [];
+        resizeObserver.disconnect();
+        markersRef.current.forEach(({ marker }) => marker.remove());
+        markersRef.current.clear();
         map.remove();
         mapRef.current = null;
       };
@@ -181,10 +208,34 @@ export const WeatherMap: React.FC<WeatherMapProps> = ({
       console.warn("MapLibre GL failed to initialize, switching to fallback:", err);
       setWebglSupported(false);
     }
-  }, [webglSupported, onSelectStation, selectedStation.name]);
+  }, [webglSupported]);
 
-  // Update selected marker flyTo when station changes externally
+  // Adjust basemap raster paint when Light / Dark theme toggles
   useEffect(() => {
+    if (!mapRef.current || !mapLoaded) return;
+    const isDark = theme === "dark";
+
+    try {
+      mapRef.current.setPaintProperty("osm-tiles", "raster-saturation", isDark ? -0.95 : -0.6);
+      mapRef.current.setPaintProperty("osm-tiles", "raster-contrast", isDark ? 0.4 : 0.1);
+      mapRef.current.setPaintProperty("osm-tiles", "raster-brightness-max", isDark ? 0.45 : 1.0);
+      mapRef.current.setPaintProperty("osm-tiles", "raster-brightness-min", isDark ? 0.05 : 0.0);
+    } catch (err) {
+      // Ignore if style layer not ready
+    }
+  }, [theme, mapLoaded]);
+
+  // Update selected marker highlight and flyTo without rebuilding the map
+  useEffect(() => {
+    markersRef.current.forEach(({ dotEl }, name) => {
+      const isSelected = name === selectedStation.name;
+      dotEl.className = `h-3.5 w-3.5 rounded-full shadow-md transition-transform group-hover:scale-125 ${
+        isSelected
+          ? "bg-sky-500 ring-4 ring-sky-300 dark:ring-sky-800"
+          : "bg-slate-700 dark:bg-slate-300 ring-2 ring-white dark:ring-slate-900"
+      }`;
+    });
+
     if (mapRef.current && selectedStation.longitude && selectedStation.latitude) {
       mapRef.current.flyTo({
         center: [selectedStation.longitude, selectedStation.latitude],
@@ -192,7 +243,61 @@ export const WeatherMap: React.FC<WeatherMapProps> = ({
         essential: true,
       });
     }
-  }, [selectedStation]);
+  }, [selectedStation.name, selectedStation.longitude, selectedStation.latitude]);
+
+  // Animated Wind Particles Canvas loop
+  useEffect(() => {
+    if (activeLayer !== "wind") return;
+    const canvas = windCanvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    canvas.width = canvas.offsetWidth;
+    canvas.height = canvas.offsetHeight;
+
+    const particles: Array<{ x: number; y: number; speed: number; length: number; opacity: number }> = [];
+    for (let i = 0; i < 90; i++) {
+      particles.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        speed: 1.0 + Math.random() * 2.2,
+        length: 8 + Math.random() * 12,
+        opacity: 0.2 + Math.random() * 0.6,
+      });
+    }
+
+    let animId: number;
+    const isDark = theme === "dark";
+    const strokeColor = isDark ? "#7dd3fc" : "#0369a1";
+
+    const render = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.lineWidth = 1.3;
+      ctx.strokeStyle = strokeColor;
+
+      particles.forEach((p) => {
+        ctx.beginPath();
+        ctx.globalAlpha = p.opacity;
+        ctx.moveTo(p.x, p.y);
+        ctx.lineTo(p.x + p.length * 0.8, p.y - p.length * 0.5);
+        ctx.stroke();
+
+        p.x += p.speed * 0.8;
+        p.y -= p.speed * 0.5;
+
+        if (p.x > canvas.width || p.y < 0) {
+          p.x = Math.random() * (canvas.width * 0.7);
+          p.y = canvas.height + Math.random() * 20;
+        }
+      });
+
+      animId = requestAnimationFrame(render);
+    };
+
+    render();
+    return () => cancelAnimationFrame(animId);
+  }, [activeLayer, theme]);
 
   const handleZoomIn = () => {
     if (mapRef.current) mapRef.current.zoomIn();
@@ -212,56 +317,86 @@ export const WeatherMap: React.FC<WeatherMapProps> = ({
     }
   };
 
+  const handleSearchStation = (query: string) => {
+    setSearchQuery(query);
+    const q = query.toLowerCase().trim();
+    if (!q) return;
+    const found = INDIAN_STATIONS.find(
+      (s) => s.name.toLowerCase().includes(q) || s.region.toLowerCase().includes(q)
+    );
+    if (found) {
+      onSelectStationRef.current({
+        name: found.name,
+        latitude: found.lat,
+        longitude: found.lon,
+        region: found.region,
+      });
+    }
+  };
+
   return (
-    <div className="relative w-full h-[580px] rounded-xl border border-slate-200 bg-slate-50 overflow-hidden shadow-xs flex flex-col justify-between select-none">
-      {/* Top Map Layer Controls */}
+    <div className="relative w-full h-[620px] rounded-2xl border border-border bg-surface-secondary overflow-hidden shadow-xs flex flex-col justify-between select-none">
+      {/* Top Map Layer Controls & Floating Search */}
       <MapControls
         activeLayer={activeLayer}
         onLayerChange={onLayerChange}
         searchQuery={searchQuery}
-        onSearchChange={setSearchQuery}
+        onSearchChange={handleSearchStation}
         onZoomIn={handleZoomIn}
         onZoomOut={handleZoomOut}
         onResetView={handleResetView}
       />
 
-      {/* Main Map Canvas */}
+      {/* MapLibre DOM Container */}
       <div
         ref={mapContainerRef}
-        className="w-full h-full absolute inset-0 z-0 bg-slate-100"
-      />
+        className="absolute inset-0 z-0 h-full w-full bg-surface-secondary"
+      >
+        {!webglSupported && (
+          <div className="flex h-full w-full items-center justify-center p-6 text-center text-xs text-text-muted">
+            WebGL acceleration not detected. Using 2D meteorological cartographic fallback.
+          </div>
+        )}
+      </div>
 
-      {/* Meteorological SVG Layer Overlay on Top of Map */}
+      {/* Weather Layer Overlays */}
       <div className="pointer-events-none absolute inset-0 z-10 overflow-hidden">
         <svg
-          className="h-full w-full opacity-65 transition-opacity duration-300"
+          className="h-full w-full"
           viewBox="0 0 800 600"
           preserveAspectRatio="none"
+          fill="none"
         >
           <defs>
-            <linearGradient id="rainGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#08519c" stopOpacity="0.55" />
-              <stop offset="50%" stopColor="#2171b5" stopOpacity="0.35" />
-              <stop offset="100%" stopColor="#6baed6" stopOpacity="0.15" />
-            </linearGradient>
-            <linearGradient id="tempGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#d7301f" stopOpacity="0.5" />
-              <stop offset="50%" stopColor="#ef6548" stopOpacity="0.3" />
-              <stop offset="100%" stopColor="#fdbb84" stopOpacity="0.1" />
-            </linearGradient>
-            <linearGradient id="riskGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#dc2626" stopOpacity="0.6" />
-              <stop offset="50%" stopColor="#ea580c" stopOpacity="0.35" />
-              <stop offset="100%" stopColor="#16a34a" stopOpacity="0.1" />
-            </linearGradient>
+            <radialGradient id="precipCore" cx="48%" cy="38%" r="35%">
+              <stop offset="0%" stopColor="#49006a" stopOpacity="0.8" />
+              <stop offset="25%" stopColor="#7a0177" stopOpacity="0.65" />
+              <stop offset="50%" stopColor="#ae017e" stopOpacity="0.5" />
+              <stop offset="75%" stopColor="#dd3497" stopOpacity="0.35" />
+              <stop offset="90%" stopColor="#f768a1" stopOpacity="0.2" />
+              <stop offset="100%" stopColor="#fa9fb5" stopOpacity="0.0" />
+            </radialGradient>
+
+            <radialGradient id="tempGrad" cx="50%" cy="45%" r="40%">
+              <stop offset="0%" stopColor="#67000d" stopOpacity="0.75" />
+              <stop offset="35%" stopColor="#d7301f" stopOpacity="0.55" />
+              <stop offset="70%" stopColor="#fc8d59" stopOpacity="0.35" />
+              <stop offset="100%" stopColor="#fee8c8" stopOpacity="0.0" />
+            </radialGradient>
+
+            <radialGradient id="riskGrad" cx="46%" cy="36%" r="32%">
+              <stop offset="0%" stopColor="#990000" stopOpacity="0.85" />
+              <stop offset="45%" stopColor="#d7301f" stopOpacity="0.6" />
+              <stop offset="85%" stopColor="#fc8d59" stopOpacity="0.3" />
+              <stop offset="100%" stopColor="#ffffff" stopOpacity="0.0" />
+            </radialGradient>
           </defs>
 
-          {/* Dynamic weather layer based on activeLayer */}
           {activeLayer === "rainfall" && (
             <g>
-              <ellipse cx="380" cy="240" rx="140" ry="110" fill="url(#rainGrad)" />
-              <ellipse cx="440" cy="270" rx="90" ry="70" fill="#08306b" fillOpacity="0.4" />
-              <ellipse cx="340" cy="380" rx="120" ry="90" fill="url(#rainGrad)" />
+              <ellipse cx="380" cy="240" rx="160" ry="120" fill="url(#precipCore)" />
+              <ellipse cx="410" cy="260" rx="90" ry="70" fill="#ae017e" fillOpacity="0.45" />
+              <circle cx="430" cy="250" r="40" fill="#49006a" fillOpacity="0.55" />
             </g>
           )}
 
@@ -274,7 +409,6 @@ export const WeatherMap: React.FC<WeatherMapProps> = ({
 
           {activeLayer === "satellite" && (
             <g opacity="0.8">
-              {/* Simulated INSAT-3D IR Brightness Temp Convective Complex */}
               <ellipse cx="390" cy="250" rx="150" ry="110" fill="#FFFFFF" fillOpacity="0.55" />
               <ellipse cx="420" cy="260" rx="90" ry="70" fill="#E2E8F0" fillOpacity="0.65" />
               <circle cx="430" cy="250" r="45" fill="#CBD5E1" fillOpacity="0.75" />
@@ -304,76 +438,62 @@ export const WeatherMap: React.FC<WeatherMapProps> = ({
       {/* Animated Wind Particles Canvas */}
       {activeLayer === "wind" && (
         <canvas
+          ref={windCanvasRef}
           id="wind-particles-canvas"
           className="pointer-events-none absolute inset-0 z-10 h-full w-full opacity-75"
-          ref={(canvas) => {
-            if (!canvas) return;
-            const ctx = canvas.getContext("2d");
-            if (!ctx) return;
-            canvas.width = canvas.offsetWidth;
-            canvas.height = canvas.offsetHeight;
-
-            const particles: Array<{ x: number; y: number; speed: number; length: number; opacity: number }> = [];
-            for (let i = 0; i < 90; i++) {
-              particles.push({
-                x: Math.random() * canvas.width,
-                y: Math.random() * canvas.height,
-                speed: 1.0 + Math.random() * 2.2,
-                length: 8 + Math.random() * 12,
-                opacity: 0.2 + Math.random() * 0.6,
-              });
-            }
-
-            let animId: number;
-            const render = () => {
-              ctx.clearRect(0, 0, canvas.width, canvas.height);
-              ctx.lineWidth = 1.2;
-              ctx.strokeStyle = "#49006a";
-
-              particles.forEach((p) => {
-                ctx.beginPath();
-                ctx.globalAlpha = p.opacity;
-                ctx.moveTo(p.x, p.y);
-                // Southwesterly monsoon flow: dx > 0, dy < 0
-                ctx.lineTo(p.x + p.length * 0.8, p.y - p.length * 0.5);
-                ctx.stroke();
-
-                p.x += p.speed * 0.8;
-                p.y -= p.speed * 0.5;
-
-                if (p.x > canvas.width || p.y < 0) {
-                  p.x = Math.random() * (canvas.width * 0.7);
-                  p.y = canvas.height + Math.random() * 20;
-                }
-              });
-
-              animId = requestAnimationFrame(render);
-            };
-
-            render();
-            return () => cancelAnimationFrame(animId);
-          }}
         />
       )}
 
-      {/* Floating Selected Station Label */}
-      <div className="absolute top-16 right-3 z-20 rounded-md border border-slate-200 bg-white/95 px-3 py-2 shadow-xs backdrop-blur-xs text-xs pointer-events-auto max-w-[220px]">
-        <div className="flex items-center gap-1.5 text-slate-500 text-[11px] mb-0.5">
-          <MapPin className="h-3 w-3 text-sky-600" />
-          <span className="font-semibold text-slate-800">{selectedStation.name}</span>
-          <span className="text-[10px] font-mono text-slate-400">
-            {selectedStation.latitude.toFixed(2)}°N, {selectedStation.longitude.toFixed(2)}°E
+      {/* Floating Selected Station Observation Card (OpenWeather reference style) */}
+      <div className="absolute top-16 right-3 z-20 rounded-xl border border-border bg-surface/95 dark:bg-surface/95 p-3.5 shadow-lg backdrop-blur-md text-xs pointer-events-auto max-w-[240px] space-y-2.5 transition-colors">
+        {/* Main large readout */}
+        <div className="flex items-center justify-between">
+          <div>
+            <span className="text-2xl sm:text-3xl font-black font-mono tracking-tight text-text-primary">
+              {currentValue !== undefined ? currentValue : "--"}
+            </span>
+            <span className="text-xs font-bold font-mono text-text-muted ml-1">
+              {variable === "rainfall_mm" ? "mm" : variable === "temperature_c" ? "°C" : "m/s"}
+            </span>
+          </div>
+          <div className="h-8 w-8 rounded-lg bg-sky-50 dark:bg-sky-950/60 border border-sky-200 dark:border-sky-800 flex items-center justify-center text-sky-600 dark:text-sky-300">
+            {variable === "rainfall_mm" ? (
+              <CloudRain className="h-5 w-5" />
+            ) : variable === "temperature_c" ? (
+              <Thermometer className="h-5 w-5" />
+            ) : (
+              <Wind className="h-5 w-5" />
+            )}
+          </div>
+        </div>
+
+        {/* Station name and coordinates */}
+        <div className="flex items-center gap-1.5 text-text-muted text-[11px] pb-2 border-b border-border">
+          <MapPin className="h-3.5 w-3.5 text-sky-600 dark:text-sky-400 shrink-0" />
+          <span className="font-bold text-text-primary">{selectedStation.name}</span>
+          <span className="font-mono text-[10px]">
+            ({selectedStation.latitude.toFixed(1)}°N, {selectedStation.longitude.toFixed(1)}°E)
           </span>
         </div>
-        <div className="flex items-center justify-between pt-1 border-t border-slate-100 text-[11px]">
-          <span className="text-slate-600">AETHER Forecast:</span>
-          <span className="font-mono font-bold text-sky-700">
-            {currentValue} {variable === "rainfall_mm" ? "mm" : variable === "temperature_c" ? "°C" : "m/s"}
-          </span>
-        </div>
-        <div className="flex items-center justify-between text-[10px] text-slate-500 mt-0.5">
-          <span>Trust: <strong className="text-slate-700">{dominantModel.replace("_", " ")}</strong></span>
-          <span>Conf: <strong className="text-emerald-700">{confidence}%</strong></span>
+
+        {/* Telemetry breakdown */}
+        <div className="space-y-1 text-[11px]">
+          <div className="flex justify-between">
+            <span className="text-text-muted">Regime:</span>
+            <span className="font-semibold text-text-primary">{regime}</span>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-text-muted">Confidence:</span>
+            <span className="font-mono font-bold text-emerald-600 dark:text-emerald-400">
+              {confidence !== undefined ? `${confidence}%` : "--"}
+            </span>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-text-muted">Dominant:</span>
+            <span className="font-bold text-sky-700 dark:text-sky-300">
+              {dominantModel.replace("ECMWF_", "")}
+            </span>
+          </div>
         </div>
       </div>
 

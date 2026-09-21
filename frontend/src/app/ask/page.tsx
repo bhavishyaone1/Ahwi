@@ -99,6 +99,22 @@ export default function AskAetherPage() {
       })
       .catch((err) => {
         console.error(err);
+        setChatHistory([
+          ...newHistory,
+          {
+            sender: "aether",
+            content: {
+              headline: "I don't have sufficient data to answer this.",
+              why: [
+                "The meteorological telemetry for this inquiry could not be retrieved from the active pipeline.",
+                "Please select one of the verified operational inquiries or verify backend connectivity.",
+              ],
+              models: {},
+              weights: {},
+              timestamp: new Date().toISOString().replace("T", " ").slice(0, 16) + " UTC",
+            },
+          },
+        ]);
       })
       .finally(() => setLoading(false));
   };
@@ -112,23 +128,23 @@ export default function AskAetherPage() {
       className="space-y-4"
     >
       {/* Header */}
-      <div className="border-b border-slate-200 pb-3">
+      <div className="border-b border-slate-200 pb-3 min-w-0">
         <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-sky-50 text-sky-800 border border-sky-200 text-[11px] font-semibold">
           <HelpCircle className="h-3 w-3 text-sky-600" />
           <span>Operator Intelligence Assistant</span>
         </div>
-        <h1 className="text-2xl font-bold text-slate-950 tracking-tight mt-1">
+        <h1 className="text-2xl sm:text-3xl font-bold text-slate-950 tracking-tight mt-1">
           Ask AETHER
         </h1>
-        <p className="text-xs text-slate-500">
-          Query multi-model forecasts, confidence drivers and extreme-risk intelligence
+        <p className="text-xs text-slate-500 font-medium">
+          Query the forecast, model evidence and risk signals in natural language.
         </p>
       </div>
 
       {/* Main Two-Column Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
         {/* Left 4 Cols: Suggested Questions */}
-        <motion.div variants={fadeUp} className="lg:col-span-4 space-y-3">
+        <motion.div variants={fadeUp} className="lg:col-span-4 min-w-0 space-y-3">
           <Card className="shadow-xs border-slate-200">
             <CardHeader className="p-4 pb-2 border-b border-slate-100">
               <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider block">
@@ -159,7 +175,7 @@ export default function AskAetherPage() {
         </motion.div>
 
         {/* Right 8 Cols: Grounded Intelligence Feed */}
-        <motion.div variants={fadeUp} className="lg:col-span-8 flex flex-col space-y-3">
+        <motion.div variants={fadeUp} className="lg:col-span-8 min-w-0 flex flex-col space-y-3">
           {/* Chat Container */}
           <Card className="shadow-xs border-slate-200 bg-slate-50/40 p-4 space-y-4 min-h-[380px] max-h-[480px] overflow-y-auto">
             {chatHistory.map((msg, i) => {

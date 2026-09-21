@@ -55,10 +55,10 @@ export function ModelWeightDonut({ weights, className = "" }: ModelWeightDonutPr
 
         {/* Center label */}
         <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center text-center">
-          <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-400">
+          <span className="text-[10px] font-semibold uppercase tracking-wider text-text-muted">
             AETHER
           </span>
-          <span className="text-xs font-bold text-slate-800 leading-tight">
+          <span className="text-xs font-bold text-text-primary leading-tight">
             MODEL<br />WEIGHTS
           </span>
         </div>
@@ -73,14 +73,14 @@ export function ModelWeightDonut({ weights, className = "" }: ModelWeightDonutPr
                 className="h-2.5 w-2.5 rounded-full"
                 style={{ backgroundColor: item.color }}
               />
-              <span className="text-slate-600 font-medium">{item.name}</span>
+              <span className="text-text-secondary font-medium">{item.name}</span>
             </div>
             <motion.span
               key={item.value}
               initial={{ scale: 0.95, opacity: 0.7 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ duration: 0.25 }}
-              className="font-mono font-semibold text-slate-900"
+              className="font-mono font-semibold text-text-primary"
             >
               {item.value}%
             </motion.span>

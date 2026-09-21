@@ -4,17 +4,58 @@
 @tailwind utilities;
 
 :root {
-  --background: #f8fafc;
-  --foreground: #0f172a;
+  --background: #F8FAFC;
+  --surface: #FFFFFF;
+  --surface-secondary: #F1F5F9;
+  --surface-elevated: #FFFFFF;
+  --border: #E2E8F0;
+  --text-primary: #0F172A;
+  --text-secondary: #475569;
+  --text-muted: #64748B;
+  --aether-primary: #0284C7;
+  --aether-sky: #38BDF8;
+  --aether-success: #10B981;
+  --aether-warning: #F59E0B;
+  --aether-danger: #EF4444;
+}
+
+.dark {
+  --background: #0B0F14;
+  --surface: #11161D;
+  --surface-secondary: #171D25;
+  --surface-elevated: #1C232D;
+  --border: #26313D;
+  --text-primary: #F8FAFC;
+  --text-secondary: #CBD5E1;
+  --text-muted: #94A3B8;
+  --aether-primary: #38BDF8;
+  --aether-sky: #7DD3FC;
+  --aether-success: #34D399;
+  --aether-warning: #FBBF24;
+  --aether-danger: #F87171;
 }
 
 body {
-  color: var(--foreground);
+  color: var(--text-primary);
   background-color: var(--background);
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* Ensure all grid and flex children never blowout containers */
+* {
+  min-width: 0;
+}
+
+/* Accessibility: Respect prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 /* Custom subtle scrollbar */
@@ -23,12 +64,12 @@ body {
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #f1f5f9;
+  background: var(--surface-secondary);
 }
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
+  background: var(--border);
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: var(--text-muted);
 }

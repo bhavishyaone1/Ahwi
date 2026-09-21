@@ -71,21 +71,21 @@ export const ForecastTraceDrawer: React.FC = () => {
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "spring", stiffness: 350, damping: 32 }}
-              className="w-screen max-w-md bg-white shadow-2xl border-l border-slate-200 flex flex-col"
+              className="w-screen max-w-md bg-surface shadow-2xl border-l border-border text-text-primary flex flex-col"
             >
               {/* Header */}
-              <div className="p-4 border-b border-slate-200 flex items-center justify-between bg-slate-50/80">
+              <div className="p-4 border-b border-border flex items-center justify-between bg-surface-secondary/50">
                 <div>
                   <div className="flex items-center gap-1.5">
                     <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-text-muted">
                       Operational Lineage
                     </span>
                   </div>
-                  <h2 className="text-sm font-bold text-slate-950 mt-0.5">
+                  <h2 className="text-sm font-bold text-text-primary mt-0.5">
                     Forecast Trace & Execution
                   </h2>
-                  <p className="text-[11px] text-slate-500">
+                  <p className="text-[11px] text-text-muted">
                     {traceData
                       ? `${traceData.location} (${traceData.horizon} · ${traceData.variable})`
                       : "Inspecting pipeline..."}
@@ -94,7 +94,7 @@ export const ForecastTraceDrawer: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setIsTraceOpen(false)}
-                  className="p-1 rounded-md text-slate-400 hover:text-slate-600 hover:bg-slate-200/60 transition"
+                  className="p-1 rounded-md text-text-muted hover:text-text-primary hover:bg-surface-secondary transition"
                   aria-label="Close trace drawer"
                 >
                   <X className="w-4 h-4" />
@@ -105,21 +105,21 @@ export const ForecastTraceDrawer: React.FC = () => {
               <div className="flex-1 overflow-y-auto p-4 space-y-4">
                 {loadingTrace ? (
                   <div className="py-12 text-center space-y-3">
-                    <div className="w-6 h-6 border-2 border-sky-500 border-t-transparent rounded-full animate-spin mx-auto" />
-                    <p className="text-xs text-slate-500">Querying active execution steps...</p>
+                    <div className="w-6 h-6 border-2 border-aether-sky border-t-transparent rounded-full animate-spin mx-auto" />
+                    <p className="text-xs text-text-muted">Querying active execution steps...</p>
                   </div>
                 ) : traceData ? (
-                  <div className="relative border-l-2 border-sky-100 ml-3 space-y-5">
+                  <div className="relative border-l-2 border-aether-sky/20 ml-3 space-y-5">
                     {traceData.steps.map((s, idx) => (
                       <div key={idx} className="relative pl-5">
                         {/* Node Dot */}
-                        <div className="absolute -left-[15px] top-0.5 w-7 h-7 rounded-full bg-white border border-slate-200 shadow-xs flex items-center justify-center">
+                        <div className="absolute -left-[15px] top-0.5 w-7 h-7 rounded-full bg-surface border border-border shadow-xs flex items-center justify-center">
                           {getStepIcon(idx)}
                         </div>
 
-                        <div className="bg-slate-50/80 rounded-lg p-3 border border-slate-200/70 hover:border-sky-300 transition">
+                        <div className="bg-surface-secondary/60 rounded-lg p-3 border border-border hover:border-aether-sky/50 transition">
                           <div className="flex items-center justify-between">
-                            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                            <span className="text-[10px] font-bold text-text-muted uppercase tracking-wider">
                               Step {s.step}
                             </span>
                             <Badge variant="success" className="text-[10px] px-1.5 py-0 gap-1">
@@ -127,12 +127,12 @@ export const ForecastTraceDrawer: React.FC = () => {
                               <span>{s.status}</span>
                             </Badge>
                           </div>
-                          <h3 className="text-xs font-semibold text-slate-900 mt-1">
+                          <h3 className="text-xs font-semibold text-text-primary mt-1">
                             {s.name}
                           </h3>
 
                           {/* Detail block */}
-                          <div className="mt-2 bg-white rounded-md p-2 border border-slate-200 font-mono text-[10px] text-slate-700 overflow-x-auto">
+                          <div className="mt-2 bg-surface rounded-md p-2 border border-border font-mono text-[10px] text-text-secondary overflow-x-auto">
                             <pre className="whitespace-pre-wrap leading-relaxed">
                               {typeof s.detail === "object"
                                 ? JSON.stringify(s.detail, null, 2)
@@ -144,12 +144,12 @@ export const ForecastTraceDrawer: React.FC = () => {
                     ))}
                   </div>
                 ) : (
-                  <p className="text-xs text-slate-500 text-center py-8">No trace available.</p>
+                  <p className="text-xs text-text-muted text-center py-8">No trace available.</p>
                 )}
               </div>
 
               {/* Footer */}
-              <div className="p-3 border-t border-slate-200 bg-slate-50 text-[11px] text-slate-500 flex items-center justify-between">
+              <div className="p-3 border-t border-border bg-surface-secondary/50 text-[11px] text-text-muted flex items-center justify-between">
                 <span className="font-mono text-[10px]">MoES / NCMRWF PS 26081</span>
                 <Button
                   variant="default"

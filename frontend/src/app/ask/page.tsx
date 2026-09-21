@@ -13,7 +13,7 @@ const SUGGESTED_QUERIES = [
   "Why does AETHER trust AIFS over GFS in heavy rain?",
 ];
 
-export const AskAetherPage = () => {
+const AskAetherPage = () => {
   const [query, setQuery] = useState("");
   const [loading, setLoading] = useState(false);
   const [response, setResponse] = useState<QueryResponse | null>(null);

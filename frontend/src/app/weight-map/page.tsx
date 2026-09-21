@@ -1,14 +1,22 @@
 "use client";
 
 import React, { useState } from "react";
+import { motion } from "motion/react";
 import { useAetherData } from "../../context/AetherDataContext";
 import { Layers, MapPin, ZoomIn, ZoomOut, Info } from "lucide-react";
 import { INDIAN_STATIONS } from "../../components/WeatherMap";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { pageVariants, fadeUp } from "@/lib/motion";
 
 export default function WeightMapPage() {
-  const { variable, setVariable, leadTimeHours, setLeadTimeHours, setSelectedLocation } = useAetherData();
+  const { variable, setVariable, leadTimeHours, setLeadTimeHours, setSelectedLocation } =
+    useAetherData();
   const [selectedModel, setSelectedModel] = useState<string>("AIFS Weight");
-  const [activeSublayer, setActiveSublayer] = useState<"weights" | "agreement" | "risk">("weights");
+  const [activeSublayer, setActiveSublayer] = useState<"weights" | "agreement" | "risk">(
+    "weights"
+  );
   const [selectedRegion, setSelectedRegion] = useState<{
     name: string;
     aifs: number;
@@ -32,19 +40,25 @@ export default function WeightMapPage() {
   };
 
   return (
-    <div className="space-y-4">
+    <motion.div
+      variants={pageVariants}
+      initial="initial"
+      animate="animate"
+      exit="exit"
+      className="space-y-4"
+    >
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-2">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 pb-2">
         <div>
-          <div className="inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full bg-sky-50 text-sky-700 border border-sky-200 text-[11px] font-bold">
-            <Layers className="w-3 h-3 text-sky-600" />
+          <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-sky-50 text-sky-800 border border-sky-200 text-[11px] font-semibold">
+            <Layers className="h-3 w-3 text-sky-600" />
             <span>Spatial Model Contribution</span>
           </div>
-          <h1 className="text-2xl font-black text-slate-900 tracking-tight mt-1">
+          <h1 className="text-2xl font-bold text-slate-950 tracking-tight mt-1">
             Model Weight Map
           </h1>
           <p className="text-xs text-slate-500">
-            See which model AETHER trusts across different regions and lead times
+            See which model AETHER trusts across different regions and lead times (0.25° grid)
           </p>
         </div>
 
@@ -54,7 +68,7 @@ export default function WeightMapPage() {
           <select
             value={variable}
             onChange={(e) => setVariable(e.target.value)}
-            className="bg-white border border-slate-200 rounded-xl px-3 py-1.5 text-xs font-bold text-slate-800 shadow-xs focus:ring-1 focus:ring-sky-500 focus:outline-none"
+            className="h-8 bg-white border border-slate-200 rounded-md px-2.5 text-xs font-semibold text-slate-800 shadow-xs focus:ring-1 focus:ring-sky-500 focus:outline-none"
           >
             <option value="rainfall_mm">Rainfall</option>
             <option value="temperature_c">Temperature</option>
@@ -65,7 +79,7 @@ export default function WeightMapPage() {
           <select
             value={leadTimeHours}
             onChange={(e) => setLeadTimeHours(Number(e.target.value))}
-            className="bg-white border border-slate-200 rounded-xl px-3 py-1.5 text-xs font-bold text-slate-800 shadow-xs focus:ring-1 focus:ring-sky-500 focus:outline-none"
+            className="h-8 bg-white border border-slate-200 rounded-md px-2.5 text-xs font-semibold text-slate-800 shadow-xs focus:ring-1 focus:ring-sky-500 focus:outline-none"
           >
             <option value={6}>6 hours</option>
             <option value={12}>12 hours</option>
@@ -78,26 +92,36 @@ export default function WeightMapPage() {
           <select
             value={selectedModel}
             onChange={(e) => setSelectedModel(e.target.value)}
-            className="bg-white border border-slate-200 rounded-xl px-3 py-1.5 text-xs font-bold text-slate-800 shadow-xs focus:ring-1 focus:ring-sky-500 focus:outline-none"
+            className="h-8 bg-white border border-slate-200 rounded-md px-2.5 text-xs font-semibold text-slate-800 shadow-xs focus:ring-1 focus:ring-sky-500 focus:outline-none"
           >
             <option value="AIFS Weight">AIFS Weight</option>
-            <option value="ECMWF Weight">ECMWF Weight</option>
+            <option value="ECMWF Weight">ECMWF IFS Weight</option>
             <option value="GFS Weight">GFS Weight</option>
+            <option value="Dominant Model">Dominant Model</option>
+            <option value="Model Agreement">Model Agreement</option>
           </select>
         </div>
       </div>
 
       {/* Main Map Container */}
-      <div className="relative w-full h-[540px] bg-slate-50/70 rounded-3xl border border-slate-200 overflow-hidden shadow-xs flex flex-col justify-between">
+      <motion.div
+        variants={fadeUp}
+        className="relative w-full h-[540px] bg-slate-50/70 rounded-xl border border-slate-200 overflow-hidden shadow-xs flex flex-col justify-between"
+      >
         {/* SVG Subcontinental Dominance Canvas */}
         <div className="relative flex-1 flex items-center justify-center select-none p-2">
           <svg viewBox="0 0 600 650" className="w-full h-full max-h-[500px]">
             <defs>
               <pattern id="weight-grid" width="28" height="28" patternUnits="userSpaceOnUse">
-                <path d="M 28 0 L 0 0 0 28" fill="none" stroke="#E2E8F0" strokeWidth="0.5" strokeDasharray="2 2" />
+                <path
+                  d="M 28 0 L 0 0 0 28"
+                  fill="none"
+                  stroke="#E2E8F0"
+                  strokeWidth="0.5"
+                  strokeDasharray="2 2"
+                />
               </pattern>
 
-              {/* Spatial Weight Gradient Fields matching reference image */}
               <radialGradient id="aifsHighNorth" cx="42%" cy="28%" r="28%">
                 <stop offset="0%" stopColor="#EF4444" stopOpacity="0.8" />
                 <stop offset="35%" stopColor="#F97316" stopOpacity="0.75" />
@@ -127,7 +151,6 @@ export default function WeightMapPage() {
             <circle cx="230" cy="190" r="110" fill="url(#aifsHighNorth)" />
             <circle cx="280" cy="380" r="120" fill="url(#aifsCentral)" />
 
-            {/* Water label */}
             <text x="80" y="440" fill="#94A3B8" fontSize="10" fontStyle="italic" fontWeight="600">
               Arabian Sea
             </text>
@@ -138,41 +161,42 @@ export default function WeightMapPage() {
             {/* Stations */}
             {INDIAN_STATIONS.map((st) => {
               const { x, y } = project(st.lat, st.lon);
-              const isDelhi = st.name === "Delhi NCR";
+              const isSelected = selectedRegion.name.includes(st.name);
 
               return (
                 <g
                   key={st.name}
-                  className="cursor-pointer"
                   onClick={() => {
-                    setSelectedRegion({
-                      name: st.name,
-                      aifs: isDelhi ? 46 : 38,
-                      ecmwf: isDelhi ? 32 : 36,
-                      gfs: isDelhi ? 22 : 26,
-                    });
                     setSelectedLocation({
                       name: st.name,
                       latitude: st.lat,
                       longitude: st.lon,
                       region: st.region,
                     });
+                    setSelectedRegion({
+                      name: `${st.region} (${st.name})`,
+                      aifs: st.name === "Delhi NCR" ? 46 : st.name === "Mumbai" ? 38 : 42,
+                      ecmwf: st.name === "Delhi NCR" ? 32 : st.name === "Mumbai" ? 44 : 35,
+                      gfs: st.name === "Delhi NCR" ? 22 : st.name === "Mumbai" ? 18 : 23,
+                    });
                   }}
+                  className="cursor-pointer group"
                 >
                   <circle
                     cx={x}
                     cy={y}
-                    r="5"
-                    fill="#0F172A"
+                    r={isSelected ? 6 : 4}
+                    fill={isSelected ? "#0284C7" : "#0F172A"}
                     stroke="#FFFFFF"
                     strokeWidth="1.5"
+                    className="transition-transform group-hover:scale-125"
                   />
                   <text
-                    x={x + 7}
-                    y={y + 3}
-                    fill="#1E293B"
-                    fontSize="9.5"
-                    fontWeight="700"
+                    x={x + 8}
+                    y={y + 4}
+                    fontSize="10"
+                    fontWeight={isSelected ? "bold" : "500"}
+                    fill={isSelected ? "#0284C7" : "#334155"}
                   >
                     {st.name}
                   </text>
@@ -181,90 +205,97 @@ export default function WeightMapPage() {
             })}
           </svg>
 
-          {/* Left Legend: Model Contribution Brackets matching mockup */}
-          <div className="absolute bottom-16 left-4 z-10 bg-white/95 backdrop-blur-md rounded-xl p-3 border border-slate-200 shadow-sm text-[10px]">
-            <span className="font-bold text-slate-800 block mb-1.5">
-              {selectedModel} Contribution
+          {/* Bracket Legend matching reference image */}
+          <div className="absolute top-4 left-4 bg-white/95 backdrop-blur-xs p-3 rounded-lg border border-slate-200 shadow-xs text-xs space-y-1.5 z-10">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-1">
+              AIFS Contribution
             </span>
-            <div className="space-y-1">
-              <div className="flex items-center space-x-1.5">
-                <span className="w-3 h-2.5 rounded-xs bg-[#EF4444]" />
-                <span className="text-slate-600 font-mono">&gt; 80%</span>
-              </div>
-              <div className="flex items-center space-x-1.5">
-                <span className="w-3 h-2.5 rounded-xs bg-[#F97316]" />
-                <span className="text-slate-600 font-mono">60 - 80%</span>
-              </div>
-              <div className="flex items-center space-x-1.5">
-                <span className="w-3 h-2.5 rounded-xs bg-[#FBBF24]" />
-                <span className="text-slate-600 font-mono">40 - 60%</span>
-              </div>
-              <div className="flex items-center space-x-1.5">
-                <span className="w-3 h-2.5 rounded-xs bg-[#34D399]" />
-                <span className="text-slate-600 font-mono">20 - 40%</span>
-              </div>
-              <div className="flex items-center space-x-1.5">
-                <span className="w-3 h-2.5 rounded-xs bg-[#38BDF8]" />
-                <span className="text-slate-600 font-mono">5 - 20%</span>
-              </div>
-              <div className="flex items-center space-x-1.5">
-                <span className="w-3 h-2.5 rounded-xs bg-[#0284C7]" />
-                <span className="text-slate-600 font-mono">&lt; 5%</span>
-              </div>
+            <div className="flex items-center gap-2">
+              <span className="h-2.5 w-4 rounded-xs bg-rose-500" />
+              <span className="font-mono text-[11px]">&gt; 60%</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="h-2.5 w-4 rounded-xs bg-orange-500" />
+              <span className="font-mono text-[11px]">40–60%</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="h-2.5 w-4 rounded-xs bg-amber-400" />
+              <span className="font-mono text-[11px]">25–40%</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="h-2.5 w-4 rounded-xs bg-emerald-400" />
+              <span className="font-mono text-[11px]">15–25%</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="h-2.5 w-4 rounded-xs bg-sky-400" />
+              <span className="font-mono text-[11px]">5–15%</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="h-2.5 w-4 rounded-xs bg-blue-600" />
+              <span className="font-mono text-[11px]">&lt; 5%</span>
             </div>
           </div>
 
-          {/* Inspection Tooltip matching reference mockup */}
-          <div className="absolute top-6 right-6 z-10 bg-white/95 backdrop-blur-md rounded-2xl p-4 border border-slate-200 shadow-lg w-56">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-2 mb-2">
-              <span className="font-bold text-xs text-slate-900">{selectedRegion.name}</span>
-              <span className="text-[10px] font-mono text-slate-400">+{leadTimeHours}h</span>
+          {/* Regional Inspection Card matching reference */}
+          <div className="absolute top-4 right-4 bg-white/95 backdrop-blur-xs p-3.5 rounded-lg border border-slate-200 shadow-xs text-xs w-56 z-10">
+            <span className="font-bold text-slate-900 block mb-2">{selectedRegion.name}</span>
+            <div className="space-y-1.5 font-mono text-xs">
+              <div className="flex justify-between items-center">
+                <span className="text-slate-600 flex items-center gap-1.5">
+                  <span className="h-2 w-2 rounded-full bg-sky-600" /> AIFS:
+                </span>
+                <span className="font-bold text-sky-700">{selectedRegion.aifs}%</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-slate-600 flex items-center gap-1.5">
+                  <span className="h-2 w-2 rounded-full bg-blue-600" /> ECMWF IFS:
+                </span>
+                <span className="font-bold text-slate-800">{selectedRegion.ecmwf}%</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-slate-600 flex items-center gap-1.5">
+                  <span className="h-2 w-2 rounded-full bg-slate-500" /> GFS:
+                </span>
+                <span className="font-bold text-slate-600">{selectedRegion.gfs}%</span>
+              </div>
             </div>
-            <div className="space-y-1.5 text-xs font-semibold">
-              <div className="flex justify-between items-center text-sky-700">
-                <span>AIFS</span>
-                <span className="font-mono font-bold">{selectedRegion.aifs}%</span>
-              </div>
-              <div className="flex justify-between items-center text-indigo-700">
-                <span>ECMWF</span>
-                <span className="font-mono font-bold">{selectedRegion.ecmwf}%</span>
-              </div>
-              <div className="flex justify-between items-center text-teal-700">
-                <span>GFS</span>
-                <span className="font-mono font-bold">{selectedRegion.gfs}%</span>
-              </div>
-            </div>
+            <p className="text-[10px] text-slate-400 mt-3 pt-2 border-t border-slate-100">
+              AIFS achieves superior skill in monsoonal convection across northern terrain.
+            </p>
           </div>
         </div>
 
-        {/* Bottom Sub-layer buttons */}
-        <div className="p-3 bg-white/90 backdrop-blur-md border-t border-slate-200 flex items-center space-x-2">
-          <button
-            onClick={() => setActiveSublayer("weights")}
-            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition ${
-              activeSublayer === "weights" ? "bg-slate-900 text-white" : "bg-slate-100 text-slate-600 hover:bg-slate-200"
-            }`}
-          >
-            Model Weights
-          </button>
-          <button
-            onClick={() => setActiveSublayer("agreement")}
-            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition ${
-              activeSublayer === "agreement" ? "bg-slate-900 text-white" : "bg-slate-100 text-slate-600 hover:bg-slate-200"
-            }`}
-          >
-            Model Agreement
-          </button>
-          <button
-            onClick={() => setActiveSublayer("risk")}
-            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition ${
-              activeSublayer === "risk" ? "bg-slate-900 text-white" : "bg-slate-100 text-slate-600 hover:bg-slate-200"
-            }`}
-          >
-            Risk Layer
-          </button>
+        {/* Bottom Sublayer Filter Bar */}
+        <div className="p-3 bg-white border-t border-slate-200 flex items-center justify-between text-xs z-10">
+          <div className="flex items-center gap-1">
+            <Button
+              variant={activeSublayer === "weights" ? "scientific" : "outline"}
+              size="sm"
+              onClick={() => setActiveSublayer("weights")}
+            >
+              Model Weights
+            </Button>
+            <Button
+              variant={activeSublayer === "agreement" ? "scientific" : "outline"}
+              size="sm"
+              onClick={() => setActiveSublayer("agreement")}
+            >
+              Model Agreement
+            </Button>
+            <Button
+              variant={activeSublayer === "risk" ? "scientific" : "outline"}
+              size="sm"
+              onClick={() => setActiveSublayer("risk")}
+            >
+              Risk Layer
+            </Button>
+          </div>
+
+          <span className="text-[11px] font-mono text-slate-500 hidden sm:inline">
+            AETHER 0.25° High-Resolution Analysis Mesh
+          </span>
         </div>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }

@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
-import { Award, CheckCircle2, TrendingDown, Filter } from "lucide-react";
+import { motion } from "motion/react";
+import { Award, CheckCircle2, TrendingDown, Filter, Database, Calendar } from "lucide-react";
 import {
   LineChart,
   Line,
@@ -10,8 +11,12 @@ import {
   CartesianGrid,
   Tooltip,
   Legend,
-  ResponsiveContainer
+  ResponsiveContainer,
 } from "recharts";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { pageVariants, fadeUp } from "@/lib/motion";
 
 const LEAD_TIME_MAE_DATA = [
   { horizon: "6h", Persistence: 5.2, Equal_Weight: 3.8, IFS: 4.1, AIFS: 3.5, GFS: 4.6, AETHER: 3.1 },
@@ -39,28 +44,34 @@ export default function BenchmarkPage() {
   const [activeTab, setActiveTab] = useState<"overall" | "lead_time" | "regime" | "variable">("overall");
 
   return (
-    <div className="space-y-5">
+    <motion.div
+      variants={pageVariants}
+      initial="initial"
+      animate="animate"
+      exit="exit"
+      className="space-y-4"
+    >
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 pb-3">
         <div>
-          <div className="inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full bg-sky-50 text-sky-700 border border-sky-200 text-[11px] font-bold">
-            <Award className="w-3 h-3 text-sky-600" />
+          <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-sky-50 text-sky-800 border border-sky-200 text-[11px] font-semibold">
+            <Award className="h-3 w-3 text-sky-600" />
             <span>SIH Problem Statement 26081 Verification</span>
           </div>
-          <h1 className="text-2xl font-black text-slate-900 tracking-tight mt-1">
+          <h1 className="text-2xl font-bold text-slate-950 tracking-tight mt-1">
             Benchmark & Evaluation
           </h1>
           <p className="text-xs text-slate-500">
-            Chronological out-of-sample verification (2018–2025)
+            Chronological out-of-sample verification (2018–2022 train, 2023 val, 2024–2025 test)
           </p>
         </div>
 
-        {/* Filters matching reference mockup */}
+        {/* Filters */}
         <div className="flex flex-wrap items-center gap-2">
           <select
             value={variable}
             onChange={(e) => setVariable(e.target.value)}
-            className="bg-white border border-slate-200 rounded-xl px-3 py-1.5 text-xs font-bold text-slate-800 shadow-xs focus:ring-1 focus:ring-sky-500 focus:outline-none"
+            className="h-8 bg-white border border-slate-200 rounded-md px-2.5 text-xs font-semibold text-slate-800 shadow-xs focus:ring-1 focus:ring-sky-500 focus:outline-none"
           >
             <option value="Rainfall">Rainfall</option>
             <option value="Temperature">Temperature</option>
@@ -70,7 +81,7 @@ export default function BenchmarkPage() {
           <select
             value={leadTime}
             onChange={(e) => setLeadTime(e.target.value)}
-            className="bg-white border border-slate-200 rounded-xl px-3 py-1.5 text-xs font-bold text-slate-800 shadow-xs focus:ring-1 focus:ring-sky-500 focus:outline-none"
+            className="h-8 bg-white border border-slate-200 rounded-md px-2.5 text-xs font-semibold text-slate-800 shadow-xs focus:ring-1 focus:ring-sky-500 focus:outline-none"
           >
             <option value="6 hours">6 hours</option>
             <option value="12 hours">12 hours</option>
@@ -82,7 +93,7 @@ export default function BenchmarkPage() {
           <select
             value={region}
             onChange={(e) => setRegion(e.target.value)}
-            className="bg-white border border-slate-200 rounded-xl px-3 py-1.5 text-xs font-bold text-slate-800 shadow-xs focus:ring-1 focus:ring-sky-500 focus:outline-none"
+            className="h-8 bg-white border border-slate-200 rounded-md px-2.5 text-xs font-semibold text-slate-800 shadow-xs focus:ring-1 focus:ring-sky-500 focus:outline-none"
           >
             <option value="All India">All India</option>
             <option value="North India">North India</option>
@@ -93,7 +104,7 @@ export default function BenchmarkPage() {
           <select
             value={regime}
             onChange={(e) => setRegime(e.target.value)}
-            className="bg-white border border-slate-200 rounded-xl px-3 py-1.5 text-xs font-bold text-slate-800 shadow-xs focus:ring-1 focus:ring-sky-500 focus:outline-none"
+            className="h-8 bg-white border border-slate-200 rounded-md px-2.5 text-xs font-semibold text-slate-800 shadow-xs focus:ring-1 focus:ring-sky-500 focus:outline-none"
           >
             <option value="All regimes">All regimes</option>
             <option value="Heavy Rain">Heavy Rain</option>
@@ -103,146 +114,200 @@ export default function BenchmarkPage() {
         </div>
       </div>
 
-      {/* Sub-Tabs */}
-      <div className="flex items-center space-x-2 border-b border-slate-200 text-xs font-bold">
-        <button
-          onClick={() => setActiveTab("overall")}
-          className={`px-3.5 py-2 border-b-2 transition ${
-            activeTab === "overall" ? "border-sky-600 text-sky-700" : "border-transparent text-slate-500 hover:text-slate-800"
-          }`}
-        >
-          Overall Performance
-        </button>
-        <button
-          onClick={() => setActiveTab("lead_time")}
-          className={`px-3.5 py-2 border-b-2 transition ${
-            activeTab === "lead_time" ? "border-sky-600 text-sky-700" : "border-transparent text-slate-500 hover:text-slate-800"
-          }`}
-        >
-          By Lead Time
-        </button>
-        <button
-          onClick={() => setActiveTab("regime")}
-          className={`px-3.5 py-2 border-b-2 transition ${
-            activeTab === "regime" ? "border-sky-600 text-sky-700" : "border-transparent text-slate-500 hover:text-slate-800"
-          }`}
-        >
-          By Regime
-        </button>
-        <button
-          onClick={() => setActiveTab("variable")}
-          className={`px-3.5 py-2 border-b-2 transition ${
-            activeTab === "variable" ? "border-sky-600 text-sky-700" : "border-transparent text-slate-500 hover:text-slate-800"
-          }`}
-        >
-          By Variable
-        </button>
+      {/* Tabs with layoutId */}
+      <div className="flex items-center gap-1 border-b border-slate-200 pb-1 text-xs">
+        {[
+          { id: "overall", label: "Overall Performance" },
+          { id: "lead_time", label: "By Lead Time" },
+          { id: "regime", label: "By Regime" },
+          { id: "variable", label: "By Variable" },
+        ].map((tab) => {
+          const isActive = activeTab === tab.id;
+          return (
+            <button
+              key={tab.id}
+              type="button"
+              onClick={() => setActiveTab(tab.id as any)}
+              className={`relative px-3.5 py-1.5 font-semibold transition-colors ${
+                isActive ? "text-sky-700" : "text-slate-500 hover:text-slate-800"
+              }`}
+            >
+              {isActive && (
+                <motion.div
+                  layoutId="benchmark-tab-pill"
+                  className="absolute bottom-0 left-0 right-0 h-0.5 bg-sky-600 rounded-full"
+                  transition={{ type: "spring", stiffness: 450, damping: 32 }}
+                />
+              )}
+              {tab.label}
+            </button>
+          );
+        })}
       </div>
 
-      {/* Main Layout: Table + Lead Time Chart matching reference image */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
-        {/* Left 7 Cols: Benchmark Matrix Table */}
-        <div className="lg:col-span-7 bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-xs">
-          <div className="p-4 border-b border-slate-100 flex items-center justify-between">
-            <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">
-              Verification Matrix ({leadTime})
-            </span>
-            <span className="text-[11px] font-mono text-emerald-600 font-bold">
-              AETHER improves MAE by 18.2% vs IFS
-            </span>
-          </div>
+      {/* Main Layout: Table (7 cols) + Lead Time Chart (5 cols) */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
+        {/* Left 7 cols: Table */}
+        <motion.div variants={fadeUp} className="lg:col-span-7">
+          <Card className="shadow-xs border-slate-200">
+            <CardHeader className="p-4 pb-2 border-b border-slate-100 flex flex-row items-center justify-between space-y-0">
+              <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">
+                Verification Matrix ({leadTime})
+              </span>
+              <Badge variant="scientific" className="font-mono text-[10px]">
+                AETHER improves MAE by 18.2% vs IFS
+              </Badge>
+            </CardHeader>
 
-          <div className="overflow-x-auto">
-            <table className="w-full text-xs text-left">
-              <thead className="bg-slate-50 text-slate-500 uppercase text-[10px] font-bold border-b border-slate-200">
-                <tr>
-                  <th className="p-3">Model</th>
-                  <th className="p-3">MAE (mm)</th>
-                  <th className="p-3">RMSE (mm)</th>
-                  <th className="p-3">Bias (mm)</th>
-                  <th className="p-3">CSI</th>
-                  <th className="p-3">Brier Score</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100 font-mono">
-                {BENCHMARK_TABLE.map((row) => {
-                  const isAether = row.model === "AETHER";
-                  return (
-                    <tr
-                      key={row.model}
-                      className={`hover:bg-slate-50 ${isAether ? "bg-sky-50/60 font-bold" : ""}`}
-                    >
-                      <td className="p-3 font-sans font-semibold text-slate-900 flex items-center space-x-1.5">
-                        {isAether && <CheckCircle2 className="w-3.5 h-3.5 text-sky-600 shrink-0" />}
-                        <span>{row.model}</span>
-                      </td>
-                      <td className={`p-3 ${isAether ? "text-sky-900 font-black" : "text-slate-800"}`}>
-                        {row.mae.toFixed(2)}
-                      </td>
-                      <td className={`p-3 ${isAether ? "text-sky-900 font-black" : "text-slate-800"}`}>
-                        {row.rmse.toFixed(2)}
-                      </td>
-                      <td className="p-3 text-slate-600">
-                        {row.bias > 0 ? `+${row.bias.toFixed(2)}` : row.bias.toFixed(2)}
-                      </td>
-                      <td className={`p-3 font-bold ${isAether ? "text-emerald-700" : "text-slate-800"}`}>
-                        {row.csi.toFixed(2)}
-                      </td>
-                      <td className="p-3 text-slate-700">
-                        {row.brier.toFixed(3)}
-                      </td>
+            <CardContent className="p-0">
+              <div className="overflow-x-auto">
+                <table className="w-full text-xs text-left">
+                  <thead className="bg-slate-50 text-slate-500 uppercase text-[10px] font-bold border-b border-slate-200">
+                    <tr>
+                      <th className="p-2.5 px-3">Model</th>
+                      <th className="p-2.5 px-3">MAE (mm)</th>
+                      <th className="p-2.5 px-3">RMSE (mm)</th>
+                      <th className="p-2.5 px-3">Bias (mm)</th>
+                      <th className="p-2.5 px-3">CSI</th>
+                      <th className="p-2.5 px-3">Brier Score</th>
                     </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-        </div>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100 font-mono">
+                    {BENCHMARK_TABLE.map((row) => {
+                      const isAether = row.model === "AETHER";
+                      return (
+                        <tr
+                          key={row.model}
+                          className={`hover:bg-slate-50/50 ${
+                            isAether ? "bg-sky-50/30 font-bold" : ""
+                          }`}
+                        >
+                          <td className={`p-2.5 px-3 ${isAether ? "text-sky-900 font-black" : "text-slate-800"}`}>
+                            {row.model}
+                          </td>
+                          <td className={`p-2.5 px-3 ${isAether ? "text-sky-900 font-black" : "text-slate-700"}`}>
+                            {row.mae.toFixed(2)}
+                          </td>
+                          <td className={`p-2.5 px-3 ${isAether ? "text-sky-900 font-black" : "text-slate-700"}`}>
+                            {row.rmse.toFixed(2)}
+                          </td>
+                          <td className="p-2.5 px-3 text-slate-600">
+                            {row.bias > 0 ? `+${row.bias.toFixed(2)}` : row.bias.toFixed(2)}
+                          </td>
+                          <td className={`p-2.5 px-3 ${isAether ? "text-emerald-700 font-black" : "text-slate-700"}`}>
+                            {row.csi.toFixed(2)}
+                          </td>
+                          <td className={`p-2.5 px-3 ${isAether ? "text-emerald-700 font-black" : "text-slate-500"}`}>
+                            {row.brier.toFixed(3)}
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
 
-        {/* Right 5 Cols: Performance by Lead Time Chart */}
-        <div className="lg:col-span-5 bg-white rounded-2xl border border-slate-200 p-5 shadow-xs">
-          <div className="flex items-center justify-between mb-3">
-            <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">
-              Performance by Lead Time (MAE)
-            </span>
-            <span className="text-[10px] font-mono text-slate-400">Lower is better</span>
-          </div>
-
-          <div className="w-full h-72">
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={LEAD_TIME_MAE_DATA} margin={{ top: 10, right: 20, left: -10, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#F1F5F9" />
-                <XAxis dataKey="horizon" tick={{ fill: "#64748B", fontSize: 11, fontWeight: 600 }} />
-                <YAxis tick={{ fill: "#64748B", fontSize: 11 }} unit=" mm" />
-                <Tooltip contentStyle={{ borderRadius: "8px", fontSize: "11px" }} />
-                <Legend wrapperStyle={{ fontSize: "10px", fontWeight: 600 }} />
-                <Line type="monotone" dataKey="Persistence" stroke="#94A3B8" strokeWidth={1.5} dot={false} />
-                <Line type="monotone" dataKey="Equal_Weight" stroke="#F59E0B" strokeWidth={1.5} dot={false} />
-                <Line type="monotone" dataKey="IFS" stroke="#0284C7" strokeWidth={1.5} dot={false} />
-                <Line type="monotone" dataKey="AIFS" stroke="#6366F1" strokeWidth={1.5} dot={false} />
-                <Line type="monotone" dataKey="GFS" stroke="#14B8A6" strokeWidth={1.5} dot={false} />
-                <Line type="monotone" dataKey="AETHER" stroke="#0F172A" strokeWidth={2.8} dot={{ r: 4 }} />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
+        {/* Right 5 cols: Performance by Lead Time Chart */}
+        <motion.div variants={fadeUp} className="lg:col-span-5">
+          <Card className="shadow-xs border-slate-200">
+            <CardHeader className="p-4 pb-2 border-b border-slate-100">
+              <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider block">
+                Error Progression
+              </span>
+              <CardTitle className="text-sm font-bold text-slate-900">
+                Performance by Lead Time (MAE)
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-4">
+              <div className="w-full h-64">
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart data={LEAD_TIME_MAE_DATA} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#F1F5F9" vertical={false} />
+                    <XAxis
+                      dataKey="horizon"
+                      tick={{ fontSize: 11, fill: "#64748B" }}
+                      axisLine={{ stroke: "#E2E8F0" }}
+                      tickLine={false}
+                    />
+                    <YAxis
+                      tick={{ fontSize: 11, fill: "#64748B" }}
+                      axisLine={false}
+                      tickLine={false}
+                    />
+                    <Tooltip
+                      contentStyle={{
+                        backgroundColor: "#0F172A",
+                        borderRadius: "6px",
+                        border: "none",
+                        color: "#FFF",
+                        fontSize: "11px",
+                      }}
+                    />
+                    <Legend wrapperStyle={{ fontSize: "10px" }} />
+                    <Line
+                      type="monotone"
+                      dataKey="Persistence"
+                      stroke="#CBD5E1"
+                      strokeDasharray="3 3"
+                      strokeWidth={1.5}
+                      dot={false}
+                    />
+                    <Line
+                      type="monotone"
+                      dataKey="IFS"
+                      stroke="#2563EB"
+                      strokeWidth={1.5}
+                      dot={{ r: 2 }}
+                    />
+                    <Line
+                      type="monotone"
+                      dataKey="AIFS"
+                      stroke="#0284C7"
+                      strokeWidth={1.5}
+                      dot={{ r: 2 }}
+                    />
+                    <Line
+                      type="monotone"
+                      dataKey="AETHER"
+                      stroke="#0F172A"
+                      strokeWidth={2.5}
+                      dot={{ r: 3.5 }}
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
       </div>
 
-      {/* Footer Benchmark Statistics */}
-      <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200 text-xs text-slate-600 flex flex-wrap items-center justify-between gap-3 font-mono">
-        <div>
-          <span className="text-slate-400">Test Set Period:</span>{" "}
-          <strong className="text-slate-800">2024–2025 (Chronological Out-of-Sample)</strong>
-        </div>
-        <div>
-          <span className="text-slate-400">Total Validated Samples:</span>{" "}
-          <strong className="text-slate-800">12,480 grid-timesteps</strong>
-        </div>
-        <div>
-          <span className="text-slate-400">Evaluation Strategy:</span>{" "}
-          <strong className="text-slate-800">Strictly Causal (No Lookahead Leakage)</strong>
-        </div>
-      </div>
-    </div>
+      {/* Dataset Verification Card matching mockup */}
+      <motion.div variants={fadeUp}>
+        <Card className="shadow-xs border-slate-200 bg-slate-50/60">
+          <CardContent className="p-3.5 flex flex-wrap items-center justify-between gap-3 text-xs">
+            <div className="flex items-center gap-2">
+              <Calendar className="h-4 w-4 text-sky-600" />
+              <span className="text-slate-600">
+                Test Set Period: <strong className="text-slate-900">2024–2025 (Chronological)</strong>
+              </span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Database className="h-4 w-4 text-sky-600" />
+              <span className="text-slate-600">
+                Total Verification Samples: <strong className="text-slate-900">12,480</strong>
+              </span>
+            </div>
+            <div className="flex items-center gap-2 font-mono text-[11px] text-slate-500">
+              <span>Grid: 0.25° (~27 km)</span>
+              <span>&bull;</span>
+              <span>Truth: IMD Automatic Weather Stations + GPM</span>
+            </div>
+          </CardContent>
+        </Card>
+      </motion.div>
+    </motion.div>
   );
 }

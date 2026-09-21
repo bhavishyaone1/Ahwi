@@ -2,10 +2,25 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import { motion } from "motion/react";
 import { useAetherData } from "../../context/AetherDataContext";
 import { submitOperatorQuery } from "../../lib/api";
-import { QueryResponse } from "../../lib/types";
-import { HelpCircle, Send, Sparkles, MapPin, Database, ChevronRight, Activity, Cpu, Layers } from "lucide-react";
+import {
+  HelpCircle,
+  Send,
+  Sparkles,
+  ChevronRight,
+  Activity,
+  Cpu,
+  Layers,
+  CheckCircle2,
+  Clock,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { pageVariants, fadeUp } from "@/lib/motion";
 
 const SUGGESTED_QUESTIONS = [
   "Why does AETHER trust AIFS for rainfall in Delhi?",
@@ -17,10 +32,12 @@ const SUGGESTED_QUESTIONS = [
 ];
 
 export default function AskAetherPage() {
-  const { data } = useAetherData();
+  const { data, openTraceDrawer } = useAetherData();
   const [query, setQuery] = useState("");
   const [loading, setLoading] = useState(false);
-  const [chatHistory, setChatHistory] = useState<Array<{ sender: "user" | "aether"; content: any }>>([
+  const [chatHistory, setChatHistory] = useState<
+    Array<{ sender: "user" | "aether"; content: any }>
+  >([
     {
       sender: "user",
       content: "Why does AETHER trust AIFS for rainfall in Delhi?",
@@ -28,7 +45,13 @@ export default function AskAetherPage() {
     {
       sender: "aether",
       content: {
-        text: "AETHER currently resolves 46% weight for Delhi's rainfall forecast because: AIFS has the lowest recent error (4.3 mm) under heavy rain conditions; INSAT/GPM observations show good agreement with AIFS; Historical skill is higher in the current monsoon regime; 24-hour lead time favors AIFS over GFS.",
+        headline: "AIFS currently receives higher weight (46%) for Delhi rainfall.",
+        why: [
+          "Stronger recent 72h rainfall skill (MAE 4.3 mm vs IFS 5.4 mm)",
+          "Better regime compatibility under HEAVY_RAIN synoptic monsoon state",
+          "INSAT-3D & NASA GPM satellite consensus matches AIFS moisture flux",
+          "24-hour lead-time profile historically favors AIFS over GFS in North India",
+        ],
         models: {
           ECMWF: "39.1 mm",
           AIFS: "44.8 mm",
@@ -39,6 +62,7 @@ export default function AskAetherPage() {
           ECMWF: 32,
           GFS: 22,
         },
+        timestamp: "2026-09-22 00:00 UTC",
       },
     },
   ]);
@@ -59,13 +83,16 @@ export default function AskAetherPage() {
           {
             sender: "aether",
             content: {
-              text: res.headline + " " + res.contributing_reasons.join("; "),
+              headline: res.headline,
+              why: res.contributing_reasons,
               models: res.source_data,
               weights: {
-                [res.dominant_model.replace("ECMWF_", "")]: Number(res.dominant_weight.replace("%", "")) || 46,
+                [res.dominant_model.replace("ECMWF_", "")]:
+                  Number(res.dominant_weight.replace("%", "")) || 46,
                 ECMWF: 32,
                 GFS: 22,
               },
+              timestamp: new Date().toISOString().replace("T", " ").slice(0, 16) + " UTC",
             },
           },
         ]);
@@ -77,173 +104,193 @@ export default function AskAetherPage() {
   };
 
   return (
-    <div className="space-y-5">
+    <motion.div
+      variants={pageVariants}
+      initial="initial"
+      animate="animate"
+      exit="exit"
+      className="space-y-4"
+    >
       {/* Header */}
-      <div className="border-b border-slate-100 pb-3">
-        <div className="inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full bg-sky-50 text-sky-700 border border-sky-200 text-[11px] font-bold">
-          <HelpCircle className="w-3 h-3 text-sky-600" />
+      <div className="border-b border-slate-200 pb-3">
+        <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-sky-50 text-sky-800 border border-sky-200 text-[11px] font-semibold">
+          <HelpCircle className="h-3 w-3 text-sky-600" />
           <span>Operator Intelligence Assistant</span>
         </div>
-        <h1 className="text-2xl font-black text-slate-900 tracking-tight mt-1">
+        <h1 className="text-2xl font-bold text-slate-950 tracking-tight mt-1">
           Ask AETHER
         </h1>
         <p className="text-xs text-slate-500">
-          Ask questions in natural language; get grounded answers from real model data
+          Query multi-model forecasts, confidence drivers and extreme-risk intelligence
         </p>
       </div>
 
       {/* Main Two-Column Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
         {/* Left 4 Cols: Suggested Questions */}
-        <div className="lg:col-span-4 bg-white rounded-2xl border border-slate-200 p-5 shadow-xs space-y-3">
-          <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider block">
-            Suggested Questions
-          </span>
+        <motion.div variants={fadeUp} className="lg:col-span-4 space-y-3">
+          <Card className="shadow-xs border-slate-200">
+            <CardHeader className="p-4 pb-2 border-b border-slate-100">
+              <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider block">
+                Suggested Questions
+              </span>
+              <CardTitle className="text-sm font-bold text-slate-900">
+                Operational Inquiries
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-4 space-y-2">
+              {SUGGESTED_QUESTIONS.map((sq, i) => (
+                <button
+                  key={i}
+                  type="button"
+                  onClick={() => handleSend(sq)}
+                  className="w-full text-left p-2.5 rounded-md border border-slate-200/80 bg-slate-50/60 hover:bg-sky-50 hover:border-sky-200 text-xs text-slate-700 font-medium transition flex items-center justify-between group"
+                >
+                  <span className="line-clamp-2">{sq}</span>
+                  <ChevronRight className="h-3.5 w-3.5 text-slate-400 group-hover:text-sky-600 shrink-0 ml-1.5" />
+                </button>
+              ))}
 
-          <div className="space-y-2">
-            {SUGGESTED_QUESTIONS.map((sq, i) => (
-              <button
-                key={i}
-                onClick={() => handleSend(sq)}
-                className="w-full text-left p-2.5 rounded-xl border border-slate-100 bg-slate-50 hover:bg-sky-50 hover:border-sky-200 text-xs text-slate-700 font-medium transition flex items-center justify-between group"
-              >
-                <span className="line-clamp-2">{sq}</span>
-                <ChevronRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-sky-600 shrink-0 ml-1.5" />
-              </button>
-            ))}
-          </div>
+              <div className="pt-3 border-t border-slate-100 text-[11px] text-slate-400 leading-relaxed">
+                * All responses are grounded in active pipeline telemetry. Zero hallucinated numerical forecasts.
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
 
-          <div className="pt-3 border-t border-slate-100 text-[11px] text-slate-400 leading-relaxed">
-            * All responses are grounded in active pipeline telemetry. Zero hallucinated metrics.
-          </div>
-        </div>
-
-        {/* Right 8 Cols: Conversational Feed matching reference image */}
-        <div className="lg:col-span-8 flex flex-col space-y-4">
+        {/* Right 8 Cols: Grounded Intelligence Feed */}
+        <motion.div variants={fadeUp} className="lg:col-span-8 flex flex-col space-y-3">
           {/* Chat Container */}
-          <div className="bg-slate-50/60 rounded-2xl border border-slate-200 p-4 space-y-4 min-h-[380px] max-h-[460px] overflow-y-auto">
+          <Card className="shadow-xs border-slate-200 bg-slate-50/40 p-4 space-y-4 min-h-[380px] max-h-[480px] overflow-y-auto">
             {chatHistory.map((msg, i) => {
               if (msg.sender === "user") {
                 return (
                   <div key={i} className="flex justify-end">
-                    <div className="bg-sky-600 text-white text-xs font-semibold px-4 py-2.5 rounded-2xl rounded-tr-xs shadow-xs max-w-md">
+                    <div className="bg-sky-600 text-white text-xs font-medium px-3.5 py-2 rounded-lg rounded-tr-xs shadow-xs max-w-md">
                       {msg.content}
                     </div>
                   </div>
                 );
               }
 
-              const { text, models, weights } = msg.content;
+              const { headline, why, models, weights, timestamp } = msg.content;
 
               return (
                 <div key={i} className="flex justify-start">
-                  <div className="bg-white border border-slate-200 rounded-2xl rounded-tl-xs p-5 shadow-sm max-w-xl space-y-4 text-xs">
+                  <div className="bg-white border border-slate-200 rounded-lg rounded-tl-xs p-4 shadow-xs max-w-xl space-y-3 text-xs">
                     {/* Bot header */}
-                    <div className="flex items-center space-x-2">
-                      <div className="w-6 h-6 rounded-lg bg-sky-600 text-white font-bold text-xs flex items-center justify-center">
-                        Æ
+                    <div className="flex items-center justify-between border-b border-slate-100 pb-2">
+                      <div className="flex items-center gap-1.5">
+                        <div className="h-5 w-5 rounded bg-sky-600 text-white font-bold text-[10px] flex items-center justify-center">
+                          Æ
+                        </div>
+                        <span className="font-bold text-slate-900 text-xs">AETHER</span>
+                        <Badge variant="scientific" className="text-[10px] py-0 px-1.5">
+                          Grounded Pipeline
+                        </Badge>
                       </div>
-                      <span className="font-extrabold text-slate-900 text-xs">AETHER</span>
-                      <span className="text-[10px] text-slate-400">· Grounded Operational Inference</span>
-                    </div>
-
-                    {/* Explanatory text */}
-                    <p className="text-slate-700 leading-relaxed font-normal">
-                      {text}
-                    </p>
-
-                    {/* Model Comparison */}
-                    <div className="p-3 bg-slate-50 rounded-xl border border-slate-100 space-y-1.5">
-                      <span className="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">
-                        Model Comparison (24h rainfall, Delhi NCR)
+                      <span className="text-[10px] font-mono text-slate-400 flex items-center gap-1">
+                        <Clock className="h-3 w-3" />
+                        {timestamp || "Active"}
                       </span>
-                      <div className="grid grid-cols-3 gap-2 font-mono text-xs">
-                        {Object.entries(models || {}).map(([m, val]) => (
-                          <div key={m} className="bg-white p-1.5 rounded-lg border border-slate-200 text-center">
-                            <span className="text-[10px] text-slate-500 block">{m}</span>
-                            <span className="font-bold text-slate-900">{String(val)}</span>
-                          </div>
-                        ))}
-                      </div>
                     </div>
 
-                    {/* Model Weights Progress */}
-                    <div className="space-y-1.5">
-                      <span className="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">
-                        24-Hour Model Weights
+                    {/* ANSWER */}
+                    <div>
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-1">
+                        ANSWER
                       </span>
-                      <div className="space-y-1 text-xs">
-                        {Object.entries(weights || {}).map(([m, w]) => (
-                          <div key={m} className="space-y-0.5">
-                            <div className="flex justify-between text-[11px] font-semibold">
-                              <span className="text-slate-700">{m}</span>
-                              <span className="font-mono text-slate-900">{String(w)}%</span>
-                            </div>
-                            <div className="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
-                              <div
-                                className="bg-sky-600 h-full rounded-full"
-                                style={{ width: `${Number(w) || 0}%` }}
-                              />
-                            </div>
-                          </div>
-                        ))}
-                      </div>
+                      <p className="text-slate-900 font-semibold leading-relaxed">
+                        {headline}
+                      </p>
                     </div>
 
-                    {/* 4 Action Buttons matching reference mockup */}
+                    {/* WHY */}
+                    {why && why.length > 0 && (
+                      <div className="space-y-1 pt-1">
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">
+                          WHY
+                        </span>
+                        <ul className="space-y-1 text-slate-700 pl-1">
+                          {why.map((reason: string, rIdx: number) => (
+                            <li key={rIdx} className="flex items-start gap-1.5">
+                              <span className="h-1.5 w-1.5 rounded-full bg-sky-500 mt-1.5 shrink-0" />
+                              <span>{reason}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+
+                    {/* EVIDENCE */}
+                    {models && (
+                      <div className="p-2.5 bg-slate-50 rounded-md border border-slate-100 space-y-1">
+                        <span className="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">
+                          EVIDENCE (Source Models)
+                        </span>
+                        <div className="grid grid-cols-3 gap-2 font-mono text-xs">
+                          {Object.entries(models).map(([mName, val]) => (
+                            <div key={mName} className="p-1.5 bg-white rounded border border-slate-200/60">
+                              <span className="text-[10px] text-slate-500 block truncate">{mName}</span>
+                              <span className="font-bold text-slate-900">{String(val)}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Action buttons matching prompt */}
                     <div className="pt-2 border-t border-slate-100 flex flex-wrap gap-2">
-                      <Link
-                        href="/forecast"
-                        className="px-3 py-1.5 rounded-lg bg-sky-50 text-sky-700 border border-sky-200 hover:bg-sky-100 font-bold text-[11px] transition"
+                      <Button
+                        variant="outline"
+                        size="xs"
+                        onClick={openTraceDrawer}
+                        className="gap-1 text-sky-700"
                       >
-                        View Forecast
+                        <Activity className="h-3 w-3" />
+                        <span>View Forecast Trace</span>
+                      </Button>
+                      <Link href="/models">
+                        <Button variant="outline" size="xs" className="gap-1 text-slate-700">
+                          <Cpu className="h-3 w-3" />
+                          <span>View SHAP Attribution</span>
+                        </Button>
                       </Link>
-                      <Link
-                        href="/models"
-                        className="px-3 py-1.5 rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 font-bold text-[11px] transition"
-                      >
-                        View Model Evidence
-                      </Link>
-                      <Link
-                        href="/"
-                        className="px-3 py-1.5 rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 font-bold text-[11px] transition"
-                      >
-                        View Map
-                      </Link>
-                      <Link
-                        href="/models"
-                        className="px-3 py-1.5 rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 font-bold text-[11px] transition"
-                      >
-                        View SHAP
+                      <Link href="/forecast">
+                        <Button variant="outline" size="xs" className="gap-1 text-slate-700">
+                          <Layers className="h-3 w-3" />
+                          <span>View Models</span>
+                        </Button>
                       </Link>
                     </div>
                   </div>
                 </div>
               );
             })}
-          </div>
+          </Card>
 
-          {/* Input Bar */}
-          <div className="bg-white rounded-2xl border border-slate-200 p-2 shadow-xs flex items-center space-x-2">
-            <input
+          {/* Large Query Input */}
+          <div className="flex gap-2">
+            <Input
               type="text"
+              placeholder="Ask AETHER about forecasts, model trust drivers, or severe risk..."
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && handleSend()}
-              placeholder="Ask why AETHER made a forecast decision..."
-              className="flex-1 px-4 py-2 text-xs text-slate-800 placeholder-slate-400 focus:outline-none"
+              className="h-10 text-xs bg-white"
             />
-            <button
+            <Button
+              variant="default"
               onClick={() => handleSend()}
-              disabled={loading}
-              className="px-4 py-2 bg-slate-900 text-white rounded-xl text-xs font-bold hover:bg-slate-800 transition flex items-center space-x-1.5 disabled:opacity-50"
+              disabled={loading || !query.trim()}
+              className="h-10 px-4 gap-1.5"
             >
-              <span>{loading ? "Analyzing..." : "Ask"}</span>
-              <Send className="w-3.5 h-3.5" />
-            </button>
+              <Send className="h-3.5 w-3.5" />
+              <span>Query</span>
+            </Button>
           </div>
-        </div>
+        </motion.div>
       </div>
-    </div>
+    </motion.div>
   );
 }

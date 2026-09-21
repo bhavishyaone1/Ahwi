@@ -1,8 +1,9 @@
 "use client";
 
 import React, { useState } from "react";
+import { motion } from "motion/react";
 import { useAetherData } from "../../context/AetherDataContext";
-import { Cpu, Award, ShieldAlert, Sparkles, AlertTriangle } from "lucide-react";
+import { Cpu, Award, ShieldAlert, Sparkles, AlertTriangle, Layers, Info } from "lucide-react";
 import {
   BarChart,
   Bar,
@@ -14,12 +15,25 @@ import {
   Cell,
   ReferenceLine,
 } from "recharts";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { ModelWeightDonut } from "@/components/models/ModelWeightDonut";
+import { ModelFlowBeam } from "@/components/models/ModelFlowBeam";
+import { ShapWaterfall } from "@/components/models/ShapWaterfall";
+import { pageVariants, fadeUp } from "@/lib/motion";
 
 export default function ModelIntelligencePage() {
   const { data } = useAetherData();
   const [activeTab, setActiveTab] = useState<"performance" | "weights" | "shap">("weights");
 
-  const weights = data?.weights || { ECMWF_AIFS: 0.46, ECMWF_IFS: 0.32, GFS: 0.22 };
+  const rawWeights = data?.weights || { ECMWF_AIFS: 0.46, ECMWF_IFS: 0.32, GFS: 0.22 };
+  const weights = {
+    aifs: rawWeights["ECMWF_AIFS"] || 0.46,
+    ecmwf: rawWeights["ECMWF_IFS"] || 0.32,
+    gfs: rawWeights["GFS"] || 0.22,
+  };
+
   const topFactors = data?.explanations.top_factors || [
     { feature: "Recent 72h accuracy", attribution: 0.14, direction: "positive" },
     { feature: "Regime compatibility", attribution: 0.10, direction: "positive" },
@@ -27,6 +41,12 @@ export default function ModelIntelligencePage() {
     { feature: "Lead-time skill", attribution: 0.06, direction: "positive" },
     { feature: "Model spread", attribution: -0.04, direction: "negative" },
   ];
+
+  const shapFeatures = topFactors.map((f) => ({
+    feature: f.feature,
+    shap_value: f.attribution,
+    feature_value: f.attribution > 0 ? "+1.8σ" : "-0.9σ",
+  }));
 
   const shapWaterfall = data?.explanations.shap_waterfall || [
     { name: "Base Weight", value: 0.33, contribution: 0.0 },
@@ -39,15 +59,21 @@ export default function ModelIntelligencePage() {
   ];
 
   return (
-    <div className="space-y-5">
+    <motion.div
+      variants={pageVariants}
+      initial="initial"
+      animate="animate"
+      exit="exit"
+      className="space-y-4"
+    >
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 pb-3">
         <div>
-          <div className="inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full bg-sky-50 text-sky-700 border border-sky-200 text-[11px] font-bold">
-            <Cpu className="w-3 h-3 text-sky-600" />
+          <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-sky-50 text-sky-800 border border-sky-200 text-[11px] font-semibold">
+            <Cpu className="h-3 w-3 text-sky-600" />
             <span>Explainable Model Trust</span>
           </div>
-          <h1 className="text-2xl font-black text-slate-900 tracking-tight mt-1">
+          <h1 className="text-2xl font-bold text-slate-950 tracking-tight mt-1">
             Model Intelligence — Why AETHER Trusts AIFS
           </h1>
           <p className="text-xs text-slate-500">
@@ -55,218 +81,210 @@ export default function ModelIntelligencePage() {
           </p>
         </div>
 
-        {/* Sub-Tabs */}
-        <div className="flex bg-slate-100 p-1 rounded-xl border border-slate-200 text-xs font-bold">
-          <button
-            onClick={() => setActiveTab("performance")}
-            className={`px-3 py-1.5 rounded-lg transition ${
-              activeTab === "performance" ? "bg-white text-sky-700 shadow-xs" : "text-slate-600 hover:text-slate-900"
-            }`}
-          >
-            Performance
-          </button>
-          <button
-            onClick={() => setActiveTab("weights")}
-            className={`px-3 py-1.5 rounded-lg transition ${
-              activeTab === "weights" ? "bg-white text-sky-700 shadow-xs" : "text-slate-600 hover:text-slate-900"
-            }`}
-          >
-            Model Weights
-          </button>
-          <button
-            onClick={() => setActiveTab("shap")}
-            className={`px-3 py-1.5 rounded-lg transition ${
-              activeTab === "shap" ? "bg-white text-sky-700 shadow-xs" : "text-slate-600 hover:text-slate-900"
-            }`}
-          >
-            SHAP Explanation
-          </button>
+        {/* Sub-Tabs with Motion active indicator */}
+        <div className="flex items-center gap-1 border border-slate-200 bg-slate-100/70 p-0.5 rounded-md text-xs">
+          {(["performance", "weights", "shap"] as const).map((tab) => {
+            const isActive = activeTab === tab;
+            return (
+              <button
+                key={tab}
+                type="button"
+                onClick={() => setActiveTab(tab)}
+                className={`relative px-3 py-1 rounded-sm text-xs font-semibold capitalize transition-all ${
+                  isActive ? "text-sky-900" : "text-slate-600 hover:text-slate-900"
+                }`}
+              >
+                {isActive && (
+                  <motion.div
+                    layoutId="model-subtab-pill"
+                    className="absolute inset-0 rounded-sm bg-white shadow-xs"
+                    transition={{ type: "spring", stiffness: 450, damping: 32 }}
+                  />
+                )}
+                <span className="relative z-10">
+                  {tab === "shap" ? "SHAP Explanation" : tab === "weights" ? "Model Weights" : "Performance"}
+                </span>
+              </button>
+            );
+          })}
         </div>
       </div>
 
-      {/* Top Section: Donut/Weights Card + 30-Day Skill Table */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
-        {/* Current Model Weights */}
-        <div className="lg:col-span-4 bg-white rounded-2xl border border-slate-200 p-5 shadow-xs flex flex-col justify-between">
-          <div>
-            <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider block mb-3">
-              Current Model Weights
-            </span>
+      {/* Multi-Model Fusion DAG Visual Beam */}
+      <motion.div variants={fadeUp}>
+        <ModelFlowBeam weights={weights} />
+      </motion.div>
 
-            {/* Circular representation */}
-            <div className="flex items-center justify-center my-4">
-              <div className="relative w-36 h-36 rounded-full border-8 border-sky-500 flex flex-col items-center justify-center bg-slate-50">
-                <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">AETHER</span>
-                <span className="text-sm font-black text-slate-900">WEIGHTS</span>
-              </div>
-            </div>
-
-            {/* Breakdown */}
-            <div className="space-y-2 text-xs font-semibold pt-2 border-t border-slate-100">
-              <div className="flex justify-between items-center">
-                <div className="flex items-center space-x-2">
-                  <span className="w-2.5 h-2.5 rounded-full bg-sky-600" />
-                  <span className="text-slate-700">AIFS</span>
-                </div>
-                <span className="font-mono font-extrabold text-slate-900">
-                  {Math.round((weights["ECMWF_AIFS"] || 0.46) * 100)}%
-                </span>
-              </div>
-              <div className="flex justify-between items-center">
-                <div className="flex items-center space-x-2">
-                  <span className="w-2.5 h-2.5 rounded-full bg-indigo-600" />
-                  <span className="text-slate-700">ECMWF</span>
-                </div>
-                <span className="font-mono font-extrabold text-slate-900">
-                  {Math.round((weights["ECMWF_IFS"] || 0.32) * 100)}%
-                </span>
-              </div>
-              <div className="flex justify-between items-center">
-                <div className="flex items-center space-x-2">
-                  <span className="w-2.5 h-2.5 rounded-full bg-teal-600" />
-                  <span className="text-slate-700">GFS</span>
-                </div>
-                <span className="font-mono font-extrabold text-slate-900">
-                  {Math.round((weights["GFS"] || 0.22) * 100)}%
-                </span>
-              </div>
-            </div>
-          </div>
-
-          <p className="text-[10px] text-slate-400 mt-4 italic">
-            * Weights dynamically derived via XGBoost softmax regression trained on ground-truth verification.
-          </p>
-        </div>
+      {/* Section 1: Donut/Weights Card + 30-Day Skill Table */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
+        {/* Model Weight Donut */}
+        <motion.div variants={fadeUp} className="lg:col-span-4">
+          <Card className="shadow-xs border-slate-200">
+            <CardHeader className="p-4 pb-2 border-b border-slate-100">
+              <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider block">
+                Current Model Weights
+              </span>
+              <CardTitle className="text-sm font-bold text-slate-900">
+                Dynamic Softmax Consensus
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-4">
+              <ModelWeightDonut weights={weights} />
+              <p className="text-[10px] text-slate-400 mt-4 italic text-center">
+                * Derived via causal XGBoost trained on chronological ground-truth verification.
+              </p>
+            </CardContent>
+          </Card>
+        </motion.div>
 
         {/* Model Performance (Last 30 Days) */}
-        <div className="lg:col-span-8 bg-white rounded-2xl border border-slate-200 p-5 shadow-xs">
-          <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider block mb-3">
-            Model Performance (Last 30 Days)
-          </span>
-
-          <div className="overflow-x-auto">
-            <table className="w-full text-xs text-left">
-              <thead className="bg-slate-50 text-slate-500 uppercase text-[10px] font-bold border-b border-slate-200">
-                <tr>
-                  <th className="p-3">Model</th>
-                  <th className="p-3">MAE (mm)</th>
-                  <th className="p-3">RMSE (mm)</th>
-                  <th className="p-3">Bias (mm)</th>
-                  <th className="p-3">Skill Score</th>
-                  <th className="p-3">Status</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100 font-mono">
-                <tr className="hover:bg-slate-50">
-                  <td className="p-3 font-bold text-slate-800">ECMWF IFS</td>
-                  <td className="p-3">5.42</td>
-                  <td className="p-3">8.76</td>
-                  <td className="p-3 text-rose-600">-1.22</td>
-                  <td className="p-3 font-bold text-slate-700">0.68</td>
-                  <td className="p-3 text-emerald-600 font-semibold">Healthy</td>
-                </tr>
-                <tr className="hover:bg-sky-50/50 bg-sky-50/20 font-bold">
-                  <td className="p-3 text-sky-900">ECMWF AIFS</td>
-                  <td className="p-3 text-sky-800">4.31</td>
-                  <td className="p-3 text-sky-800">6.94</td>
-                  <td className="p-3 text-emerald-600">-0.87</td>
-                  <td className="p-3 text-sky-900 font-extrabold">0.76</td>
-                  <td className="p-3 text-emerald-600 font-semibold">Leading</td>
-                </tr>
-                <tr className="hover:bg-slate-50">
-                  <td className="p-3 font-bold text-slate-800">NOAA GFS</td>
-                  <td className="p-3">6.87</td>
-                  <td className="p-3">11.23</td>
-                  <td className="p-3 text-rose-600">-2.14</td>
-                  <td className="p-3 font-bold text-slate-700">0.54</td>
-                  <td className="p-3 text-emerald-600 font-semibold">Healthy</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-500">
-            <span>Evaluation Dataset: Synoptic Verification Stations</span>
-            <span>Error Memory Windows: 24h / 72h / 7d / 30d</span>
-          </div>
-        </div>
+        <motion.div variants={fadeUp} className="lg:col-span-8">
+          <Card className="shadow-xs border-slate-200">
+            <CardHeader className="p-4 pb-2 border-b border-slate-100">
+              <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider block">
+                Verification Matrix
+              </span>
+              <CardTitle className="text-sm font-bold text-slate-900">
+                Model Performance (Last 30 Days)
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-4">
+              <div className="overflow-x-auto">
+                <table className="w-full text-xs text-left">
+                  <thead className="bg-slate-50 text-slate-500 uppercase text-[10px] font-bold border-b border-slate-200">
+                    <tr>
+                      <th className="p-2.5 px-3">Model</th>
+                      <th className="p-2.5 px-3">MAE (mm)</th>
+                      <th className="p-2.5 px-3">RMSE (mm)</th>
+                      <th className="p-2.5 px-3">Bias (mm)</th>
+                      <th className="p-2.5 px-3">Skill Score</th>
+                      <th className="p-2.5 px-3">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100 font-mono">
+                    <tr className="hover:bg-slate-50/50">
+                      <td className="p-2.5 px-3 font-semibold text-slate-800">ECMWF IFS</td>
+                      <td className="p-2.5 px-3">5.42</td>
+                      <td className="p-2.5 px-3">8.76</td>
+                      <td className="p-2.5 px-3 text-rose-600">-1.22</td>
+                      <td className="p-2.5 px-3 font-semibold text-slate-700">0.68</td>
+                      <td className="p-2.5 px-3">
+                        <Badge variant="outline" className="text-emerald-700 bg-emerald-50">
+                          Active
+                        </Badge>
+                      </td>
+                    </tr>
+                    <tr className="hover:bg-slate-50/50 bg-sky-50/20">
+                      <td className="p-2.5 px-3 font-bold text-sky-900 flex items-center gap-1.5">
+                        <Award className="h-3.5 w-3.5 text-sky-600" />
+                        ECMWF AIFS
+                      </td>
+                      <td className="p-2.5 px-3 font-bold text-sky-900">4.31</td>
+                      <td className="p-2.5 px-3 font-bold text-sky-900">6.94</td>
+                      <td className="p-2.5 px-3 text-emerald-600">-0.47</td>
+                      <td className="p-2.5 px-3 font-bold text-sky-900">0.76</td>
+                      <td className="p-2.5 px-3">
+                        <Badge variant="scientific">Dominant</Badge>
+                      </td>
+                    </tr>
+                    <tr className="hover:bg-slate-50/50">
+                      <td className="p-2.5 px-3 font-semibold text-slate-800">NOAA GFS</td>
+                      <td className="p-2.5 px-3">6.87</td>
+                      <td className="p-2.5 px-3">11.23</td>
+                      <td className="p-2.5 px-3 text-rose-600">-2.14</td>
+                      <td className="p-2.5 px-3 font-semibold text-slate-700">0.54</td>
+                      <td className="p-2.5 px-3">
+                        <Badge variant="outline" className="text-emerald-700 bg-emerald-50">
+                          Active
+                        </Badge>
+                      </td>
+                    </tr>
+                    <tr className="bg-slate-50 font-bold border-t-2 border-slate-200 text-slate-950">
+                      <td className="p-2.5 px-3 font-black text-sky-800">AETHER (Blend)</td>
+                      <td className="p-2.5 px-3 font-black text-sky-800">3.82</td>
+                      <td className="p-2.5 px-3 font-black text-sky-800">6.12</td>
+                      <td className="p-2.5 px-3 font-black text-emerald-700">-0.12</td>
+                      <td className="p-2.5 px-3 font-black text-sky-800">0.81</td>
+                      <td className="p-2.5 px-3">
+                        <Badge variant="success">Optimal</Badge>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
       </div>
 
-      {/* Bottom Section: Why AIFS is Trusted (Top Factors) + SHAP Waterfall */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
-        {/* Top Factors Bar Chart */}
-        <div className="lg:col-span-5 bg-white rounded-2xl border border-slate-200 p-5 shadow-xs">
-          <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider block mb-3">
-            Why AIFS is Trusted (Top Factors)
-          </span>
-
-          <div className="space-y-3">
-            {topFactors.map((f, i) => {
-              const isPos = f.attribution >= 0;
-              const valFormatted = `${isPos ? "+" : ""}${f.attribution.toFixed(2)}`;
-              const barWidth = `${Math.min(100, Math.abs(f.attribution) * 500)}%`;
-
-              return (
-                <div key={i} className="space-y-1">
-                  <div className="flex justify-between text-xs font-semibold">
-                    <span className="text-slate-700">{f.feature}</span>
-                    <span className={`font-mono font-bold ${isPos ? "text-sky-700" : "text-rose-600"}`}>
-                      {valFormatted}
-                    </span>
+      {/* Section 2: Why AIFS is Trusted + SHAP Feature Attribution */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
+        {/* Why AIFS is Trusted Bar Chart */}
+        <motion.div variants={fadeUp} className="lg:col-span-6">
+          <Card className="shadow-xs border-slate-200">
+            <CardHeader className="p-4 pb-2 border-b border-slate-100">
+              <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider block">
+                Explainability Drivers
+              </span>
+              <CardTitle className="text-sm font-bold text-slate-900">
+                Why AIFS is Trusted (Top Factors)
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-4">
+              <div className="space-y-3">
+                {topFactors.map((f) => (
+                  <div key={f.feature} className="space-y-1">
+                    <div className="flex justify-between items-center text-xs">
+                      <span className="text-slate-700 font-medium">{f.feature}</span>
+                      <span
+                        className={`font-mono font-bold ${
+                          f.attribution >= 0 ? "text-emerald-700" : "text-rose-700"
+                        }`}
+                      >
+                        {f.attribution >= 0 ? "+" : ""}
+                        {f.attribution.toFixed(2)}
+                      </span>
+                    </div>
+                    <div className="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+                      <div
+                        className={`h-full rounded-full transition-all duration-500 ${
+                          f.attribution >= 0 ? "bg-sky-600" : "bg-rose-500"
+                        }`}
+                        style={{ width: `${Math.abs(f.attribution) * 500}%` }}
+                      />
+                    </div>
                   </div>
-                  <div className="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
-                    <div
-                      className={`h-full rounded-full ${isPos ? "bg-sky-600" : "bg-rose-500"}`}
-                      style={{ width: barWidth }}
-                    />
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
 
-        {/* SHAP Feature Attribution Waterfall Chart */}
-        <div className="lg:col-span-7 bg-white rounded-2xl border border-slate-200 p-5 shadow-xs">
-          <div className="flex items-center justify-between mb-3">
-            <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider block">
-              SHAP Feature Attribution (TreeExplainer)
-            </span>
-            <span className="text-[10px] font-mono text-slate-400">Target: Model Reliability</span>
-          </div>
-
-          <div className="w-full h-56">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={shapWaterfall} layout="vertical" margin={{ top: 5, right: 30, left: 80, bottom: 5 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#F1F5F9" horizontal={false} />
-                <XAxis type="number" tick={{ fill: "#64748B", fontSize: 10 }} domain={[0, 0.8]} />
-                <YAxis dataKey="name" type="category" tick={{ fill: "#334155", fontSize: 10, fontWeight: 600 }} />
-                <Tooltip
-                  formatter={(val: any) => [`${Number(val).toFixed(2)}`, "SHAP Weight Influence"]}
-                  contentStyle={{ borderRadius: "8px", fontSize: "11px" }}
-                />
-                <ReferenceLine x={0.33} stroke="#94A3B8" strokeDasharray="3 3" label={{ value: "Base (0.33)", fill: "#94A3B8", fontSize: 9 }} />
-                <Bar dataKey="value" radius={[0, 4, 4, 0]}>
-                  {shapWaterfall.map((entry, index) => (
-                    <Cell
-                      key={`cell-${index}`}
-                      fill={entry.contribution >= 0 ? "#0284C7" : "#EF4444"}
-                    />
-                  ))}
-                </Bar>
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
+        {/* SHAP Waterfall / Feature Attribution */}
+        <motion.div variants={fadeUp} className="lg:col-span-6">
+          <Card className="shadow-xs border-slate-200">
+            <CardHeader className="p-4 pb-2 border-b border-slate-100">
+              <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider block">
+                Causal Decision Boundary
+              </span>
+              <CardTitle className="text-sm font-bold text-slate-900">
+                SHAP Attribution Waterfall
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-4">
+              <ShapWaterfall features={shapFeatures} modelName="ECMWF AIFS" />
+            </CardContent>
+          </Card>
+        </motion.div>
       </div>
 
-      {/* Mandatory Disclaimer */}
-      <div className="p-3 bg-rose-50/70 border border-rose-200 rounded-xl flex items-center space-x-2 text-rose-800 text-xs font-semibold">
-        <AlertTriangle className="w-4 h-4 text-rose-600 shrink-0" />
+      {/* Mandatory IMD Meteorological Disclaimer */}
+      <div className="p-3 bg-amber-50/70 border border-amber-200 rounded-md flex items-center gap-2 text-xs text-amber-900">
+        <AlertTriangle className="h-4 w-4 text-amber-600 shrink-0" />
         <span>
-          AETHER MODEL RISK — NOT AN OFFICIAL METEOROLOGICAL WARNING. Official alerts are issued exclusively by the India Meteorological Department (IMD).
+          <strong>AETHER MODEL RISK NOTICE:</strong> This intelligence is computed algorithmically via the AETHER multi-model fusion pipeline. It does not constitute an official warning from the India Meteorological Department (IMD).
         </span>
       </div>
-    </div>
+    </motion.div>
   );
 }

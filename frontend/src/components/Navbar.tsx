@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { motion } from "motion/react";
 import {
   CloudSun,
   Layers,
@@ -121,13 +122,20 @@ export const Navbar: React.FC = () => {
                       <Link
                         key={item.name}
                         href={item.href}
-                        className={`flex items-center space-x-1 px-2.5 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                        className={`relative flex items-center space-x-1 px-2.5 py-1.5 rounded-md text-xs font-medium transition-colors ${
                           isActive
-                            ? "bg-sky-50 text-sky-700 font-semibold shadow-xs"
-                            : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
+                            ? "text-sky-800 font-semibold"
+                            : "text-slate-600 hover:text-slate-950 hover:bg-slate-50"
                         }`}
                       >
-                        <Icon className={`w-3.5 h-3.5 ${isActive ? "text-sky-600" : "text-slate-400"}`} />
+                        {isActive && (
+                          <motion.div
+                            layoutId="desktop-nav-active"
+                            className="absolute inset-0 rounded-md bg-sky-100/90 border border-sky-300/80 shadow-xs -z-10"
+                            transition={{ type: "spring", stiffness: 450, damping: 32 }}
+                          />
+                        )}
+                        <Icon className={`w-3.5 h-3.5 ${isActive ? "text-sky-700" : "text-slate-400"}`} />
                         <span>{item.name}</span>
                       </Link>
                     );
@@ -197,10 +205,17 @@ export const Navbar: React.FC = () => {
             <Link
               key={item.name}
               href={item.href}
-              className={`flex flex-col items-center py-1 px-3 rounded-lg text-[10px] font-medium transition ${
-                isActive ? "text-sky-600 font-bold" : "text-slate-500 hover:text-slate-800"
+              className={`relative flex flex-col items-center py-1 px-3 rounded-lg text-[10px] font-medium transition-colors ${
+                isActive ? "text-sky-700 font-bold" : "text-slate-500 hover:text-slate-800"
               }`}
             >
+              {isActive && (
+                <motion.div
+                  layoutId="mobile-nav-active"
+                  className="absolute inset-0 rounded-lg bg-sky-100/90 border border-sky-300/80 -z-10"
+                  transition={{ type: "spring", stiffness: 450, damping: 32 }}
+                />
+              )}
               <Icon className="w-4 h-4 mb-0.5" />
               <span>{item.name}</span>
             </Link>

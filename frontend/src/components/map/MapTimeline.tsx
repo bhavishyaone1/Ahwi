@@ -59,7 +59,7 @@ export function MapTimeline({
           <button
             type="button"
             onClick={onTogglePlay}
-            className="flex h-7 w-7 items-center justify-center rounded-full bg-[#e87a53] text-slate-950 hover:bg-[#de6e46] active:scale-95 transition shadow-xs"
+            className="flex h-7 w-7 items-center justify-center rounded-full bg-[#e87a53] text-slate-950 hover:bg-[#de6e46] active:scale-95 transition shadow-md shadow-amber-600/30"
             title={isPlaying ? "Pause Forecast Loop" : "Play Forecast Loop"}
           >
             {isPlaying ? <Pause className="h-3.5 w-3.5" /> : <Play className="h-3.5 w-3.5 ml-0.5" />}
@@ -93,7 +93,7 @@ export function MapTimeline({
                 {isActive && (
                   <motion.div
                     layoutId="timeline-pill-highlight"
-                    className="absolute inset-0 rounded-full bg-amber-500/15 dark:bg-[#38231c] border border-amber-500/30 dark:border-[#e87a53]/40 shadow-xs"
+                    className="absolute inset-0 rounded-full bg-amber-500/15 dark:bg-[#38231c] border border-amber-500/30 dark:border-[#e87a53]/40 shadow-sm shadow-amber-500/20"
                     transition={{ type: "spring", stiffness: 450, damping: 30 }}
                   />
                 )}

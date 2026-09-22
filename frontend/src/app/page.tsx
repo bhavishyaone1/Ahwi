@@ -63,7 +63,7 @@ export default function OverviewPage() {
         <div className="flex items-center gap-2 shrink-0">
           <button
             onClick={openTraceDrawer}
-            className="card-interactive flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface border border-border text-text-primary text-xs font-semibold hover:bg-surface-secondary shadow-xs transition"
+            className="card-interactive flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface border border-border/90 text-text-primary text-xs font-semibold hover:bg-surface-secondary shadow-sm hover:shadow-md transition"
           >
             <Activity className="h-3.5 w-3.5 text-sky-600 dark:text-sky-400" />
             <span className="font-mono">Trace Execution DAG</span>

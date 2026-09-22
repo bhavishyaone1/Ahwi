@@ -55,21 +55,21 @@ export default function ModelIntelligencePage() {
     >
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-border pb-3 min-w-0">
-        <div className="min-w-0">
-          <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-aether-sky/10 text-aether-sky border border-aether-sky/20 text-[11px] font-semibold">
-            <Cpu className="h-3 w-3" />
+        <div className="min-w-0 space-y-1">
+          <div className="badge-scientific bg-sky-50 dark:bg-sky-950/70 text-sky-700 dark:text-sky-300 border border-sky-200 dark:border-sky-800">
+            <Cpu className="h-3 w-3 text-sky-600 dark:text-sky-400" />
             <span>Explainable Model Trust</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-text-primary tracking-tight mt-1">
+          <h1 className="text-2xl sm:text-3xl font-black text-text-primary tracking-tight mt-1">
             Model Skill & Adaptive Trust
           </h1>
           <p className="text-xs text-text-muted font-medium">
-            Understand model performance, dynamic weights, and empirical SHAP key drivers
+            Understand model performance, dynamic weights, and empirical SHAP key drivers.
           </p>
         </div>
 
         {/* Sub-Tabs with Motion active indicator */}
-        <div className="flex items-center gap-1 border border-border bg-surface-secondary/70 p-0.5 rounded-md text-xs shrink-0">
+        <div className="flex items-center gap-1 border border-border bg-surface-secondary/70 p-0.5 rounded-lg text-xs shrink-0">
           {(["weights", "performance", "shap"] as const).map((tab) => {
             const isActive = activeTab === tab;
             return (
@@ -77,14 +77,14 @@ export default function ModelIntelligencePage() {
                 key={tab}
                 type="button"
                 onClick={() => setActiveTab(tab)}
-                className={`relative px-3 py-1 rounded-sm text-xs font-semibold transition-all ${
-                  isActive ? "text-aether-sky" : "text-text-muted hover:text-text-primary"
+                className={`relative px-3 py-1.5 rounded-md text-xs font-semibold transition-all ${
+                  isActive ? "text-text-primary font-bold shadow-xs" : "text-text-muted hover:text-text-primary"
                 }`}
               >
                 {isActive && (
                   <motion.div
                     layoutId="model-subtab-pill"
-                    className="absolute inset-0 rounded-sm bg-surface shadow-xs"
+                    className="absolute inset-0 rounded-md bg-surface shadow-xs"
                     transition={{ type: "spring", stiffness: 450, damping: 32 }}
                   />
                 )}

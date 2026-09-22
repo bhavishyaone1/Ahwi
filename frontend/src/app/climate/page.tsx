@@ -3,6 +3,7 @@
 import React from "react";
 import { motion } from "motion/react";
 import { useAetherData } from "../../context/AetherDataContext";
+import { useTheme } from "@/context/ThemeContext";
 import { Compass, TrendingUp, AlertCircle, Sparkles, Thermometer, CloudRain } from "lucide-react";
 import {
   ComposedChart,
@@ -21,6 +22,7 @@ import { NumberTicker } from "@/components/common/NumberTicker";
 import { pageVariants, fadeUp } from "@/lib/motion";
 
 export default function ClimatePage() {
+  const { theme } = useTheme();
   const { data, selectedLocation, variable } = useAetherData();
   const climate = data?.climate_context;
   const currentVal = data?.aether_forecast?.calibrated_value;
@@ -46,16 +48,16 @@ export default function ClimatePage() {
       className="space-y-4"
     >
       {/* Header */}
-      <div className="border-b border-slate-200 pb-3 min-w-0">
-        <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-sky-50 text-sky-800 border border-sky-200 text-[11px] font-semibold">
-          <Compass className="h-3 w-3 text-sky-600" />
+      <div className="border-b border-border pb-3 min-w-0 space-y-1">
+        <div className="badge-scientific bg-sky-50 dark:bg-sky-950/70 text-sky-700 dark:text-sky-300 border border-sky-200 dark:border-sky-800">
+          <Compass className="h-3 w-3 text-sky-600 dark:text-sky-400" />
           <span>Long-Term Climatological Benchmarking</span>
         </div>
-        <h1 className="text-2xl sm:text-3xl font-bold text-slate-950 tracking-tight mt-1">
+        <h1 className="text-2xl sm:text-3xl font-black text-text-primary tracking-tight mt-1">
           Climate Context
         </h1>
-        <p className="text-xs text-slate-500 font-medium">
-          Measure how unusual the current forecast is against historical climate (ERA5 1991–2020 baseline)
+        <p className="text-xs text-text-muted font-medium">
+          Measure how unusual the current forecast is against historical climate (ERA5 1991–2020 baseline).
         </p>
       </div>
 
@@ -65,64 +67,64 @@ export default function ClimatePage() {
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
             {/* Current Forecast */}
             <motion.div variants={fadeUp} className="min-w-0">
-              <Card className="shadow-xs border-slate-200">
+              <Card className="shadow-xs border-border bg-surface">
                 <CardHeader className="p-3.5 pb-1">
-                  <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider block">
+                  <span className="text-[10px] uppercase font-bold text-text-muted tracking-wider block font-mono">
                     Current Forecast (24h)
                   </span>
                   <div className="flex items-baseline gap-1 mt-0.5 font-mono">
-                    <span className="text-2xl font-black text-slate-950">
+                    <span className="text-2xl font-black text-text-primary">
                       {currentVal !== undefined ? (
                         <NumberTicker value={currentVal} decimals={1} />
                       ) : (
                         "--"
                       )}
                     </span>
-                    <span className="text-xs font-bold text-slate-500">{getUnit()}</span>
+                    <span className="text-xs font-bold text-text-muted">{getUnit()}</span>
                   </div>
                 </CardHeader>
                 <CardContent className="p-3.5 pt-0">
-                  <span className="text-[11px] text-slate-400 block truncate">{selectedLocation.name}</span>
+                  <span className="text-[11px] text-text-muted block truncate">{selectedLocation.name}</span>
                 </CardContent>
               </Card>
             </motion.div>
 
             {/* Climate Normal */}
             <motion.div variants={fadeUp} className="min-w-0">
-              <Card className="shadow-xs border-slate-200">
+              <Card className="shadow-xs border-border bg-surface">
                 <CardHeader className="p-3.5 pb-1">
-                  <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider block">
+                  <span className="text-[10px] uppercase font-bold text-text-muted tracking-wider block font-mono">
                     Climate Normal
                   </span>
                   <div className="flex items-baseline gap-1 mt-0.5 font-mono">
-                    <span className="text-2xl font-black text-slate-800">
+                    <span className="text-2xl font-black text-text-primary">
                       <NumberTicker value={climate.climate_normal} decimals={1} />
                     </span>
-                    <span className="text-xs font-bold text-slate-500">{getUnit()}</span>
+                    <span className="text-xs font-bold text-text-muted">{getUnit()}</span>
                   </div>
                 </CardHeader>
                 <CardContent className="p-3.5 pt-0">
-                  <span className="text-[11px] text-slate-400 block">30-Year Seasonal Baseline</span>
+                  <span className="text-[11px] text-text-muted block font-mono">30-Year Seasonal Baseline</span>
                 </CardContent>
               </Card>
             </motion.div>
 
             {/* Anomaly */}
             <motion.div variants={fadeUp} className="min-w-0">
-              <Card className="shadow-xs border-slate-200">
+              <Card className="shadow-xs border-border bg-surface">
                 <CardHeader className="p-3.5 pb-1">
-                  <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider block">
+                  <span className="text-[10px] uppercase font-bold text-text-muted tracking-wider block font-mono">
                     Anomaly
                   </span>
                   <div className="flex items-baseline gap-1 mt-0.5 font-mono">
-                    <span className={`text-2xl font-black ${climate.anomaly >= 0 ? "text-emerald-600" : "text-amber-600"}`}>
+                    <span className={`text-2xl font-black ${climate.anomaly >= 0 ? "text-emerald-600 dark:text-emerald-400" : "text-amber-600 dark:text-amber-400"}`}>
                       {climate.anomaly >= 0 ? "+" : ""}
                       <NumberTicker value={climate.anomaly} decimals={1} /> {getUnit()}
                     </span>
                   </div>
                 </CardHeader>
                 <CardContent className="p-3.5 pt-0">
-                  <span className={`text-[11px] font-bold block ${climate.anomaly >= 0 ? "text-emerald-600" : "text-amber-600"}`}>
+                  <span className={`text-[11px] font-bold block ${climate.anomaly >= 0 ? "text-emerald-600 dark:text-emerald-400" : "text-amber-600 dark:text-amber-400"}`}>
                     {climate.anomaly_pct >= 0 ? "+" : ""}{climate.anomaly_pct}% vs Normal
                   </span>
                 </CardContent>
@@ -131,19 +133,19 @@ export default function ClimatePage() {
 
             {/* Historical Percentile */}
             <motion.div variants={fadeUp} className="min-w-0">
-              <Card className="shadow-xs border-slate-200">
+              <Card className="shadow-xs border-border bg-surface">
                 <CardHeader className="p-3.5 pb-1">
-                  <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider block">
+                  <span className="text-[10px] uppercase font-bold text-text-muted tracking-wider block font-mono">
                     Historical Percentile
                   </span>
                   <div className="flex items-baseline gap-1 mt-0.5 font-mono">
-                    <span className="text-2xl font-black text-indigo-700">
+                    <span className="text-2xl font-black text-sky-700 dark:text-sky-400">
                       <NumberTicker value={climate.percentile} decimals={0} suffix="th" />
                     </span>
                   </div>
                 </CardHeader>
                 <CardContent className="p-3.5 pt-0">
-                  <span className="text-[11px] text-slate-400 block">
+                  <span className="text-[11px] text-text-muted block">
                     {climate.percentile >= 90 ? "Rare synoptic extreme" : "Within normal envelope"}
                   </span>
                 </CardContent>
@@ -155,17 +157,17 @@ export default function ClimatePage() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
             {/* 30-Year Climatology Chart */}
             <motion.div variants={fadeUp} className="lg:col-span-8 min-w-0">
-              <Card className="shadow-xs border-slate-200">
-                <CardHeader className="p-4 pb-2 border-b border-slate-100 flex flex-row items-center justify-between space-y-0">
+              <Card className="shadow-xs border-border bg-surface">
+                <CardHeader className="p-4 pb-2 border-b border-border flex flex-row items-center justify-between space-y-0">
                   <div>
-                    <CardTitle className="text-sm font-bold text-slate-900">
+                    <CardTitle className="text-sm font-bold text-text-primary">
                       30-Year Climatological Baseline (1991–2020 ERA5)
                     </CardTitle>
-                    <p className="text-[11px] text-slate-400">
+                    <p className="text-[11px] text-text-muted">
                       Normal cycle with min/max envelope and current forecast benchmark
                     </p>
                   </div>
-                  <Badge variant="outline" className="font-mono text-[10px]">
+                  <Badge variant="scientific" className="font-mono text-[10px]">
                     ERA5 Reanalysis
                   </Badge>
                 </CardHeader>
@@ -176,27 +178,28 @@ export default function ClimatePage() {
                         data={chartData}
                         margin={{ top: 10, right: 20, left: -10, bottom: 0 }}
                       >
-                        <CartesianGrid strokeDasharray="3 3" stroke="#F1F5F9" vertical={false} />
+                        <CartesianGrid strokeDasharray="3 3" stroke={theme === "dark" ? "#26313D" : "#E2E8F0"} vertical={false} />
                         <XAxis
                           dataKey="month"
-                          tick={{ fontSize: 11, fill: "#64748B" }}
-                          axisLine={{ stroke: "#E2E8F0" }}
+                          tick={{ fontSize: 11, fill: theme === "dark" ? "#94A3B8" : "#64748B" }}
+                          axisLine={{ stroke: theme === "dark" ? "#26313D" : "#E2E8F0" }}
                           tickLine={false}
                         />
                         <YAxis
                           unit={` ${getUnit()}`}
-                          tick={{ fontSize: 11, fill: "#64748B" }}
+                          tick={{ fontSize: 11, fill: theme === "dark" ? "#94A3B8" : "#64748B" }}
                           axisLine={false}
                           tickLine={false}
                         />
                         <Tooltip
                           contentStyle={{
-                            backgroundColor: "#0F172A",
-                            borderRadius: "6px",
-                            border: "none",
+                            backgroundColor: theme === "dark" ? "#11161D" : "#0F172A",
+                            borderRadius: "8px",
+                            border: theme === "dark" ? "1px solid #26313D" : "none",
                             color: "#FFF",
                             fontSize: "11px",
                             padding: "8px 12px",
+                            fontFamily: "monospace",
                           }}
                         />
                         <Legend
@@ -211,7 +214,7 @@ export default function ClimatePage() {
                           type="monotone"
                           dataKey="max"
                           stroke="none"
-                          fill="#E2E8F0"
+                          fill={theme === "dark" ? "#1E293B" : "#E2E8F0"}
                           fillOpacity={0.6}
                           name="Historical Range"
                         />
@@ -244,52 +247,52 @@ export default function ClimatePage() {
 
             {/* Additional Climate Indicators */}
             <motion.div variants={fadeUp} className="lg:col-span-4 min-w-0 space-y-3">
-              <Card className="shadow-xs border-slate-200">
-                <CardHeader className="p-4 pb-2 border-b border-slate-100">
-                  <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider block">
+              <Card className="shadow-xs border-border bg-surface">
+                <CardHeader className="p-4 pb-2 border-b border-border">
+                  <span className="text-[10px] uppercase font-bold text-text-muted tracking-wider block font-mono">
                     Synoptic Diagnosis
                   </span>
-                  <CardTitle className="text-sm font-bold text-slate-900">
+                  <CardTitle className="text-sm font-bold text-text-primary">
                     Additional Climate Indicators
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="p-4 space-y-3 text-xs">
-                  <div className="flex items-center justify-between p-2.5 rounded-md bg-slate-50 border border-slate-100">
+                  <div className="flex items-center justify-between p-2.5 rounded-lg bg-surface-secondary/70 border border-border">
                     <div className="flex items-center gap-2">
                       <Thermometer className="h-4 w-4 text-rose-500" />
-                      <span className="font-medium text-slate-700">Temperature Anomaly:</span>
+                      <span className="font-medium text-text-secondary">Temperature Anomaly:</span>
                     </div>
-                    <span className="font-mono font-bold text-rose-600">
+                    <span className="font-mono font-bold text-rose-600 dark:text-rose-400">
                       +{climate.temp_anomaly_c}°C
                     </span>
                   </div>
 
-                  <div className="flex items-center justify-between p-2.5 rounded-md bg-slate-50 border border-slate-100">
+                  <div className="flex items-center justify-between p-2.5 rounded-lg bg-surface-secondary/70 border border-border">
                     <div className="flex items-center gap-2">
-                      <CloudRain className="h-4 w-4 text-sky-600" />
-                      <span className="font-medium text-slate-700">Seasonal Anomaly:</span>
+                      <CloudRain className="h-4 w-4 text-sky-600 dark:text-sky-400" />
+                      <span className="font-medium text-text-secondary">Seasonal Anomaly:</span>
                     </div>
-                    <span className="font-mono font-bold text-sky-700">
+                    <span className="font-mono font-bold text-sky-700 dark:text-sky-300">
                       +{climate.seasonal_anomaly_pct}%
                     </span>
                   </div>
 
-                  <div className="flex items-center justify-between p-2.5 rounded-md bg-slate-50 border border-slate-100">
+                  <div className="flex items-center justify-between p-2.5 rounded-lg bg-surface-secondary/70 border border-border">
                     <div className="flex items-center gap-2">
                       <AlertCircle className="h-4 w-4 text-amber-500" />
-                      <span className="font-medium text-slate-700">Extreme Frequency:</span>
+                      <span className="font-medium text-text-secondary">Extreme Frequency:</span>
                     </div>
-                    <span className="font-mono font-bold text-amber-700">
+                    <span className="font-mono font-bold text-amber-700 dark:text-amber-300">
                       {climate.extreme_multiplier}× Baseline
                     </span>
                   </div>
 
-                  <div className="flex items-center justify-between p-2.5 rounded-md bg-slate-50 border border-slate-100">
+                  <div className="flex items-center justify-between p-2.5 rounded-lg bg-surface-secondary/70 border border-border">
                     <div className="flex items-center gap-2">
-                      <TrendingUp className="h-4 w-4 text-slate-500" />
-                      <span className="font-medium text-slate-700">Decadal Trend:</span>
+                      <TrendingUp className="h-4 w-4 text-text-muted" />
+                      <span className="font-medium text-text-secondary">Decadal Trend:</span>
                     </div>
-                    <span className="font-mono font-bold text-slate-800">
+                    <span className="font-mono font-bold text-text-primary">
                       +{climate.trend_c_per_decade}°C / decade
                     </span>
                   </div>
@@ -299,9 +302,9 @@ export default function ClimatePage() {
           </div>
         </>
       ) : (
-        <Card className="p-8 text-center text-slate-400 border-dashed">
-          <p className="text-sm">Climate baseline data unavailable for the current selection.</p>
-          <p className="text-xs text-slate-500 mt-1">
+        <Card className="p-8 text-center text-text-muted border-dashed border-border bg-surface">
+          <p className="text-sm font-semibold">Climate baseline data unavailable for the current selection.</p>
+          <p className="text-xs text-text-muted mt-1">
             Reconnecting to ERA5 30-year climatology baseline service...
           </p>
         </Card>

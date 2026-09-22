@@ -58,11 +58,11 @@ export default function ForecastPage() {
       <div className="relative flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-border pb-3">
         <WeatherContourHeader />
         <div>
-          <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-aether-sky/10 text-aether-sky border border-aether-sky/20 text-[11px] font-semibold">
-            <Activity className="h-3 w-3" />
+          <div className="badge-scientific bg-sky-50 dark:bg-sky-950/70 text-sky-700 dark:text-sky-300 border border-sky-200 dark:border-sky-800">
+            <Activity className="h-3 w-3 text-sky-600 dark:text-sky-400" />
             <span>Multi-Model Synthesis</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-text-primary tracking-tight mt-1">
+          <h1 className="text-2xl sm:text-3xl font-black text-text-primary tracking-tight mt-1">
             Forecast Exploration
           </h1>
           <p className="text-xs text-text-muted font-medium">
@@ -76,7 +76,7 @@ export default function ForecastPage() {
           <select
             value={variable}
             onChange={(e) => setVariable(e.target.value)}
-            className="h-8 bg-surface border border-border rounded-md px-2.5 text-xs font-semibold text-text-primary shadow-xs focus:ring-1 focus:ring-aether-sky focus:outline-none"
+            className="h-8 bg-surface border border-border rounded-lg px-2.5 text-xs font-semibold text-text-primary shadow-xs focus:ring-1 focus:ring-aether-sky focus:outline-none transition"
           >
             <option value="rainfall_mm">Rainfall (mm)</option>
             <option value="temperature_c">Temperature (°C)</option>
@@ -97,7 +97,7 @@ export default function ForecastPage() {
                 });
               }
             }}
-            className="h-8 bg-surface border border-border rounded-md px-2.5 text-xs font-semibold text-text-primary shadow-xs focus:ring-1 focus:ring-aether-sky focus:outline-none"
+            className="h-8 bg-surface border border-border rounded-lg px-2.5 text-xs font-semibold text-text-primary shadow-xs focus:ring-1 focus:ring-aether-sky focus:outline-none transition"
           >
             {INDIAN_STATIONS.map((s) => (
               <option key={s.name} value={s.name}>
@@ -110,7 +110,7 @@ export default function ForecastPage() {
           <select
             value={leadTimeHours}
             onChange={(e) => setLeadTimeHours(Number(e.target.value))}
-            className="h-8 bg-surface border border-border rounded-md px-2.5 text-xs font-semibold text-text-primary shadow-xs focus:ring-1 focus:ring-aether-sky focus:outline-none"
+            className="h-8 bg-surface border border-border rounded-lg px-2.5 text-xs font-semibold text-text-primary shadow-xs focus:ring-1 focus:ring-aether-sky focus:outline-none transition"
           >
             <option value={6}>6 hours</option>
             <option value={12}>12 hours</option>
@@ -131,17 +131,17 @@ export default function ForecastPage() {
               type="button"
               onClick={() => setActiveTab(tab)}
               className={`relative px-3.5 py-1.5 text-xs font-semibold capitalize transition-colors ${
-                isActive ? "text-aether-sky" : "text-text-muted hover:text-text-primary"
+                isActive ? "text-text-primary font-bold" : "text-text-muted hover:text-text-primary"
               }`}
             >
               {isActive && (
                 <motion.div
                   layoutId="forecast-tab-pill"
-                  className="absolute bottom-0 left-0 right-0 h-0.5 bg-aether-sky rounded-full"
+                  className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#e87a53] dark:bg-sky-400 rounded-full"
                   transition={{ type: "spring", stiffness: 450, damping: 32 }}
                 />
               )}
-              {tab}
+              {tab === "forecast" ? "Time-Series Curves" : tab === "table" ? "Ensemble Table" : "Uncertainty Envelope"}
             </button>
           );
         })}

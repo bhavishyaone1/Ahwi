@@ -44,9 +44,9 @@ export default function ExtremeRiskPage() {
       className="space-y-4"
     >
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 pb-2">
-        <div>
-          <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-rose-50 text-rose-800 border border-rose-200 text-[11px] font-semibold">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-border pb-3 min-w-0">
+        <div className="min-w-0 space-y-1">
+          <div className="badge-scientific bg-rose-50 dark:bg-rose-950/60 text-rose-800 dark:text-rose-300 border border-rose-200 dark:border-rose-800">
             <ShieldAlert className="h-3 w-3 text-rose-600 dark:text-rose-400" />
             <span>High-Impact Hazard Guidance</span>
           </div>
@@ -59,7 +59,7 @@ export default function ExtremeRiskPage() {
         </div>
 
         {/* Sub-tabs */}
-        <div className="flex bg-surface-secondary p-0.5 rounded-lg border border-border text-xs font-semibold">
+        <div className="flex bg-surface-secondary/70 p-0.5 rounded-lg border border-border text-xs font-semibold shrink-0">
           {(["overview", "details", "map"] as const).map((tab) => (
             <button
               key={tab}

@@ -110,8 +110,8 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
                 className="fixed inset-0 z-20"
                 onClick={() => setDropdownOpen(false)}
               />
-              <div className="absolute left-0 mt-2 w-60 rounded-2xl bg-surface border border-border/90 shadow-xl py-2 z-30 text-xs font-medium max-h-80 overflow-y-auto">
-                <span className="px-3.5 py-1 text-[10px] font-bold text-text-muted uppercase tracking-wider block">
+              <div className="elevated-glow absolute left-0 mt-2 w-60 rounded-2xl bg-surface border border-border/90 shadow-2xl py-2 z-30 text-xs font-medium max-h-80 overflow-y-auto">
+                <span className="px-3.5 py-1 text-[10px] font-semibold text-text-muted uppercase tracking-wider block font-mono">
                   Select Observation Station
                 </span>
                 {INDIAN_STATIONS.map((st) => (
@@ -174,9 +174,9 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
         {/* Forecast Trace CTA Button (fuller pill shape + shadow) */}
         <button
           onClick={openTraceDrawer}
-          className="hidden sm:flex items-center gap-1.5 px-3 py-1 rounded-full bg-gradient-to-r from-sky-500/10 to-sky-600/20 dark:from-sky-950/60 dark:to-sky-900/40 border border-sky-300 dark:border-sky-700 text-sky-700 dark:text-sky-300 text-xs font-bold hover:from-sky-500/20 hover:to-sky-600/30 shadow-sm shadow-sky-500/20 transition"
+          className="hidden sm:flex items-center gap-1.5 px-3 py-1 rounded-full bg-sky-500/10 dark:bg-sky-950/60 border border-sky-400/30 dark:border-sky-700 text-sky-700 dark:text-sky-300 text-xs font-bold hover:bg-sky-500/20 shadow-sm shadow-sky-500/20 transition"
         >
-          <Activity className="h-3.5 w-3.5" />
+          <Activity className="h-3.5 w-3.5 text-sky-500" />
           <span>Trace</span>
         </button>
 

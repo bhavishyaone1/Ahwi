@@ -141,9 +141,9 @@ export const EventStreamRail: React.FC = () => {
               <button
                 key={tab.id}
                 onClick={() => setFilter(tab.id)}
-                className={`py-1 px-2 rounded-full text-[10px] font-bold transition-all ${
+                className={`py-1 px-2.5 rounded-full text-[10px] font-bold transition-all ${
                   isActive
-                    ? "bg-orange-500 text-slate-950 shadow-xs"
+                    ? "bg-accent text-slate-950 shadow-sm"
                     : "bg-surface-secondary/70 text-text-muted hover:text-text-primary hover:bg-surface-secondary"
                 }`}
               >
@@ -164,7 +164,7 @@ export const EventStreamRail: React.FC = () => {
                 {items.map((ev) => (
                   <div
                     key={ev.id}
-                    className={`p-3 rounded-xl bg-surface-secondary/60 border border-border/80 border-l-2 border-l-transparent ${ev.hoverBorder} space-y-1.5 shadow-xs hover:shadow-md transition-all group`}
+                    className={`p-3 rounded-xl bg-surface-secondary/60 border border-border/80 border-l-2 border-l-transparent ${ev.hoverBorder} space-y-1.5 shadow-sm hover:shadow-md transition-all group`}
                   >
                     <div className="flex items-center justify-between text-[11px]">
                       <div className="flex items-center gap-2 font-bold">
@@ -200,7 +200,7 @@ export const EventStreamRail: React.FC = () => {
               {selectedLocation.name}
             </span>
           </div>
-          <Badge variant="scientific" className="font-mono text-[10px] bg-orange-500/10 text-orange-500 dark:text-orange-400 border-orange-500/20">
+          <Badge variant="scientific" className="font-mono text-[10px] bg-sky-500/10 text-sky-600 dark:text-sky-400 border-sky-500/20">
             +{leadTimeHours}h Horizon
           </Badge>
         </div>
@@ -311,13 +311,13 @@ export const EventStreamRail: React.FC = () => {
         {/* Inspect Forecast Trace Button */}
         <button
           onClick={openTraceDrawer}
-          className="w-full flex items-center justify-between p-2.5 rounded-xl bg-surface-secondary hover:bg-orange-500/10 dark:hover:bg-orange-950/30 text-text-secondary hover:text-orange-500 dark:hover:text-orange-400 text-xs font-semibold border border-border/70 hover:border-orange-500/40 transition group"
+          className="w-full flex items-center justify-between p-2.5 rounded-xl bg-surface-secondary hover:bg-sky-500/10 dark:hover:bg-sky-950/30 text-text-secondary hover:text-sky-500 dark:hover:text-sky-400 text-xs font-semibold border border-border/70 hover:border-sky-500/40 transition group"
         >
           <div className="flex items-center gap-1.5">
-            <Activity className="h-3.5 w-3.5 text-orange-500" />
+            <Activity className="h-3.5 w-3.5 text-sky-500" />
             <span>Inspect Forecast Trace</span>
           </div>
-          <ChevronRight className="h-3.5 w-3.5 text-text-muted group-hover:text-orange-500 transition-transform group-hover:translate-x-0.5" />
+          <ChevronRight className="h-3.5 w-3.5 text-text-muted group-hover:text-sky-500 transition-transform group-hover:translate-x-0.5" />
         </button>
       </div>
     </div>

@@ -145,9 +145,9 @@ export default function AskAetherPage() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
         {/* Left 4 Cols: Suggested Questions */}
         <motion.div variants={fadeUp} className="lg:col-span-4 min-w-0 space-y-3">
-          <Card className="shadow-xs border-border bg-surface overflow-hidden">
+          <Card className="shadow-sm hover:shadow-md card-interactive border-border bg-surface rounded-2xl overflow-hidden">
             <CardHeader className="p-4 pb-2 border-b border-border">
-              <span className="text-[10px] uppercase font-bold text-text-muted tracking-wider block font-mono">
+              <span className="font-mono text-[10px] uppercase font-semibold text-text-muted tracking-wider block">
                 Suggested Inquiries
               </span>
               <CardTitle className="text-sm font-bold text-text-primary">
@@ -177,12 +177,12 @@ export default function AskAetherPage() {
         {/* Right 8 Cols: Grounded Intelligence Feed */}
         <motion.div variants={fadeUp} className="lg:col-span-8 min-w-0 flex flex-col space-y-3">
           {/* Chat Container */}
-          <Card className="shadow-xs border-border bg-surface-secondary/30 p-4 space-y-4 min-h-[380px] max-h-[480px] overflow-y-auto">
+          <Card className="shadow-sm border-border bg-surface-secondary/30 rounded-2xl p-4 space-y-4 min-h-[380px] max-h-[480px] overflow-y-auto">
             {chatHistory.map((msg, i) => {
               if (msg.sender === "user") {
                 return (
                   <div key={i} className="flex justify-end">
-                    <div className="bg-sky-600 dark:bg-sky-500 text-white text-xs font-semibold px-3.5 py-2 rounded-xl rounded-tr-xs shadow-xs max-w-md">
+                    <div className="bg-sky-600 dark:bg-sky-500 text-white text-xs font-semibold px-3.5 py-2 rounded-xl rounded-tr-xs shadow-sm max-w-md">
                       {msg.content}
                     </div>
                   </div>
@@ -193,7 +193,7 @@ export default function AskAetherPage() {
 
               return (
                 <div key={i} className="flex justify-start">
-                  <div className="bg-surface border border-border rounded-xl rounded-tl-xs p-4 shadow-xs max-w-xl space-y-3 text-xs border-l-3 border-l-sky-500">
+                  <div className="bg-surface border border-border rounded-xl rounded-tl-xs p-4 shadow-sm max-w-xl space-y-3 text-xs border-l-3 border-l-sky-500">
                     {/* Bot header */}
                     <div className="flex items-center justify-between border-b border-border pb-2">
                       <div className="flex items-center gap-1.5">
@@ -213,7 +213,7 @@ export default function AskAetherPage() {
 
                     {/* ANSWER */}
                     <div>
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-text-muted block mb-1 font-mono">
+                      <span className="font-mono text-[10px] uppercase font-semibold text-text-muted tracking-wider block mb-1">
                         ANSWER
                       </span>
                       <p className="text-text-primary font-semibold leading-relaxed">
@@ -224,7 +224,7 @@ export default function AskAetherPage() {
                     {/* WHY */}
                     {why && why.length > 0 && (
                       <div className="space-y-1 pt-1">
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-text-muted block font-mono">
+                        <span className="font-mono text-[10px] uppercase font-semibold text-text-muted tracking-wider block">
                           DIAGNOSTIC EVIDENCE
                         </span>
                         <ul className="space-y-1 text-text-secondary pl-1">
@@ -299,7 +299,7 @@ export default function AskAetherPage() {
               variant="default"
               onClick={() => handleSend()}
               disabled={loading || !query.trim()}
-              className="h-10 px-4 gap-1.5 bg-sky-600 hover:bg-sky-500 text-white font-bold text-xs shrink-0 shadow-xs"
+              className="h-10 px-4 gap-1.5 bg-sky-600 hover:bg-sky-500 text-white font-bold text-xs shrink-0 shadow-sm hover:shadow-md transition-all duration-200"
             >
               <Send className="h-3.5 w-3.5" />
               <span>Query</span>

@@ -139,7 +139,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           <div className="px-3 pt-3 pb-1">
             <div className="flex items-center justify-between p-2 rounded-xl bg-surface-secondary/70 border border-border">
               <div className="flex items-center gap-2.5 min-w-0">
-                <div className="h-8 w-8 rounded-full bg-gradient-to-tr from-amber-500 to-rose-500 text-white flex items-center justify-center text-xs font-black shadow-xs shrink-0">
+                <div className="h-8 w-8 rounded-full bg-gradient-to-tr from-amber-500 to-rose-500 text-white flex items-center justify-center text-xs font-black shadow-sm shrink-0">
                   E
                 </div>
                 <div className="flex flex-col min-w-0">
@@ -163,7 +163,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           {NAV_GROUPS.map((grp) => (
             <div key={grp.group} className="space-y-1">
               {!collapsed && (
-                <span className="px-2 text-[10px] font-bold text-text-muted uppercase tracking-wider block font-mono">
+                <span className="px-2 text-[10px] font-semibold text-text-muted uppercase tracking-wider block font-mono">
                   {grp.group}
                 </span>
               )}
@@ -178,23 +178,23 @@ export const Sidebar: React.FC<SidebarProps> = ({
                       href={item.href}
                       onClick={onCloseMobile}
                       title={collapsed ? item.name : undefined}
-                      className={`relative flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold transition-all ${
+                      className={`relative flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold transition-all duration-200 ${
                         isActive
-                          ? "text-orange-600 dark:text-orange-400 font-bold"
-                          : "text-text-secondary hover:text-text-primary hover:bg-surface-secondary"
+                          ? "text-accent font-bold"
+                          : "text-text-secondary hover:text-text-primary hover:bg-surface-secondary hover:-translate-y-0.5 hover:shadow-sm"
                       } ${collapsed ? "justify-center px-0" : ""}`}
                     >
                       {isActive && (
                         <motion.div
                           layoutId="sidebar-active-pill"
-                          className="absolute inset-0 rounded-xl bg-orange-500/15 dark:bg-orange-950/40 border border-orange-500/30 dark:border-orange-500/40 -z-10 shadow-sm shadow-orange-500/15"
+                          className="absolute inset-0 rounded-xl bg-accent/15 dark:bg-accent/20 border border-accent/40 -z-10 shadow-md shadow-accent/25"
                           transition={{ type: "spring", stiffness: 450, damping: 32 }}
                         />
                       )}
                       <Icon
                         className={`h-4 w-4 shrink-0 ${
                           isActive
-                            ? "text-orange-500 dark:text-orange-400"
+                            ? "text-accent"
                             : "text-text-muted group-hover:text-text-primary"
                         }`}
                       />
@@ -213,7 +213,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             <Link
               href="/ask"
               onClick={onCloseMobile}
-              className="w-full flex items-center justify-center gap-2 py-3.5 px-4 rounded-2xl bg-gradient-to-r from-orange-500 via-amber-500 to-orange-600 hover:from-orange-600 hover:to-orange-500 hover:scale-[1.02] active:scale-[0.98] text-slate-950 font-black text-xs shadow-lg shadow-orange-500/25 transition-all"
+              className="w-full flex items-center justify-center gap-2 py-3.5 px-4 rounded-2xl bg-gradient-to-r from-orange-500 via-amber-500 to-orange-600 hover:from-orange-600 hover:to-orange-500 hover:scale-[1.02] active:scale-[0.98] text-slate-950 font-black text-xs shadow-lg shadow-orange-500/25 transition-all duration-200"
             >
               <Sparkles className="h-4 w-4 text-slate-950" />
               <span>Ask a question</span>
@@ -237,11 +237,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 onClick={toggleTheme}
                 title="Switch theme"
                 className={`relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                  theme === "dark" ? "bg-orange-500" : "bg-slate-300 dark:bg-slate-700"
+                  theme === "dark" ? "bg-accent" : "bg-slate-300 dark:bg-slate-700"
                 }`}
               >
                 <span
-                  className={`pointer-events-none inline-block h-4 w-4 rounded-full bg-white shadow-xs transform ring-0 transition duration-200 ease-in-out ${
+                  className={`pointer-events-none inline-block h-4 w-4 rounded-full bg-white shadow-sm transform ring-0 transition duration-200 ease-in-out ${
                     theme === "dark" ? "translate-x-4" : "translate-x-0"
                   }`}
                 />

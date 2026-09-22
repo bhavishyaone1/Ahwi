@@ -84,16 +84,16 @@ export function MapTimeline({
                 key={step.hours}
                 type="button"
                 onClick={() => onChangeHours(step.hours)}
-                className={`group relative flex flex-col items-center justify-center px-2 py-1 rounded-full text-xs font-mono transition-all ${
+                className={`group relative flex flex-col items-center justify-center px-2 py-1 rounded-full text-xs font-mono transition-all duration-200 ${
                   isActive
-                    ? "text-orange-500 dark:text-orange-400 font-bold"
-                    : "text-text-muted hover:text-text-primary"
+                    ? "text-accent font-bold"
+                    : "text-text-muted hover:text-text-primary hover:bg-surface-secondary/70"
                 }`}
               >
                 {isActive && (
                   <motion.div
                     layoutId="timeline-pill-highlight"
-                    className="absolute inset-0 rounded-full bg-orange-500/20 dark:bg-orange-950/50 border-2 border-orange-500 ring-2 ring-orange-500/40 shadow-lg shadow-orange-500/35"
+                    className="absolute inset-0 rounded-full bg-accent/20 border-2 border-accent ring-2 ring-accent/40 shadow-lg shadow-accent/35"
                     transition={{ type: "spring", stiffness: 450, damping: 30 }}
                   />
                 )}

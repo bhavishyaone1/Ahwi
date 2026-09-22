@@ -76,7 +76,7 @@ export default function ForecastPage() {
           <select
             value={variable}
             onChange={(e) => setVariable(e.target.value)}
-            className="h-8 bg-surface border border-border rounded-lg px-2.5 text-xs font-semibold text-text-primary shadow-xs focus:ring-1 focus:ring-aether-sky focus:outline-none transition"
+            className="h-8 bg-surface border border-border rounded-lg px-2.5 text-xs font-semibold text-text-primary shadow-sm focus:ring-1 focus:ring-info focus:outline-none transition"
           >
             <option value="rainfall_mm">Rainfall (mm)</option>
             <option value="temperature_c">Temperature (°C)</option>
@@ -97,7 +97,7 @@ export default function ForecastPage() {
                 });
               }
             }}
-            className="h-8 bg-surface border border-border rounded-lg px-2.5 text-xs font-semibold text-text-primary shadow-xs focus:ring-1 focus:ring-aether-sky focus:outline-none transition"
+            className="h-8 bg-surface border border-border rounded-lg px-2.5 text-xs font-semibold text-text-primary shadow-sm focus:ring-1 focus:ring-info focus:outline-none transition"
           >
             {INDIAN_STATIONS.map((s) => (
               <option key={s.name} value={s.name}>
@@ -110,7 +110,7 @@ export default function ForecastPage() {
           <select
             value={leadTimeHours}
             onChange={(e) => setLeadTimeHours(Number(e.target.value))}
-            className="h-8 bg-surface border border-border rounded-lg px-2.5 text-xs font-semibold text-text-primary shadow-xs focus:ring-1 focus:ring-aether-sky focus:outline-none transition"
+            className="h-8 bg-surface border border-border rounded-lg px-2.5 text-xs font-semibold text-text-primary shadow-sm focus:ring-1 focus:ring-info focus:outline-none transition"
           >
             <option value={6}>6 hours</option>
             <option value={12}>12 hours</option>
@@ -128,9 +128,8 @@ export default function ForecastPage() {
           return (
             <button
               key={tab}
-              type="button"
               onClick={() => setActiveTab(tab)}
-              className={`relative px-3.5 py-1.5 text-xs font-semibold capitalize transition-colors ${
+              className={`relative px-3 py-1.5 text-xs font-semibold transition-colors duration-200 ${
                 isActive ? "text-text-primary font-bold" : "text-text-muted hover:text-text-primary"
               }`}
             >
@@ -151,7 +150,7 @@ export default function ForecastPage() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
         {/* Left 8 cols: Time Series / Table */}
         <motion.div variants={fadeUp} className="lg:col-span-8 min-w-0">
-          <Card className="shadow-xs border-border bg-surface">
+          <Card className="shadow-sm hover:shadow-md card-interactive border-border bg-surface rounded-2xl">
             <CardHeader className="p-4 pb-2 border-b border-border flex flex-row items-center justify-between space-y-0">
               <div>
                 <CardTitle className="text-sm font-bold text-text-primary">
@@ -316,9 +315,9 @@ export default function ForecastPage() {
 
         {/* Right 4 cols: Key Forecast Card */}
         <motion.div variants={fadeUp} className="lg:col-span-4 min-w-0 space-y-3">
-          <Card className="shadow-xs border-border bg-surface">
+          <Card className="shadow-sm hover:shadow-md card-interactive border-border bg-surface rounded-2xl">
             <CardHeader className="p-4 pb-2 border-b border-border">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-text-muted block">
+              <span className="font-mono text-[10px] font-semibold uppercase tracking-wider text-text-muted block">
                 Key Forecast ({leadTimeHours}h)
               </span>
               <CardTitle className="text-sm font-extrabold text-text-primary uppercase tracking-tight">
@@ -327,14 +326,14 @@ export default function ForecastPage() {
             </CardHeader>
             <CardContent className="p-4 space-y-4">
               <div className="flex items-baseline gap-1.5">
-                <span className="text-4xl font-black font-mono text-text-primary tracking-tight">
+                <span className="text-5xl font-black font-mono text-text-primary tracking-tight">
                   {data?.aether_forecast.calibrated_value !== undefined ? (
                     <NumberTicker value={data.aether_forecast.calibrated_value} decimals={1} />
                   ) : (
                     "--"
                   )}
                 </span>
-                <span className="text-base font-bold font-mono text-text-muted">
+                <span className="text-xs font-bold font-mono text-text-muted ml-1">
                   {data?.aether_forecast.unit || getUnit()}
                 </span>
               </div>
@@ -410,7 +409,7 @@ export default function ForecastPage() {
 
       {/* Forecast Trace Execution DAG Footer */}
       <motion.div variants={fadeUp}>
-        <Card className="shadow-xs border-border bg-surface-secondary/40">
+        <Card className="shadow-sm hover:shadow-md card-interactive border-border bg-surface-secondary/40 rounded-2xl">
           <CardHeader className="p-3.5 pb-1 flex flex-row items-center justify-between space-y-0">
             <CardTitle className="text-xs font-bold text-text-primary flex items-center gap-1.5">
               <Layers className="h-3.5 w-3.5 text-aether-sky" />

@@ -25,8 +25,8 @@ export const CONTINUOUS_LEGENDS: Record<
   temperature: {
     title: "Temperature",
     unit: "°C",
-    gradient: "linear-gradient(to right, #3b82f6 0%, #06b6d4 20%, #10b981 40%, #eab308 60%, #f97316 80%, #ef4444 100%)",
-    ticks: ["-10", "0", "10", "20", "25", "30", "35", "40", "45+"],
+    gradient: "linear-gradient(to right, #fde68a 0%, #f59e0b 25%, #ea580c 50%, #dc2626 75%, #7f1d1d 90%, #450a0a 100%)",
+    ticks: ["15", "20", "25", "30", "35", "40", "45", "50+"],
   },
   wind: {
     title: "Wind Speed",

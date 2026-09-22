@@ -44,7 +44,7 @@ export function RiskRing({
   const Icon = type === "rain" ? CloudRain : type === "heat" ? Flame : Wind;
 
   return (
-    <div className={`flex flex-col items-center rounded-lg border border-border bg-surface p-4 shadow-xs text-center ${className}`}>
+    <div className={`flex flex-col items-center rounded-2xl border border-border bg-surface p-4 shadow-sm hover:shadow-md card-interactive text-center ${className}`}>
       <div className="flex items-center gap-1.5 mb-2 text-text-secondary font-medium text-xs">
         <Icon className="h-3.5 w-3.5 text-text-muted" />
         <span>{label}</span>

@@ -78,13 +78,13 @@ export default function ModelIntelligencePage() {
                 type="button"
                 onClick={() => setActiveTab(tab)}
                 className={`relative px-3 py-1.5 rounded-md text-xs font-semibold transition-all ${
-                  isActive ? "text-text-primary font-bold shadow-xs" : "text-text-muted hover:text-text-primary"
+                  isActive ? "text-text-primary font-bold shadow-sm" : "text-text-muted hover:text-text-primary"
                 }`}
               >
                 {isActive && (
                   <motion.div
                     layoutId="model-subtab-pill"
-                    className="absolute inset-0 rounded-md bg-surface shadow-xs"
+                    className="absolute inset-0 rounded-md bg-surface shadow-sm"
                     transition={{ type: "spring", stiffness: 450, damping: 32 }}
                   />
                 )}
@@ -108,9 +108,9 @@ export default function ModelIntelligencePage() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
         {/* Model Weight Donut */}
         <motion.div variants={fadeUp} className="lg:col-span-4 min-w-0">
-          <Card className="shadow-xs border-border bg-surface">
+          <Card className="shadow-sm hover:shadow-md card-interactive border-border bg-surface rounded-2xl">
             <CardHeader className="p-4 pb-2 border-b border-border">
-              <span className="text-[10px] uppercase font-bold text-text-muted tracking-wider block">
+              <span className="font-mono text-[10px] uppercase font-semibold text-text-muted tracking-wider block">
                 Adaptive Model Weights
               </span>
               <CardTitle className="text-sm font-bold text-text-primary">
@@ -136,9 +136,9 @@ export default function ModelIntelligencePage() {
 
         {/* Model Performance (Last 30 Days) */}
         <motion.div variants={fadeUp} className="lg:col-span-8 min-w-0">
-          <Card className="shadow-xs border-border bg-surface">
+          <Card className="shadow-sm hover:shadow-md card-interactive border-border bg-surface rounded-2xl">
             <CardHeader className="p-4 pb-2 border-b border-border">
-              <span className="text-[10px] uppercase font-bold text-text-muted tracking-wider block">
+              <span className="font-mono text-[10px] uppercase font-semibold text-text-muted tracking-wider block">
                 Verification Matrix
               </span>
               <CardTitle className="text-sm font-bold text-text-primary">
@@ -218,9 +218,9 @@ export default function ModelIntelligencePage() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
         {/* Why AIFS is Trusted Bar Chart */}
         <motion.div variants={fadeUp} className="lg:col-span-6">
-          <Card className="shadow-xs border-border bg-surface">
+          <Card className="shadow-sm hover:shadow-md card-interactive border-border bg-surface rounded-2xl">
             <CardHeader className="p-4 pb-2 border-b border-border">
-              <span className="text-[10px] uppercase font-bold text-text-muted tracking-wider block">
+              <span className="font-mono text-[10px] uppercase font-semibold text-text-muted tracking-wider block">
                 Explainability Drivers
               </span>
               <CardTitle className="text-sm font-bold text-text-primary">
@@ -259,9 +259,9 @@ export default function ModelIntelligencePage() {
 
         {/* SHAP Waterfall / Feature Attribution */}
         <motion.div variants={fadeUp} className="lg:col-span-6">
-          <Card className="shadow-xs border-border bg-surface">
+          <Card className="shadow-sm hover:shadow-md card-interactive border-border bg-surface rounded-2xl">
             <CardHeader className="p-4 pb-2 border-b border-border">
-              <span className="text-[10px] uppercase font-bold text-text-muted tracking-wider block">
+              <span className="font-mono text-[10px] uppercase font-semibold text-text-muted tracking-wider block">
                 Causal Decision Boundary
               </span>
               <CardTitle className="text-sm font-bold text-text-primary">

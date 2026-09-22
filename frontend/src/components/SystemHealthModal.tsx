@@ -27,7 +27,7 @@ export const SystemHealthModal: React.FC<SystemHealthModalProps> = ({ isOpen, on
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm p-4">
-      <div className="bg-surface rounded-2xl shadow-2xl max-w-lg w-full border border-border p-6 relative text-text-primary">
+      <div className="bg-surface rounded-2xl shadow-2xl max-w-lg w-full border border-border p-6 relative text-text-primary elevated-glow">
         <button
           onClick={onClose}
           className="absolute top-4 right-4 p-1 rounded-full text-text-muted hover:text-text-primary hover:bg-surface-secondary transition"

@@ -151,7 +151,7 @@ export default function WeightMapPage() {
 
       el.innerHTML = `
         <div class="h-full w-full rounded-full border-2 ${isSelected ? "border-slate-950 scale-125 ring-4 ring-sky-300" : "border-white"} shadow-md transition-transform group-hover:scale-125 flex items-center justify-center" style="background-color: ${color}cc;">
-          <span class="text-[9px] font-bold text-white font-mono drop-shadow-xs">${Math.round(displayWeight * 100)}%</span>
+          <span class="text-[9px] font-bold text-white font-mono drop-shadow-sm">${Math.round(displayWeight * 100)}%</span>
         </div>
         <div class="absolute -bottom-6 hidden whitespace-nowrap rounded bg-slate-950 px-1.5 py-0.5 text-[10px] font-medium text-white shadow-md group-hover:block z-30 pointer-events-none">
           ${pt.station} (${Math.round(displayWeight * 100)}%)
@@ -214,7 +214,7 @@ export default function WeightMapPage() {
           <select
             value={variable}
             onChange={(e) => setVariable(e.target.value)}
-            className="h-8 bg-surface border border-border rounded-lg px-2.5 text-xs font-semibold text-text-primary shadow-xs focus:ring-1 focus:ring-aether-sky focus:outline-none transition"
+            className="h-8 bg-surface border border-border rounded-lg px-2.5 text-xs font-semibold text-text-primary shadow-sm focus:ring-1 focus:ring-info focus:outline-none transition"
           >
             <option value="rainfall_mm">Precipitation (mm)</option>
             <option value="temperature_c">Temperature (°C)</option>
@@ -225,7 +225,7 @@ export default function WeightMapPage() {
           <select
             value={leadTimeHours}
             onChange={(e) => setLeadTimeHours(Number(e.target.value))}
-            className="h-8 bg-surface border border-border rounded-lg px-2.5 text-xs font-semibold text-text-primary shadow-xs focus:ring-1 focus:ring-aether-sky focus:outline-none transition"
+            className="h-8 bg-surface border border-border rounded-lg px-2.5 text-xs font-semibold text-text-primary shadow-sm focus:ring-1 focus:ring-info focus:outline-none transition"
           >
             <option value={6}>+6 hours</option>
             <option value={12}>+12 hours</option>
@@ -238,7 +238,7 @@ export default function WeightMapPage() {
           <select
             value={selectedModel}
             onChange={(e) => setSelectedModel(e.target.value)}
-            className="h-8 bg-surface border border-border rounded-lg px-2.5 text-xs font-semibold text-text-primary shadow-xs focus:ring-1 focus:ring-aether-sky focus:outline-none transition"
+            className="h-8 bg-surface border border-border rounded-lg px-2.5 text-xs font-semibold text-text-primary shadow-sm focus:ring-1 focus:ring-info focus:outline-none transition"
           >
             <option value="Dominant Model">Dominant Ensemble Member</option>
             <option value="AIFS Weight">AIFS Weight Allocation</option>
@@ -252,18 +252,18 @@ export default function WeightMapPage() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
         {/* Left 8 cols: MapLibre GL Map */}
         <motion.div variants={fadeUp} className="lg:col-span-8 min-w-0">
-          <div className="relative w-full h-[540px] bg-surface-secondary rounded-xl border border-border overflow-hidden shadow-xs flex flex-col justify-between">
+          <div className="relative w-full h-[540px] bg-surface-secondary rounded-2xl border border-border overflow-hidden shadow-sm flex flex-col justify-between">
             <div ref={mapContainerRef} className="absolute inset-0 h-full w-full" />
 
             {/* Top Overlay Indicator */}
-            <div className="absolute top-3 left-3 z-10 glass-panel rounded-lg px-3 py-1.5 text-xs font-semibold text-text-primary shadow-xs flex items-center gap-2">
+            <div className="absolute top-3 left-3 z-10 glass-panel rounded-lg px-3 py-1.5 text-xs font-semibold text-text-primary shadow-sm flex items-center gap-2">
               <span className="radar-telemetry-dot shrink-0" />
               <span className="font-mono">Layer: {selectedModel} (+{leadTimeHours}h Horizon)</span>
             </div>
 
             {/* Bottom Legend */}
             <div className="absolute bottom-3 left-3 z-10 glass-panel rounded-xl p-3 shadow-md text-xs space-y-2 max-w-xs">
-              <span className="text-[10px] font-bold text-text-muted uppercase tracking-wider block font-mono">
+              <span className="font-mono text-[10px] uppercase font-semibold text-text-muted tracking-wider block">
                 Model Allocation Palette
               </span>
               <div className="flex items-center gap-3 text-[11px] font-medium">
@@ -276,7 +276,7 @@ export default function WeightMapPage() {
                   <span className="font-semibold text-text-primary">IFS</span>
                 </div>
                 <div className="flex items-center gap-1.5">
-                  <span className="h-2.5 w-2.5 rounded-full bg-teal-600 shrink-0" />
+                  <span className="h-2.5 w-2.5 rounded-full bg-slate-500 shrink-0" />
                   <span className="font-semibold text-text-primary">GFS</span>
                 </div>
               </div>
@@ -289,9 +289,9 @@ export default function WeightMapPage() {
 
         {/* Right 4 cols: Regional Inspection Card */}
         <motion.div variants={fadeUp} className="lg:col-span-4 min-w-0 space-y-3">
-          <Card className="shadow-xs border-border bg-surface overflow-hidden">
+          <Card className="shadow-sm hover:shadow-md card-interactive border-border bg-surface rounded-2xl overflow-hidden">
             <CardHeader className="p-4 pb-2 border-b border-border">
-              <span className="text-[10px] uppercase font-bold text-text-muted tracking-wider block font-mono">
+              <span className="font-mono text-[10px] uppercase font-semibold text-text-muted tracking-wider block">
                 Regional Inspection
               </span>
               <CardTitle className="text-base font-bold text-text-primary">
@@ -310,7 +310,7 @@ export default function WeightMapPage() {
 
                   {/* Model Weight Breakdown */}
                   <div className="space-y-2.5">
-                    <span className="text-[10px] uppercase font-bold text-text-muted tracking-wider block font-mono">
+                    <span className="font-mono text-[10px] uppercase font-semibold text-text-muted tracking-wider block">
                       Dynamic Weight Attribution
                     </span>
                     <div className="space-y-2.5">
@@ -342,14 +342,14 @@ export default function WeightMapPage() {
                       </div>
                       <div>
                         <div className="flex justify-between text-xs font-semibold mb-1">
-                          <span className="text-teal-700 dark:text-teal-300">NOAA GFS (NWP)</span>
-                          <span className="font-mono font-bold text-teal-700 dark:text-teal-300">
+                          <span className="text-slate-700 dark:text-slate-300">NOAA GFS (NWP)</span>
+                          <span className="font-mono font-bold text-slate-700 dark:text-slate-300">
                             {Math.round((selectedPoint.weights["GFS"] || 0) * 100)}%
                           </span>
                         </div>
                         <Progress
                           value={Math.round((selectedPoint.weights["GFS"] || 0) * 100)}
-                          indicatorColor="bg-teal-600"
+                          indicatorColor="bg-slate-500"
                           className="h-2"
                         />
                       </div>

@@ -67,23 +67,23 @@ export default function ClimatePage() {
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
             {/* Current Forecast */}
             <motion.div variants={fadeUp} className="min-w-0">
-              <Card className="shadow-xs border-border bg-surface">
-                <CardHeader className="p-3.5 pb-1">
-                  <span className="text-[10px] uppercase font-bold text-text-muted tracking-wider block font-mono">
+              <Card className="shadow-sm hover:shadow-md card-interactive border-border bg-surface rounded-2xl">
+                <CardHeader className="p-4 pb-1">
+                  <span className="font-mono text-[10px] uppercase font-semibold text-text-muted tracking-wider block">
                     Current Forecast (24h)
                   </span>
-                  <div className="flex items-baseline gap-1 mt-0.5 font-mono">
-                    <span className="text-2xl font-black text-text-primary">
+                  <div className="flex items-baseline gap-1 mt-1 font-mono">
+                    <span className="text-4xl font-black text-text-primary tracking-tight">
                       {currentVal !== undefined ? (
                         <NumberTicker value={currentVal} decimals={1} />
                       ) : (
                         "--"
                       )}
                     </span>
-                    <span className="text-xs font-bold text-text-muted">{getUnit()}</span>
+                    <span className="text-xs font-bold font-mono text-text-muted ml-1">{getUnit()}</span>
                   </div>
                 </CardHeader>
-                <CardContent className="p-3.5 pt-0">
+                <CardContent className="p-4 pt-0">
                   <span className="text-[11px] text-text-muted block truncate">{selectedLocation.name}</span>
                 </CardContent>
               </Card>
@@ -91,19 +91,19 @@ export default function ClimatePage() {
 
             {/* Climate Normal */}
             <motion.div variants={fadeUp} className="min-w-0">
-              <Card className="shadow-xs border-border bg-surface">
-                <CardHeader className="p-3.5 pb-1">
-                  <span className="text-[10px] uppercase font-bold text-text-muted tracking-wider block font-mono">
+              <Card className="shadow-sm hover:shadow-md card-interactive border-border bg-surface rounded-2xl">
+                <CardHeader className="p-4 pb-1">
+                  <span className="font-mono text-[10px] uppercase font-semibold text-text-muted tracking-wider block">
                     Climate Normal
                   </span>
-                  <div className="flex items-baseline gap-1 mt-0.5 font-mono">
-                    <span className="text-2xl font-black text-text-primary">
+                  <div className="flex items-baseline gap-1 mt-1 font-mono">
+                    <span className="text-4xl font-black text-text-primary tracking-tight">
                       <NumberTicker value={climate.climate_normal} decimals={1} />
                     </span>
-                    <span className="text-xs font-bold text-text-muted">{getUnit()}</span>
+                    <span className="text-xs font-bold font-mono text-text-muted ml-1">{getUnit()}</span>
                   </div>
                 </CardHeader>
-                <CardContent className="p-3.5 pt-0">
+                <CardContent className="p-4 pt-0">
                   <span className="text-[11px] text-text-muted block font-mono">30-Year Seasonal Baseline</span>
                 </CardContent>
               </Card>
@@ -111,19 +111,20 @@ export default function ClimatePage() {
 
             {/* Anomaly */}
             <motion.div variants={fadeUp} className="min-w-0">
-              <Card className="shadow-xs border-border bg-surface">
-                <CardHeader className="p-3.5 pb-1">
-                  <span className="text-[10px] uppercase font-bold text-text-muted tracking-wider block font-mono">
+              <Card className="shadow-sm hover:shadow-md card-interactive border-border bg-surface rounded-2xl">
+                <CardHeader className="p-4 pb-1">
+                  <span className="font-mono text-[10px] uppercase font-semibold text-text-muted tracking-wider block">
                     Anomaly
                   </span>
-                  <div className="flex items-baseline gap-1 mt-0.5 font-mono">
-                    <span className={`text-2xl font-black ${climate.anomaly >= 0 ? "text-emerald-600 dark:text-emerald-400" : "text-amber-600 dark:text-amber-400"}`}>
+                  <div className="flex items-baseline gap-1 mt-1 font-mono">
+                    <span className={`text-4xl font-black tracking-tight ${climate.anomaly >= 0 ? "text-emerald-600 dark:text-emerald-400" : "text-amber-600 dark:text-amber-400"}`}>
                       {climate.anomaly >= 0 ? "+" : ""}
-                      <NumberTicker value={climate.anomaly} decimals={1} /> {getUnit()}
+                      <NumberTicker value={climate.anomaly} decimals={1} />
                     </span>
+                    <span className="text-xs font-bold font-mono text-text-muted ml-1">{getUnit()}</span>
                   </div>
                 </CardHeader>
-                <CardContent className="p-3.5 pt-0">
+                <CardContent className="p-4 pt-0">
                   <span className={`text-[11px] font-bold block ${climate.anomaly >= 0 ? "text-emerald-600 dark:text-emerald-400" : "text-amber-600 dark:text-amber-400"}`}>
                     {climate.anomaly_pct >= 0 ? "+" : ""}{climate.anomaly_pct}% vs Normal
                   </span>
@@ -133,18 +134,18 @@ export default function ClimatePage() {
 
             {/* Historical Percentile */}
             <motion.div variants={fadeUp} className="min-w-0">
-              <Card className="shadow-xs border-border bg-surface">
-                <CardHeader className="p-3.5 pb-1">
-                  <span className="text-[10px] uppercase font-bold text-text-muted tracking-wider block font-mono">
+              <Card className="shadow-sm hover:shadow-md card-interactive border-border bg-surface rounded-2xl">
+                <CardHeader className="p-4 pb-1">
+                  <span className="font-mono text-[10px] uppercase font-semibold text-text-muted tracking-wider block">
                     Historical Percentile
                   </span>
-                  <div className="flex items-baseline gap-1 mt-0.5 font-mono">
-                    <span className="text-2xl font-black text-sky-700 dark:text-sky-400">
+                  <div className="flex items-baseline gap-1 mt-1 font-mono">
+                    <span className="text-4xl font-black text-sky-700 dark:text-sky-400 tracking-tight">
                       <NumberTicker value={climate.percentile} decimals={0} suffix="th" />
                     </span>
                   </div>
                 </CardHeader>
-                <CardContent className="p-3.5 pt-0">
+                <CardContent className="p-4 pt-0">
                   <span className="text-[11px] text-text-muted block">
                     {climate.percentile >= 90 ? "Rare synoptic extreme" : "Within normal envelope"}
                   </span>
@@ -157,7 +158,7 @@ export default function ClimatePage() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
             {/* 30-Year Climatology Chart */}
             <motion.div variants={fadeUp} className="lg:col-span-8 min-w-0">
-              <Card className="shadow-xs border-border bg-surface">
+              <Card className="shadow-sm hover:shadow-md card-interactive border-border bg-surface rounded-2xl">
                 <CardHeader className="p-4 pb-2 border-b border-border flex flex-row items-center justify-between space-y-0">
                   <div>
                     <CardTitle className="text-sm font-bold text-text-primary">
@@ -247,9 +248,9 @@ export default function ClimatePage() {
 
             {/* Additional Climate Indicators */}
             <motion.div variants={fadeUp} className="lg:col-span-4 min-w-0 space-y-3">
-              <Card className="shadow-xs border-border bg-surface">
+              <Card className="shadow-sm hover:shadow-md card-interactive border-border bg-surface rounded-2xl">
                 <CardHeader className="p-4 pb-2 border-b border-border">
-                  <span className="text-[10px] uppercase font-bold text-text-muted tracking-wider block font-mono">
+                  <span className="font-mono text-[10px] uppercase font-semibold text-text-muted tracking-wider block">
                     Synoptic Diagnosis
                   </span>
                   <CardTitle className="text-sm font-bold text-text-primary">

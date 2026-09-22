@@ -9,10 +9,20 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        accent: {
+          DEFAULT: "var(--accent)",
+          hover: "var(--accent-hover)",
+        },
+        success: "var(--success)",
+        info: "var(--info)",
+        warning: "var(--warning)",
+        danger: "var(--danger)",
+        bg: "var(--bg)",
         background: "var(--background)",
         surface: {
           DEFAULT: "var(--surface)",
           secondary: "var(--surface-secondary)",
+          2: "var(--surface-2)",
           elevated: "var(--surface-elevated)",
         },
         border: "var(--border)",

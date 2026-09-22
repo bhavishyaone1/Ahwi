@@ -47,13 +47,13 @@ export default function OverviewPage() {
             {data?.weather_regime?.detected && (
               <div className={`badge-scientific text-[10px] tracking-wider uppercase font-semibold border ${
                 data.weather_regime.detected.toUpperCase().includes("HEAVY") || data.weather_regime.detected.toUpperCase().includes("SEVERE")
-                  ? "bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-400 border-rose-200 dark:border-rose-900/60"
-                  : "bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-400 border-amber-200 dark:border-amber-900/60"
+                  ? "bg-danger/10 text-danger border-danger/30"
+                  : "bg-warning/10 text-warning border-warning/30"
               }`}>
                 <span className={`h-1.5 w-1.5 rounded-full shrink-0 ${
                   data.weather_regime.detected.toUpperCase().includes("HEAVY") || data.weather_regime.detected.toUpperCase().includes("SEVERE")
-                    ? "bg-rose-500"
-                    : "bg-amber-500"
+                    ? "bg-danger"
+                    : "bg-warning"
                 }`} />
                 <span className="font-mono">REGIME: {data.weather_regime.detected}</span>
               </div>

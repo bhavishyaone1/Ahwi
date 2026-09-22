@@ -24,29 +24,29 @@ export const ForecastTraceDrawer: React.FC = () => {
   const getStepIcon = (index: number) => {
     switch (index) {
       case 0:
-        return <Database className="w-4 h-4 text-sky-600" />;
+        return <Database className="w-4 h-4 text-info" />;
       case 1:
-        return <Compass className="w-4 h-4 text-cyan-600" />;
+        return <Compass className="w-4 h-4 text-info" />;
       case 2:
-        return <Activity className="w-4 h-4 text-indigo-600" />;
+        return <Activity className="w-4 h-4 text-info" />;
       case 3:
-        return <Layers className="w-4 h-4 text-amber-600" />;
+        return <Layers className="w-4 h-4 text-warning" />;
       case 4:
-        return <Cpu className="w-4 h-4 text-purple-600" />;
+        return <Cpu className="w-4 h-4 text-info" />;
       case 5:
-        return <Cpu className="w-4 h-4 text-blue-600" />;
+        return <Cpu className="w-4 h-4 text-info" />;
       case 6:
-        return <Sparkles className="w-4 h-4 text-emerald-600" />;
+        return <Sparkles className="w-4 h-4 text-accent" />;
       case 7:
-        return <Layers className="w-4 h-4 text-teal-600" />;
+        return <Layers className="w-4 h-4 text-info" />;
       case 8:
-        return <Activity className="w-4 h-4 text-sky-700" />;
+        return <Activity className="w-4 h-4 text-success" />;
       case 9:
-        return <Activity className="w-4 h-4 text-violet-600" />;
+        return <Activity className="w-4 h-4 text-info" />;
       case 10:
-        return <ShieldAlert className="w-4 h-4 text-rose-600" />;
+        return <ShieldAlert className="w-4 h-4 text-danger" />;
       default:
-        return <Sparkles className="w-4 h-4 text-sky-600" />;
+        return <Sparkles className="w-4 h-4 text-info" />;
     }
   };
 
@@ -71,14 +71,14 @@ export const ForecastTraceDrawer: React.FC = () => {
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "spring", stiffness: 350, damping: 32 }}
-              className="w-screen max-w-md bg-surface shadow-2xl border-l border-border text-text-primary flex flex-col"
+              className="w-screen max-w-md bg-surface shadow-2xl border-l border-border text-text-primary flex flex-col elevated-glow"
             >
               {/* Header */}
               <div className="p-4 border-b border-border flex items-center justify-between bg-surface-secondary/50">
                 <div>
                   <div className="flex items-center gap-1.5">
                     <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-text-muted">
+                    <span className="font-mono text-[10px] font-semibold uppercase tracking-wider text-text-muted">
                       Operational Lineage
                     </span>
                   </div>
@@ -113,7 +113,7 @@ export const ForecastTraceDrawer: React.FC = () => {
                     {traceData.steps.map((s, idx) => (
                       <div key={idx} className="relative pl-5">
                         {/* Node Dot */}
-                        <div className="absolute -left-[15px] top-0.5 w-7 h-7 rounded-full bg-surface border border-border shadow-xs flex items-center justify-center">
+                        <div className="absolute -left-[15px] top-0.5 w-7 h-7 rounded-full bg-surface border border-border shadow-sm flex items-center justify-center">
                           {getStepIcon(idx)}
                         </div>
 

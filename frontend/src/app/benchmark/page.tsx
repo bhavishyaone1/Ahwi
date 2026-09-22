@@ -98,7 +98,7 @@ export default function BenchmarkPage() {
           <select
             value={variable}
             onChange={(e) => setVariable(e.target.value)}
-            className="h-8 bg-surface border border-border rounded-lg px-2.5 text-xs font-semibold text-text-primary shadow-xs focus:ring-1 focus:ring-aether-sky focus:outline-none transition"
+            className="h-8 bg-surface border border-border rounded-lg px-2.5 text-xs font-semibold text-text-primary shadow-sm focus:ring-1 focus:ring-info focus:outline-none transition"
           >
             <option value="rainfall_mm">Precipitation (mm)</option>
             <option value="temperature_c">Temperature (°C)</option>
@@ -108,7 +108,7 @@ export default function BenchmarkPage() {
           <select
             value={leadTime}
             onChange={(e) => setLeadTime(Number(e.target.value))}
-            className="h-8 bg-surface border border-border rounded-lg px-2.5 text-xs font-semibold text-text-primary shadow-xs focus:ring-1 focus:ring-aether-sky focus:outline-none transition"
+            className="h-8 bg-surface border border-border rounded-lg px-2.5 text-xs font-semibold text-text-primary shadow-sm focus:ring-1 focus:ring-info focus:outline-none transition"
           >
             <option value={6}>+6h Horizon</option>
             <option value={12}>+12h Horizon</option>
@@ -120,7 +120,7 @@ export default function BenchmarkPage() {
           <select
             value={regime}
             onChange={(e) => setRegime(e.target.value)}
-            className="h-8 bg-surface border border-border rounded-lg px-2.5 text-xs font-semibold text-text-primary shadow-xs focus:ring-1 focus:ring-aether-sky focus:outline-none transition"
+            className="h-8 bg-surface border border-border rounded-lg px-2.5 text-xs font-semibold text-text-primary shadow-sm focus:ring-1 focus:ring-info focus:outline-none transition"
           >
             <option value="ALL">All Regimes</option>
             <option value="HEAVY_RAIN">Heavy Rain</option>
@@ -145,13 +145,13 @@ export default function BenchmarkPage() {
               type="button"
               onClick={() => setActiveTab(tab.id as any)}
               className={`relative px-3.5 py-1.5 font-bold transition-colors ${
-                isActive ? "text-aether-primary" : "text-text-muted hover:text-text-primary"
+                isActive ? "text-accent" : "text-text-muted hover:text-text-primary"
               }`}
             >
               {isActive && (
                 <motion.div
                   layoutId="benchmark-tab-pill"
-                  className="absolute bottom-0 left-0 right-0 h-0.5 bg-aether-primary rounded-full"
+                  className="absolute bottom-0 left-0 right-0 h-0.5 bg-accent rounded-full"
                   transition={{ type: "spring", stiffness: 450, damping: 32 }}
                 />
               )}
@@ -165,10 +165,10 @@ export default function BenchmarkPage() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
         {/* Left 7 cols: Benchmark Table */}
         <motion.div variants={fadeUp} className="lg:col-span-7 min-w-0">
-          <Card className="shadow-xs border-border bg-surface overflow-hidden">
+          <Card className="shadow-sm hover:shadow-md card-interactive border-border bg-surface rounded-2xl overflow-hidden">
             <CardHeader className="p-4 pb-2 border-b border-border flex flex-row items-center justify-between space-y-0">
               <div>
-                <span className="text-[10px] uppercase font-bold text-text-muted tracking-wider block font-mono">
+                <span className="font-mono text-[10px] uppercase font-semibold text-text-muted tracking-wider block">
                   Out-of-Sample Verification Matrix (+{leadTime}h Horizon)
                 </span>
                 <CardTitle className="text-sm font-bold text-text-primary mt-0.5">
@@ -190,7 +190,7 @@ export default function BenchmarkPage() {
             <CardContent className="p-0">
               <div className="overflow-x-auto">
                 <table className="w-full text-xs text-left border-collapse">
-                  <thead className="bg-surface-secondary/80 text-text-muted uppercase text-[10px] font-bold border-b border-border font-mono">
+                  <thead className="bg-surface-secondary/80 text-text-muted uppercase text-[10px] font-semibold border-b border-border font-mono">
                     <tr>
                       <th className="p-2.5 px-3">Model</th>
                       <th className="p-2.5 px-3 text-right">MAE</th>
@@ -269,9 +269,9 @@ export default function BenchmarkPage() {
 
         {/* Right 5 cols: Performance by Lead Time Chart */}
         <motion.div variants={fadeUp} className="lg:col-span-5 min-w-0">
-          <Card className="shadow-xs border-border bg-surface overflow-hidden">
+          <Card className="shadow-sm hover:shadow-md card-interactive border-border bg-surface rounded-2xl overflow-hidden">
             <CardHeader className="p-4 pb-2 border-b border-border">
-              <span className="text-[10px] uppercase font-bold text-text-muted tracking-wider block font-mono">
+              <span className="font-mono text-[10px] uppercase font-semibold text-text-muted tracking-wider block">
                 Error Progression
               </span>
               <CardTitle className="text-sm font-bold text-text-primary">

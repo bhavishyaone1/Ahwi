@@ -127,8 +127,8 @@ export const WeatherMap: React.FC<WeatherMapProps> = ({
               paint: {
                 "raster-opacity": isDark ? 0.95 : 0.85,
                 "raster-saturation": isDark ? -1.0 : -0.6,
-                "raster-contrast": isDark ? 0.6 : 0.1,
-                "raster-brightness-max": isDark ? 0.22 : 0.85,
+                "raster-contrast": isDark ? 0.65 : 0.1,
+                "raster-brightness-max": isDark ? 0.28 : 0.85,
                 "raster-brightness-min": isDark ? 0.02 : 0.0,
               },
             },
@@ -414,10 +414,11 @@ export const WeatherMap: React.FC<WeatherMapProps> = ({
               </radialGradient>
 
               <radialGradient id="tempGrad" cx="50%" cy="45%" r="40%">
-                <stop offset="0%" stopColor="#67000d" stopOpacity="0.75" />
-                <stop offset="35%" stopColor="#d7301f" stopOpacity="0.55" />
-                <stop offset="70%" stopColor="#fc8d59" stopOpacity="0.35" />
-                <stop offset="100%" stopColor="#fee8c8" stopOpacity="0.0" />
+                <stop offset="0%" stopColor="#450a0a" stopOpacity="0.80" />
+                <stop offset="30%" stopColor="#991b1b" stopOpacity="0.65" />
+                <stop offset="60%" stopColor="#ea580c" stopOpacity="0.45" />
+                <stop offset="85%" stopColor="#f59e0b" stopOpacity="0.25" />
+                <stop offset="100%" stopColor="#fde68a" stopOpacity="0.0" />
               </radialGradient>
 
               <radialGradient id="riskGrad" cx="46%" cy="36%" r="32%">
@@ -558,13 +559,13 @@ export const WeatherMap: React.FC<WeatherMapProps> = ({
             </div>
             <div className="flex justify-between pt-1 border-t border-border/50">
               <span className="text-text-muted font-sans">Dominant Model</span>
-              <span className="font-bold text-orange-500 dark:text-orange-400">
+              <span className="font-bold text-info">
                 {dominantModel.replace("ECMWF_", "")}
               </span>
             </div>
             <div className="flex justify-between">
               <span className="text-text-muted font-sans">Confidence</span>
-              <span className="font-bold text-emerald-600 dark:text-emerald-400">
+              <span className="font-bold text-success">
                 {confidence !== undefined ? `${confidence}%` : "--"}
               </span>
             </div>

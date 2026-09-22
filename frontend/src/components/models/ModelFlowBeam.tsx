@@ -21,7 +21,7 @@ export function ModelFlowBeam({ weights, className = "" }: ModelFlowBeamProps) {
   ];
 
   return (
-    <div className={`relative overflow-hidden rounded-lg border border-border bg-surface p-4 shadow-xs ${className}`}>
+    <div className={`relative overflow-hidden rounded-2xl border border-border bg-surface p-4 shadow-sm hover:shadow-md card-interactive ${className}`}>
       <div className="flex items-center justify-between pb-3 border-b border-border mb-3">
         <div className="flex items-center gap-2">
           <Cpu className="h-4 w-4 text-aether-sky" />
@@ -68,7 +68,7 @@ export function ModelFlowBeam({ weights, className = "" }: ModelFlowBeamProps) {
               borderColor: ["#BAE6FD", "#38BDF8", "#BAE6FD"],
             }}
             transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-            className="flex h-10 w-10 items-center justify-center rounded-full bg-surface border-2 border-aether-sky/50 shadow-xs mb-2"
+            className="flex h-10 w-10 items-center justify-center rounded-full bg-surface border-2 border-aether-sky/50 shadow-sm mb-2"
           >
             <Sparkles className="h-5 w-5 text-aether-sky" />
           </motion.div>

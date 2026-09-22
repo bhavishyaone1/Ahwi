@@ -67,7 +67,7 @@ export default function ExtremeRiskPage() {
               onClick={() => setSubTab(tab)}
               className={`px-3 py-1 rounded-md capitalize transition-all ${
                 subTab === tab
-                  ? "bg-surface text-text-primary shadow-xs font-bold"
+                  ? "bg-surface text-text-primary shadow-sm font-bold"
                   : "text-text-muted hover:text-text-primary"
               }`}
             >
@@ -98,7 +98,7 @@ export default function ExtremeRiskPage() {
 
         {/* Right: Risk Assessment Card */}
         <motion.div variants={fadeUp} className="lg:col-span-5 min-w-0 space-y-3">
-          <Card className="shadow-xs border-border bg-surface overflow-hidden">
+          <Card className="shadow-sm hover:shadow-md card-interactive border-border bg-surface rounded-2xl overflow-hidden">
             <CardHeader className="p-4 pb-2 border-b border-border flex flex-row items-center justify-between space-y-0">
               <div>
                 <CardTitle className="text-sm font-bold text-text-primary">
@@ -138,7 +138,7 @@ export default function ExtremeRiskPage() {
 
               {/* Key Risk Drivers */}
               <div className="space-y-2 pt-3 border-t border-border">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-text-muted block font-mono">
+                <span className="font-mono text-[10px] uppercase font-semibold text-text-muted tracking-wider block">
                   Key Risk Drivers
                 </span>
                 <div className="space-y-1.5 text-xs text-text-secondary">

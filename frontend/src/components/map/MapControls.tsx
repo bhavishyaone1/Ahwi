@@ -69,20 +69,20 @@ export function MapControls({
                 key={layer.id}
                 type="button"
                 onClick={() => onLayerChange(layer.id)}
-                className={`relative flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-all whitespace-nowrap ${
+                className={`relative flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-all duration-200 whitespace-nowrap ${
                   isActive
-                    ? "text-orange-500 dark:text-orange-400 font-bold"
-                    : "text-text-secondary hover:text-text-primary hover:bg-orange-500/10 hover:border-orange-500/30 hover:shadow-xs hover:-translate-y-0.5 border border-transparent"
+                    ? "text-accent font-bold"
+                    : "text-text-secondary hover:text-text-primary hover:bg-accent/10 hover:border-b-2 hover:border-b-accent hover:shadow-sm hover:-translate-y-0.5 border border-transparent"
                 }`}
               >
                 {isActive && (
                   <motion.div
                     layoutId="layer-active-capsule"
-                    className="absolute inset-0 rounded-full bg-orange-500/15 dark:bg-orange-950/40 border border-orange-500/40 dark:border-orange-500/50 shadow-md shadow-orange-500/20 dark:shadow-orange-500/25"
+                    className="absolute inset-0 rounded-full bg-accent/15 dark:bg-accent/20 border border-accent/40 shadow-md shadow-accent/20"
                     transition={{ type: "spring", stiffness: 450, damping: 30 }}
                   />
                 )}
-                <Icon className={`relative z-10 h-3.5 w-3.5 ${isActive ? "text-orange-500 dark:text-orange-400" : "text-text-muted"}`} />
+                <Icon className={`relative z-10 h-3.5 w-3.5 ${isActive ? "text-accent" : "text-text-muted"}`} />
                 <span className="relative z-10">{layer.label}</span>
               </button>
             );

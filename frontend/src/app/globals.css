@@ -4,35 +4,51 @@
 @tailwind utilities;
 
 :root {
-  --background: #F8FAFC;
-  --surface: #FFFFFF;
-  --surface-secondary: #F1F5F9;
-  --surface-elevated: #FFFFFF;
-  --border: #E2E8F0;
-  --text-primary: #0F172A;
+  --accent: #f97316;
+  --accent-hover: #fb923c;
+  --success: #10b981;
+  --info: #0284c7;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+  --bg: #f8fafc;
+  --background: var(--bg);
+  --surface: #ffffff;
+  --surface-2: #f1f5f9;
+  --surface-secondary: var(--surface-2);
+  --surface-elevated: #ffffff;
+  --border: rgba(15, 23, 42, 0.08);
+  --text-primary: #0f172a;
   --text-secondary: #475569;
-  --text-muted: #64748B;
-  --aether-primary: #0284C7;
-  --aether-sky: #38BDF8;
-  --aether-success: #10B981;
-  --aether-warning: #F59E0B;
-  --aether-danger: #EF4444;
+  --text-muted: #64748b;
+  --aether-primary: var(--accent);
+  --aether-sky: var(--info);
+  --aether-success: var(--success);
+  --aether-warning: var(--warning);
+  --aether-danger: var(--danger);
 }
 
 .dark {
-  --background: #0B0F14;
-  --surface: #11161D;
-  --surface-secondary: #171D25;
-  --surface-elevated: #1C232D;
-  --border: #26313D;
-  --text-primary: #F8FAFC;
-  --text-secondary: #CBD5E1;
-  --text-muted: #94A3B8;
-  --aether-primary: #38BDF8;
-  --aether-sky: #7DD3FC;
-  --aether-success: #34D399;
-  --aether-warning: #FBBF24;
-  --aether-danger: #F87171;
+  --accent: #f97316;
+  --accent-hover: #fb923c;
+  --success: #10b981;
+  --info: #38bdf8;
+  --warning: #f59e0b;
+  --danger: #f43f5e;
+  --bg: #0a0b0d;
+  --background: var(--bg);
+  --surface: #12141a;
+  --surface-2: #191c24;
+  --surface-secondary: var(--surface-2);
+  --surface-elevated: #1f232d;
+  --border: rgba(255, 255, 255, 0.08);
+  --text-primary: #f4f5f7;
+  --text-secondary: #cbd5e1;
+  --text-muted: #8b8f9a;
+  --aether-primary: var(--accent);
+  --aether-sky: var(--info);
+  --aether-success: var(--success);
+  --aether-warning: var(--warning);
+  --aether-danger: var(--danger);
 }
 
 body {
@@ -59,10 +75,10 @@ body {
 }
 
 .dark .glass-panel {
-  background: rgba(17, 22, 29, 0.9);
+  background: rgba(18, 20, 26, 0.9);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.09);
+  border: 1px solid var(--border);
   box-shadow: 0 12px 40px -8px rgba(0, 0, 0, 0.65), 0 4px 16px -4px rgba(0, 0, 0, 0.4), inset 0 1px 0 0 rgba(255, 255, 255, 0.06);
 }
 
@@ -74,14 +90,15 @@ body {
 }
 
 .card-interactive:hover {
-  transform: translateY(-2.5px);
-  box-shadow: 0 14px 32px -6px rgba(2, 132, 199, 0.16), 0 4px 10px -2px rgba(0, 0, 0, 0.08);
-  border-color: rgba(56, 189, 248, 0.5);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.06);
+  border-color: rgba(249, 115, 22, 0.35);
 }
 
 .dark .card-interactive:hover {
-  box-shadow: 0 16px 40px -6px rgba(56, 189, 248, 0.22), 0 4px 14px -2px rgba(0, 0, 0, 0.7);
-  border-color: rgba(56, 189, 248, 0.55);
+  transform: translateY(-2px);
+  box-shadow: 0 14px 34px -8px rgba(0, 0, 0, 0.75), 0 0 18px -4px rgba(249, 115, 22, 0.16);
+  border-color: rgba(249, 115, 22, 0.4);
 }
 
 /* Elevated "floating readout" style — for the big stat cards overlaid on maps/heroes */
@@ -90,7 +107,7 @@ body {
 }
 
 .dark .elevated-glow {
-  box-shadow: 0 24px 60px -12px rgba(0, 0, 0, 0.75), 0 0 0 1px rgba(56, 189, 248, 0.12), 0 0 32px -4px rgba(56, 189, 248, 0.15);
+  box-shadow: 0 24px 60px -12px rgba(0, 0, 0, 0.85), 0 0 0 1px rgba(255, 255, 255, 0.08), 0 0 25px -4px rgba(249, 115, 22, 0.14);
 }
 
 /* Scientific Metric Badges */
@@ -128,7 +145,7 @@ body {
   width: 0.5rem;
   height: 0.5rem;
   border-radius: 9999px;
-  background-color: #10B981;
+  background-color: var(--success);
   animation: radar-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 

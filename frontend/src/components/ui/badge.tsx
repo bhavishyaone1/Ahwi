@@ -22,9 +22,9 @@ const badgeVariants = cva(
         scientific:
           "border border-sky-300 dark:border-sky-700 bg-sky-100 dark:bg-sky-950/80 text-sky-800 dark:text-sky-300 font-bold shadow-xs shadow-sky-500/10",
         demo:
-          "border border-amber-300 dark:border-amber-800 bg-amber-100 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 font-bold",
+          "border border-amber-300 dark:border-amber-800 bg-amber-100 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 font-bold shadow-xs shadow-amber-500/10",
         real:
-          "border border-emerald-300 dark:border-emerald-800 bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 font-bold",
+          "border border-emerald-300 dark:border-emerald-800 bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 font-bold shadow-xs shadow-emerald-500/10",
       },
     },
     defaultVariants: {

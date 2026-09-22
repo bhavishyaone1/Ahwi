@@ -10,7 +10,7 @@ import { motion } from "motion/react";
 export function CoordinateGrid({ className = "" }: { className?: string }) {
   return (
     <svg
-      className={`pointer-events-none absolute inset-0 h-full w-full opacity-[0.035] ${className}`}
+      className={`pointer-events-none absolute inset-0 h-full w-full opacity-[0.06] dark:opacity-[0.09] ${className}`}
       xmlns="http://www.w3.org/2000/svg"
     >
       <defs>
@@ -33,7 +33,7 @@ export function CoordinateGrid({ className = "" }: { className?: string }) {
 export function ContourLines({ className = "" }: { className?: string }) {
   return (
     <svg
-      className={`pointer-events-none absolute inset-0 h-full w-full opacity-[0.04] ${className}`}
+      className={`pointer-events-none absolute inset-0 h-full w-full opacity-[0.07] dark:opacity-[0.1] ${className}`}
       viewBox="0 0 1440 600"
       fill="none"
       preserveAspectRatio="xMidYMid slice"
@@ -94,7 +94,8 @@ export function AtmosphericBackground({ className = "" }: { className?: string }
       aria-hidden="true"
     >
       {/* Soft ambient atmospheric glow */}
-      <div className="absolute -top-[12%] left-1/2 -translate-x-1/2 w-[1100px] h-[550px] bg-gradient-to-b from-sky-100/40 via-sky-50/15 to-transparent blur-3xl rounded-full" />
+      <div className="absolute -top-[12%] left-1/2 -translate-x-1/2 w-[1100px] h-[550px] bg-gradient-to-b from-sky-200/50 via-sky-100/20 to-transparent dark:from-sky-500/20 dark:via-sky-500/5 blur-3xl rounded-full" />
+      <div className="absolute top-[20%] -right-[10%] w-[700px] h-[500px] bg-gradient-to-bl from-amber-200/30 via-amber-100/10 to-transparent dark:from-amber-500/10 dark:via-amber-500/0 blur-3xl rounded-full" />
 
       {/* Coordinate & dot grid */}
       <CoordinateGrid />

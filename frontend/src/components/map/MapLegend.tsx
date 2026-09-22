@@ -7,115 +7,97 @@ interface MapLegendProps {
   activeLayer: string;
 }
 
-export const LEGEND_CONFIGS: Record<
+export const CONTINUOUS_LEGENDS: Record<
   string,
-  { title: string; unit: string; stops: { color: string; label: string }[] }
+  {
+    title: string;
+    unit: string;
+    gradient: string;
+    ticks: string[];
+  }
 > = {
   rainfall: {
     title: "Precipitation",
-    unit: "mm/24h",
-    stops: [
-      { color: "#08306b", label: "> 100" },
-      { color: "#08519c", label: "50–100" },
-      { color: "#2171b5", label: "25–50" },
-      { color: "#4292c6", label: "10–25" },
-      { color: "#6baed6", label: "5–10" },
-      { color: "#9ecae1", label: "1–5" },
-      { color: "#c6dbef", label: "0–1" },
-    ],
+    unit: "mm/h",
+    gradient: "linear-gradient(to right, #10b981 0%, #84cc16 15%, #eab308 30%, #f97316 48%, #ef4444 65%, #ec4899 80%, #a855f7 92%, #ffffff 100%)",
+    ticks: ["0", "0.5", "1", "2", "4", "6", "7", "10", "12", "14", "16", "24", "32", "60"],
   },
   temperature: {
-    title: "Surface Temp",
+    title: "Temperature",
     unit: "°C",
-    stops: [
-      { color: "#7f0000", label: "> 45" },
-      { color: "#b30000", label: "40–45" },
-      { color: "#d7301f", label: "35–40" },
-      { color: "#ef6548", label: "30–35" },
-      { color: "#fdbb84", label: "25–30" },
-      { color: "#fee8c8", label: "20–25" },
-      { color: "#2b83ba", label: "< 20" },
-    ],
+    gradient: "linear-gradient(to right, #3b82f6 0%, #06b6d4 20%, #10b981 40%, #eab308 60%, #f97316 80%, #ef4444 100%)",
+    ticks: ["-10", "0", "10", "20", "25", "30", "35", "40", "45+"],
   },
   wind: {
-    title: "Wind Velocity",
-    unit: "km/h",
-    stops: [
-      { color: "#49006a", label: "> 60 (Gale)" },
-      { color: "#7a0177", label: "45–60" },
-      { color: "#ae017e", label: "30–45" },
-      { color: "#dd3497", label: "20–30" },
-      { color: "#f768a1", label: "10–20" },
-      { color: "#fcc5c0", label: "< 10" },
-    ],
+    title: "Wind Speed",
+    unit: "m/s",
+    gradient: "linear-gradient(to right, #94a3b8 0%, #38bdf8 25%, #6366f1 50%, #d946ef 75%, #ef4444 100%)",
+    ticks: ["0", "2", "5", "10", "15", "20", "28", "35+"],
+  },
+  pressure: {
+    title: "Atmospheric Pressure",
+    unit: "hPa",
+    gradient: "linear-gradient(to right, #6366f1 0%, #3b82f6 30%, #10b981 60%, #f59e0b 85%, #ef4444 100%)",
+    ticks: ["980", "995", "1005", "1013", "1020", "1030"],
   },
   satellite: {
-    title: "INSAT-3D IR Cloud Top",
-    unit: "Brightness Temp",
-    stops: [
-      { color: "#ffffff", label: "Deep Convection" },
-      { color: "#d9d9d9", label: "Cirrus / High" },
-      { color: "#969696", label: "Mid-level Stratum" },
-      { color: "#525252", label: "Low Stratus" },
-      { color: "#252525", label: "Clear Ground" },
-    ],
+    title: "Cloud Coverage",
+    unit: "%",
+    gradient: "linear-gradient(to right, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.4) 40%, rgba(255,255,255,0.75) 75%, #ffffff 100%)",
+    ticks: ["0", "20", "40", "60", "80", "100"],
   },
   risk: {
     title: "Severe Weather Risk",
-    unit: "Compound Index",
-    stops: [
-      { color: "#dc2626", label: "EXTREME (>85%)" },
-      { color: "#ea580c", label: "HIGH (70–85%)" },
-      { color: "#d97706", label: "WATCH (40–70%)" },
-      { color: "#16a34a", label: "LOW (<40%)" },
-    ],
+    unit: "Index",
+    gradient: "linear-gradient(to right, #10b981 0%, #f59e0b 35%, #ea580c 70%, #dc2626 100%)",
+    ticks: ["Low", "Watch", "High", "Extreme"],
   },
   trust: {
-    title: "Dominant Model Trust",
-    unit: "Softmax Weight",
-    stops: [
-      { color: "#0284c7", label: "AIFS Dominant (>40%)" },
-      { color: "#2563eb", label: "ECMWF Dominant (>40%)" },
-      { color: "#64748b", label: "GFS Dominant (>40%)" },
-      { color: "#059669", label: "Consensus (Disagreement <5%)" },
-    ],
+    title: "Model Trust Distribution",
+    unit: "Softmax",
+    gradient: "linear-gradient(to right, #059669 0%, #64748b 33%, #2563eb 66%, #0284c7 100%)",
+    ticks: ["Consensus", "GFS", "IFS", "AIFS"],
   },
 };
 
 export function MapLegend({ activeLayer }: MapLegendProps) {
-  const legend = LEGEND_CONFIGS[activeLayer] || LEGEND_CONFIGS.rainfall;
+  const config = CONTINUOUS_LEGENDS[activeLayer] || CONTINUOUS_LEGENDS.rainfall;
 
   return (
-    <div className="absolute bottom-16 left-3 z-20 rounded-xl border border-border bg-surface/95 dark:bg-surface/95 px-3 py-2.5 shadow-md backdrop-blur-md text-xs pointer-events-auto max-w-[180px] transition-colors">
-      <div className="flex items-center justify-between border-b border-border pb-1 mb-1.5">
-        <span className="font-semibold text-text-primary text-[11px] truncate">
-          {legend.title}
-        </span>
-        <span className="text-[10px] font-mono text-text-muted ml-1">
-          {legend.unit}
-        </span>
-      </div>
-
+    <div className="absolute bottom-16 left-3 z-20 rounded-xl border border-border/80 bg-surface/90 dark:bg-[#18181b]/90 p-2.5 shadow-lg backdrop-blur-md pointer-events-auto transition-colors max-w-[92vw] sm:max-w-xs">
       <AnimatePresence mode="wait">
         <motion.div
           key={activeLayer}
-          initial={{ opacity: 0, y: 4 }}
+          initial={{ opacity: 0, y: 3 }}
           animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -4 }}
-          transition={{ duration: 0.18 }}
-          className="space-y-1"
+          exit={{ opacity: 0, y: -3 }}
+          transition={{ duration: 0.15 }}
+          className="space-y-1.5"
         >
-          {legend.stops.map((stop, idx) => (
-            <div key={idx} className="flex items-center gap-2 text-[10px]">
-              <span
-                className="h-2.5 w-3.5 shrink-0 rounded-xs border border-border"
-                style={{ backgroundColor: stop.color }}
-              />
-              <span className="text-text-secondary font-mono truncate">
-                {stop.label}
+          {/* Ticks header / numbers */}
+          <div className="flex items-center justify-between gap-1 text-[9px] font-mono text-text-muted/80 tracking-tighter select-none">
+            {config.ticks.map((t, idx) => (
+              <span key={idx} className="shrink-0">
+                {t}
               </span>
-            </div>
-          ))}
+            ))}
+          </div>
+
+          {/* Continuous Gradient Bar */}
+          <div
+            className="h-2.5 w-full rounded-full border border-black/20 shadow-inner"
+            style={{ background: config.gradient }}
+          />
+
+          {/* Unit & Title footer */}
+          <div className="flex items-center justify-between text-[10px] select-none pt-0.5">
+            <span className="font-semibold text-text-primary text-[11px]">
+              {config.title}
+            </span>
+            <span className="font-mono font-bold text-text-muted">
+              {config.unit}
+            </span>
+          </div>
         </motion.div>
       </AnimatePresence>
     </div>

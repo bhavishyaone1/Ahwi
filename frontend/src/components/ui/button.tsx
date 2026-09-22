@@ -4,28 +4,30 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center whitespace-nowrap rounded-lg text-xs font-medium transition-all focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-sky-500 disabled:pointer-events-none disabled:opacity-50 select-none active:scale-[0.98]",
+  "inline-flex items-center justify-center whitespace-nowrap rounded-xl text-xs font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 disabled:pointer-events-none disabled:opacity-50 select-none active:scale-[0.98]",
   {
     variants: {
       variant: {
         default:
-          "bg-sky-600 text-white shadow-sm hover:bg-sky-700 active:bg-sky-800",
+          "bg-gradient-to-r from-sky-600 to-sky-500 hover:from-sky-500 hover:to-sky-400 text-white shadow-md shadow-sky-500/30 active:bg-sky-700",
+        coral:
+          "bg-gradient-to-r from-[#e87a53] to-[#f97316] hover:from-[#f97316] hover:to-[#ea580c] text-slate-950 font-black shadow-md shadow-amber-600/35",
         destructive:
-          "bg-rose-600 text-white shadow-sm hover:bg-rose-700",
+          "bg-gradient-to-r from-rose-600 to-rose-500 hover:from-rose-500 hover:to-rose-400 text-white shadow-md shadow-rose-500/30",
         outline:
-          "border border-border bg-surface text-text-secondary shadow-xs hover:bg-surface-secondary hover:text-text-primary",
+          "border border-border/90 bg-surface text-text-secondary shadow-sm hover:bg-surface-secondary hover:text-text-primary",
         secondary:
-          "bg-surface-secondary text-text-primary shadow-xs hover:bg-surface-secondary/80",
+          "bg-surface-secondary text-text-primary shadow-sm hover:bg-surface-secondary/80",
         ghost: "text-text-secondary hover:bg-surface-secondary hover:text-text-primary",
         link: "text-sky-600 dark:text-sky-400 underline-offset-4 hover:underline",
         scientific:
-          "border border-sky-200 dark:border-sky-800 bg-sky-50/70 dark:bg-sky-950/50 text-sky-800 dark:text-sky-300 hover:bg-sky-100 dark:hover:bg-sky-900/60 shadow-xs font-semibold",
+          "border border-sky-300 dark:border-sky-700 bg-gradient-to-r from-sky-50/80 to-sky-100/60 dark:from-sky-950/60 dark:to-sky-900/40 text-sky-800 dark:text-sky-300 hover:bg-sky-100 dark:hover:bg-sky-900/60 shadow-sm shadow-sky-500/20 font-bold",
       },
       size: {
-        default: "h-8 px-3 py-1.5",
-        sm: "h-7 rounded-md px-2.5 text-[11px]",
-        lg: "h-9 rounded-lg px-4 text-sm",
-        icon: "h-8 w-8",
+        default: "h-8 px-3.5 py-1.5",
+        sm: "h-7 rounded-lg px-2.5 text-[11px]",
+        lg: "h-10 rounded-xl px-5 text-sm",
+        icon: "h-8 w-8 rounded-lg",
         xs: "h-6 px-2 text-[10px]",
       },
     },

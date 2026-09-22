@@ -98,15 +98,15 @@ export const Sidebar: React.FC<SidebarProps> = ({
           mobileOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
         }`}
       >
-        {/* Top Branding */}
+        {/* Top Branding (OpenWeather reference style) */}
         <div className="flex items-center justify-between h-16 px-4 border-b border-border">
           <Link
             href="/"
             onClick={onCloseMobile}
             className="flex items-center gap-2.5 overflow-hidden group"
           >
-            <div className="h-9 w-9 rounded-xl bg-gradient-to-tr from-sky-600 to-sky-400 dark:from-sky-500 dark:to-sky-300 flex items-center justify-center text-white font-black text-lg shadow-sm shadow-sky-500/20 shrink-0 group-hover:scale-105 transition-transform">
-              Æ
+            <div className="h-9 w-9 rounded-xl bg-gradient-to-tr from-amber-500 to-rose-500 flex items-center justify-center text-white font-black text-lg shadow-sm shadow-amber-500/20 shrink-0 group-hover:scale-105 transition-transform">
+              <CloudSun className="h-5 w-5 text-white" />
             </div>
             {!collapsed && (
               <div className="flex flex-col truncate">
@@ -114,12 +114,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   <span className="text-base font-black tracking-tight text-text-primary">
                     AETHER
                   </span>
-                  <span className="text-[9px] uppercase font-bold px-1.5 py-0.2 rounded bg-sky-50 dark:bg-sky-950/60 text-sky-700 dark:text-sky-300 border border-sky-200 dark:border-sky-800">
+                  <span className="text-[9px] uppercase font-bold px-1.5 py-0.2 rounded bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20">
                     PS 26081
                   </span>
                 </div>
                 <span className="text-[10px] text-text-muted font-medium truncate">
-                  Weather Intelligence
+                  Adaptive Weather Intelligence
                 </span>
               </div>
             )}
@@ -134,28 +134,25 @@ export const Sidebar: React.FC<SidebarProps> = ({
           </button>
         </div>
 
-        {/* Operator Badge */}
+        {/* User Profile Pill (OpenWeather reference style: Avatar + Name + Logout) */}
         {!collapsed && (
-          <div className="px-3 pt-3 pb-2">
-            <div className="flex items-center justify-between p-2 rounded-lg bg-surface-secondary/80 border border-border">
-              <div className="flex items-center gap-2">
-                <div className="h-7 w-7 rounded-full bg-sky-100 dark:bg-sky-900/60 text-sky-700 dark:text-sky-300 flex items-center justify-center text-xs font-bold font-mono">
-                  OP
+          <div className="px-3 pt-3 pb-1">
+            <div className="flex items-center justify-between p-2 rounded-xl bg-surface-secondary/70 border border-border">
+              <div className="flex items-center gap-2.5 min-w-0">
+                <div className="h-8 w-8 rounded-full bg-gradient-to-tr from-amber-500 to-rose-500 text-white flex items-center justify-center text-xs font-black shadow-xs shrink-0">
+                  E
                 </div>
-                <div className="flex flex-col">
-                  <span className="text-xs font-semibold text-text-primary">IMD / MoES Ops</span>
-                  <span className="text-[10px] text-text-muted flex items-center gap-1">
-                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-                    Station Active
-                  </span>
+                <div className="flex flex-col min-w-0">
+                  <span className="text-xs font-bold text-text-primary truncate">IMD / MoES Ops</span>
+                  <span className="text-[10px] text-text-muted truncate">Station Delhi NCR</span>
                 </div>
               </div>
               <button
                 onClick={onOpenSettings}
-                title="System Diagnostics"
-                className="text-text-muted hover:text-text-primary p-1 rounded transition"
+                title="System settings"
+                className="text-text-muted hover:text-text-primary p-1.5 rounded-lg hover:bg-surface transition shrink-0"
               >
-                <Settings className="h-3.5 w-3.5" />
+                <LogOut className="h-4 w-4" />
               </button>
             </div>
           </div>
@@ -166,7 +163,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           {NAV_GROUPS.map((grp) => (
             <div key={grp.group} className="space-y-1">
               {!collapsed && (
-                <span className="px-2 text-[10px] font-bold text-text-muted uppercase tracking-wider block">
+                <span className="px-2 text-[10px] font-bold text-text-muted uppercase tracking-wider block font-mono">
                   {grp.group}
                 </span>
               )}
@@ -181,23 +178,23 @@ export const Sidebar: React.FC<SidebarProps> = ({
                       href={item.href}
                       onClick={onCloseMobile}
                       title={collapsed ? item.name : undefined}
-                      className={`relative flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-xs font-medium transition-colors ${
+                      className={`relative flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold transition-all ${
                         isActive
-                          ? "text-sky-900 dark:text-sky-100 font-bold"
+                          ? "text-[#e87a53] dark:text-[#f89b78] font-bold"
                           : "text-text-secondary hover:text-text-primary hover:bg-surface-secondary"
                       } ${collapsed ? "justify-center px-0" : ""}`}
                     >
                       {isActive && (
                         <motion.div
                           layoutId="sidebar-active-pill"
-                          className="absolute inset-0 rounded-lg bg-sky-100 dark:bg-sky-950/80 border border-sky-300/80 dark:border-sky-800 -z-10 shadow-xs"
+                          className="absolute inset-0 rounded-xl bg-amber-500/20 dark:bg-[#38231c] border border-amber-500/40 dark:border-[#e87a53]/50 -z-10 shadow-md shadow-amber-500/20 dark:shadow-[#e87a53]/25"
                           transition={{ type: "spring", stiffness: 450, damping: 32 }}
                         />
                       )}
                       <Icon
                         className={`h-4 w-4 shrink-0 ${
                           isActive
-                            ? "text-sky-600 dark:text-sky-400"
+                            ? "text-[#e87a53] dark:text-[#f89b78]"
                             : "text-text-muted group-hover:text-text-primary"
                         }`}
                       />
@@ -210,41 +207,37 @@ export const Sidebar: React.FC<SidebarProps> = ({
           ))}
         </div>
 
-        {/* Highlight Action CTA: Ask AETHER (coral/accent like OpenWeather reference) */}
+        {/* Highlight Action CTA: Ask a question (Warm Coral Oblong Button matching OpenWeather Reference) */}
         {!collapsed && (
           <div className="p-3 border-t border-border">
             <Link
               href="/ask"
               onClick={onCloseMobile}
-              className="w-full flex items-center justify-center gap-2 py-2.5 px-3 rounded-lg bg-gradient-to-r from-sky-600 to-sky-500 hover:from-sky-700 hover:to-sky-600 text-white text-xs font-bold shadow-sm shadow-sky-500/20 transition-all hover:scale-[1.02] active:scale-[0.98]"
+              className="w-full flex items-center justify-center gap-2 py-3.5 px-4 rounded-2xl bg-gradient-to-r from-[#e87a53] via-[#ea580c] to-[#f97316] hover:from-[#f97316] hover:to-[#e87a53] hover:scale-[1.02] active:scale-[0.98] text-slate-950 font-black text-xs shadow-lg shadow-amber-600/35 transition-all"
             >
-              <Sparkles className="h-4 w-4" />
-              <span>Ask AETHER Assistant</span>
+              <Sparkles className="h-4 w-4 text-slate-950" />
+              <span>Ask a question</span>
             </Link>
           </div>
         )}
 
-        {/* Bottom Theme & Settings Bar */}
+        {/* Bottom Dark Mode Switch (OpenWeather Reference Style: Moon icon + Dark mode label + coral toggle) */}
         <div className="p-3 border-t border-border bg-surface-secondary/40 flex items-center justify-between">
           {!collapsed ? (
             <>
               <div className="flex items-center gap-2">
-                {theme === "dark" ? (
-                  <Moon className="h-4 w-4 text-sky-400 shrink-0" />
-                ) : (
-                  <Sun className="h-4 w-4 text-amber-500 shrink-0" />
-                )}
-                <span className="text-xs font-medium text-text-primary">
-                  {theme === "dark" ? "Dark mode" : "Light mode"}
+                <Moon className="h-4 w-4 text-text-muted shrink-0" />
+                <span className="text-xs font-semibold text-text-primary">
+                  Dark mode
                 </span>
               </div>
 
-              {/* iOS / OpenWeather style Toggle Switch */}
+              {/* iOS / OpenWeather style Toggle Switch with Coral active state */}
               <button
                 onClick={toggleTheme}
                 title="Switch theme"
                 className={`relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                  theme === "dark" ? "bg-sky-600" : "bg-slate-300 dark:bg-slate-700"
+                  theme === "dark" ? "bg-[#e87a53]" : "bg-slate-300 dark:bg-slate-700"
                 }`}
               >
                 <span
@@ -260,11 +253,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               title="Toggle Light / Dark mode"
               className="w-full flex justify-center p-1 text-text-muted hover:text-text-primary transition"
             >
-              {theme === "dark" ? (
-                <Moon className="h-4 w-4 text-sky-400" />
-              ) : (
-                <Sun className="h-4 w-4 text-amber-500" />
-              )}
+              <Moon className="h-4 w-4 text-text-muted" />
             </button>
           )}
         </div>

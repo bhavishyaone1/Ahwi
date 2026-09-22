@@ -19,7 +19,7 @@ export const CONTINUOUS_LEGENDS: Record<
   rainfall: {
     title: "Precipitation",
     unit: "mm/h",
-    gradient: "linear-gradient(to right, #10b981 0%, #84cc16 15%, #eab308 30%, #f97316 48%, #ef4444 65%, #ec4899 80%, #a855f7 92%, #ffffff 100%)",
+    gradient: "linear-gradient(to right, rgba(254, 243, 199, 0.5) 0%, #fde68a 12%, #f59e0b 28%, #ea580c 45%, #dc2626 65%, #b91c1c 78%, #7f1d1d 90%, #450a0a 100%)",
     ticks: ["0", "0.5", "1", "2", "4", "6", "7", "10", "12", "14", "16", "24", "32", "60"],
   },
   temperature: {

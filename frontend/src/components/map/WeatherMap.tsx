@@ -125,11 +125,11 @@ export const WeatherMap: React.FC<WeatherMapProps> = ({
               minzoom: 0,
               maxzoom: 18,
               paint: {
-                "raster-opacity": 0.85,
-                "raster-saturation": isDark ? -0.95 : -0.6,
-                "raster-contrast": isDark ? 0.4 : 0.1,
-                "raster-brightness-max": isDark ? 0.45 : 1.0,
-                "raster-brightness-min": isDark ? 0.05 : 0.0,
+                "raster-opacity": isDark ? 0.95 : 0.85,
+                "raster-saturation": isDark ? -1.0 : -0.6,
+                "raster-contrast": isDark ? 0.6 : 0.1,
+                "raster-brightness-max": isDark ? 0.22 : 0.85,
+                "raster-brightness-min": isDark ? 0.02 : 0.0,
               },
             },
           ],
@@ -169,14 +169,14 @@ export const WeatherMap: React.FC<WeatherMapProps> = ({
           const pill = document.createElement("div");
           pill.className = `flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-mono font-bold shadow-md transition-all ${
             isSelected
-              ? "bg-[#18181b] text-white ring-2 ring-[#e87a53] border border-[#e87a53] scale-105"
-              : "bg-surface/90 text-text-primary border border-border/80 hover:border-[#e87a53]/50"
+              ? "bg-[#18181b] text-white ring-2 ring-orange-500 border border-orange-500 scale-105"
+              : "bg-surface/90 text-text-primary border border-border/80 hover:border-orange-500/50"
           }`;
 
           const valBadge = document.createElement("span");
           valBadge.className = `px-1 rounded-sm text-[9px] font-bold ${
             isSelected
-              ? "bg-[#e87a53] text-slate-950"
+              ? "bg-orange-500 text-slate-950"
               : "bg-amber-500/20 text-amber-600 dark:text-amber-400"
           }`;
           valBadge.textContent = `${Math.round(stVal)}`;
@@ -238,10 +238,11 @@ export const WeatherMap: React.FC<WeatherMapProps> = ({
     const isDark = theme === "dark";
 
     try {
-      mapRef.current.setPaintProperty("osm-tiles", "raster-saturation", isDark ? -0.95 : -0.6);
-      mapRef.current.setPaintProperty("osm-tiles", "raster-contrast", isDark ? 0.4 : 0.1);
-      mapRef.current.setPaintProperty("osm-tiles", "raster-brightness-max", isDark ? 0.45 : 1.0);
-      mapRef.current.setPaintProperty("osm-tiles", "raster-brightness-min", isDark ? 0.05 : 0.0);
+      mapRef.current.setPaintProperty("osm-tiles", "raster-opacity", isDark ? 0.95 : 0.85);
+      mapRef.current.setPaintProperty("osm-tiles", "raster-saturation", isDark ? -1.0 : -0.6);
+      mapRef.current.setPaintProperty("osm-tiles", "raster-contrast", isDark ? 0.6 : 0.1);
+      mapRef.current.setPaintProperty("osm-tiles", "raster-brightness-max", isDark ? 0.22 : 0.85);
+      mapRef.current.setPaintProperty("osm-tiles", "raster-brightness-min", isDark ? 0.02 : 0.0);
     } catch (err) {
       // Ignore if style layer not ready
     }
@@ -253,8 +254,8 @@ export const WeatherMap: React.FC<WeatherMapProps> = ({
       const isSelected = name === selectedStation.name;
       dotEl.className = `flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-mono font-bold shadow-md transition-all ${
         isSelected
-          ? "bg-[#18181b] text-white ring-2 ring-[#e87a53] border border-[#e87a53] scale-105"
-          : "bg-surface/90 text-text-primary border border-border/80 hover:border-[#e87a53]/50"
+          ? "bg-[#18181b] text-white ring-2 ring-orange-500 border border-orange-500 scale-105"
+          : "bg-surface/90 text-text-primary border border-border/80 hover:border-orange-500/50"
       }`;
     });
 
@@ -404,12 +405,12 @@ export const WeatherMap: React.FC<WeatherMapProps> = ({
           >
             <defs>
               <radialGradient id="precipCore" cx="48%" cy="38%" r="35%">
-                <stop offset="0%" stopColor="#49006a" stopOpacity="0.8" />
-                <stop offset="25%" stopColor="#7a0177" stopOpacity="0.65" />
-                <stop offset="50%" stopColor="#ae017e" stopOpacity="0.5" />
-                <stop offset="75%" stopColor="#dd3497" stopOpacity="0.35" />
-                <stop offset="90%" stopColor="#f768a1" stopOpacity="0.2" />
-                <stop offset="100%" stopColor="#fa9fb5" stopOpacity="0.0" />
+                <stop offset="0%" stopColor="#450a0a" stopOpacity="0.85" />
+                <stop offset="25%" stopColor="#7f1d1d" stopOpacity="0.70" />
+                <stop offset="50%" stopColor="#b91c1c" stopOpacity="0.55" />
+                <stop offset="70%" stopColor="#ea580c" stopOpacity="0.40" />
+                <stop offset="88%" stopColor="#f59e0b" stopOpacity="0.25" />
+                <stop offset="100%" stopColor="#fde68a" stopOpacity="0.0" />
               </radialGradient>
 
               <radialGradient id="tempGrad" cx="50%" cy="45%" r="40%">
@@ -430,8 +431,8 @@ export const WeatherMap: React.FC<WeatherMapProps> = ({
             {activeLayer === "rainfall" && (
               <g>
                 <ellipse cx="380" cy="240" rx="160" ry="120" fill="url(#precipCore)" />
-                <ellipse cx="410" cy="260" rx="90" ry="70" fill="#ae017e" fillOpacity="0.45" />
-                <circle cx="430" cy="250" r="40" fill="#49006a" fillOpacity="0.55" />
+                <ellipse cx="410" cy="260" rx="90" ry="70" fill="#b91c1c" fillOpacity="0.45" />
+                <circle cx="430" cy="250" r="40" fill="#450a0a" fillOpacity="0.65" />
               </g>
             )}
 
@@ -481,23 +482,23 @@ export const WeatherMap: React.FC<WeatherMapProps> = ({
       )}
 
       {/* Floating Selected Station Observation Card (OpenWeather reference style) */}
-      <div className="elevated-glow absolute top-16 right-3 z-20 rounded-2xl border border-white/10 dark:border-white/15 bg-surface/95 dark:bg-[#12161f]/95 shadow-2xl backdrop-blur-xl text-xs pointer-events-auto min-w-[250px] max-w-[270px] overflow-hidden transition-all">
-        {/* Thin gradient accent strip across the top */}
-        <div className="h-1 w-full bg-gradient-to-r from-[#e87a53] via-amber-400 to-sky-400" />
+      <div className="elevated-glow absolute top-16 right-3 z-20 rounded-2xl border border-white/10 dark:border-white/15 bg-surface/95 dark:bg-[#12161f]/95 shadow-2xl backdrop-blur-xl text-xs pointer-events-auto min-w-[260px] max-w-[280px] overflow-hidden transition-all">
+        {/* Amber brand accent strip across the top */}
+        <div className="h-1 w-full bg-gradient-to-r from-[#f97316] via-amber-500 to-amber-400" />
 
         <div className="p-4 space-y-3">
-          {/* Main large readout matching OpenWeather (-8.8 °C with weather icon) */}
+          {/* Main large readout with strong contrast */}
           <div className="flex items-center justify-between">
             <div>
-              <span className="text-4xl font-black font-mono tracking-tight text-text-primary">
+              <span className="text-5xl font-black font-mono tracking-tight text-text-primary">
                 {currentValue !== undefined ? currentValue : "--"}
               </span>
-              <span className="text-sm font-bold font-mono text-text-muted ml-1">
+              <span className="text-sm font-bold font-mono text-text-muted ml-1.5">
                 {variable === "rainfall_mm" ? "mm" : variable === "temperature_c" ? "°C" : "m/s"}
               </span>
             </div>
-            {/* Icon in a gradient chip */}
-            <div className="h-10 w-10 rounded-xl bg-gradient-to-tr from-[#e87a53] via-[#f97316] to-amber-400 text-slate-950 flex items-center justify-center shadow-md shadow-amber-600/35 shrink-0">
+            {/* Icon in an amber gradient chip */}
+            <div className="h-11 w-11 rounded-xl bg-gradient-to-tr from-[#ea580c] to-[#f97316] text-white flex items-center justify-center shadow-md shadow-orange-500/30 shrink-0">
               {variable === "rainfall_mm" ? (
                 <CloudRain className="h-5 w-5" />
               ) : variable === "temperature_c" ? (
@@ -511,7 +512,7 @@ export const WeatherMap: React.FC<WeatherMapProps> = ({
           {/* Station name and coordinates */}
           <div className="flex items-center justify-between text-text-muted text-[11px] pb-2 border-b border-border/60">
             <div className="flex items-center gap-1.5 font-bold text-text-primary truncate">
-              <MapPin className="h-3.5 w-3.5 text-[#e87a53] shrink-0" />
+              <MapPin className="h-3.5 w-3.5 text-[#f97316] shrink-0" />
               <span className="truncate">{selectedStation.name}</span>
             </div>
             <span className="font-mono text-[10px] shrink-0">
@@ -557,7 +558,7 @@ export const WeatherMap: React.FC<WeatherMapProps> = ({
             </div>
             <div className="flex justify-between pt-1 border-t border-border/50">
               <span className="text-text-muted font-sans">Dominant Model</span>
-              <span className="font-bold text-[#e87a53] dark:text-[#f89b78]">
+              <span className="font-bold text-orange-500 dark:text-orange-400">
                 {dominantModel.replace("ECMWF_", "")}
               </span>
             </div>

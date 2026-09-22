@@ -11,7 +11,7 @@ const buttonVariants = cva(
         default:
           "bg-gradient-to-r from-sky-600 to-sky-500 hover:from-sky-500 hover:to-sky-400 text-white shadow-md shadow-sky-500/30 active:bg-sky-700",
         coral:
-          "bg-gradient-to-r from-[#e87a53] to-[#f97316] hover:from-[#f97316] hover:to-[#ea580c] text-slate-950 font-black shadow-md shadow-amber-600/35",
+          "bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-orange-500 text-slate-950 font-black shadow-md shadow-orange-500/25",
         destructive:
           "bg-gradient-to-r from-rose-600 to-rose-500 hover:from-rose-500 hover:to-rose-400 text-white shadow-md shadow-rose-500/30",
         outline:

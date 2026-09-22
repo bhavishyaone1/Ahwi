@@ -20,6 +20,7 @@ interface EventItem {
   type: string;
   tagColor: string;
   dotColor: string;
+  hoverBorder: string;
   time: string;
   title: string;
   description?: string;
@@ -42,7 +43,8 @@ export const EventStreamRail: React.FC = () => {
       category: "triggers",
       type: "Trigger Event",
       tagColor: "text-amber-500 dark:text-amber-400",
-      dotColor: "bg-amber-500",
+      dotColor: "bg-amber-500 shadow-sm shadow-amber-500/50",
+      hoverBorder: "hover:border-l-amber-500",
       time: "14:20",
       dateGroup: "22 Sep, 2026",
       title: `Precipitation spike detected at ${selectedLocation.name}`,
@@ -53,7 +55,8 @@ export const EventStreamRail: React.FC = () => {
       category: "alerts",
       type: "Alert",
       tagColor: "text-sky-500 dark:text-sky-400",
-      dotColor: "bg-sky-500",
+      dotColor: "bg-sky-500 shadow-sm shadow-sky-500/50",
+      hoverBorder: "hover:border-l-sky-500",
       time: "11:00",
       dateGroup: "22 Sep, 2026",
       title: `${rainLevel} Severe Weather Advisory`,
@@ -64,7 +67,8 @@ export const EventStreamRail: React.FC = () => {
       category: "triggers",
       type: "Trigger Event",
       tagColor: "text-amber-500 dark:text-amber-400",
-      dotColor: "bg-amber-500",
+      dotColor: "bg-amber-500 shadow-sm shadow-amber-500/50",
+      hoverBorder: "hover:border-l-amber-500",
       time: "08:30",
       dateGroup: "21 Sep, 2026",
       title: `${dominantModel} Dominant Softmax Weight Reallocated`,
@@ -75,7 +79,8 @@ export const EventStreamRail: React.FC = () => {
       category: "reports",
       type: "Report",
       tagColor: "text-emerald-500 dark:text-emerald-400",
-      dotColor: "bg-emerald-500",
+      dotColor: "bg-emerald-500 shadow-sm shadow-emerald-500/50",
+      hoverBorder: "hover:border-l-emerald-500",
       time: "11:52",
       dateGroup: "21 Sep, 2026",
       title: `Verification Report: ${selectedLocation.name} Assimilation`,
@@ -84,9 +89,10 @@ export const EventStreamRail: React.FC = () => {
     {
       id: "ev-5",
       category: "cases",
-      type: "Case",
-      tagColor: "text-violet-500 dark:text-violet-400",
-      dotColor: "bg-violet-500",
+      type: "Critical Event",
+      tagColor: "text-rose-500 dark:text-rose-400",
+      dotColor: "bg-rose-500 shadow-sm shadow-rose-500/50",
+      hoverBorder: "hover:border-l-rose-500",
       time: "06:00",
       dateGroup: "20 Sep, 2026",
       title: `ECMWF IFS vs AIFS Lead-Time Divergence`,
@@ -107,19 +113,19 @@ export const EventStreamRail: React.FC = () => {
   });
 
   return (
-    <div className="w-full lg:w-80 flex flex-col space-y-3 shrink-0 select-none">
+    <div className="w-full lg:w-80 flex flex-col space-y-4 shrink-0 select-none">
       {/* Date Header + Category Filter Tabs (OpenWeather reference style) */}
-      <div className="p-3.5 rounded-2xl bg-surface/90 dark:bg-[#18181b]/90 border border-border/80 shadow-md space-y-3 backdrop-blur-md">
-        {/* Top Date Header: "27 November 2024 >>" */}
+      <div className="p-4 rounded-2xl bg-surface/90 dark:bg-[#18181b]/90 border border-border/80 shadow-md space-y-3.5 backdrop-blur-md">
+        {/* Top Date Header */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-1 text-sm font-black text-text-primary">
             <span>22 September 2026</span>
-            <ChevronsRight className="h-4 w-4 text-[#e87a53]" />
+            <ChevronsRight className="h-4 w-4 text-orange-500" />
           </div>
-          <span className="text-[10px] font-mono text-text-muted">Live Stream</span>
+          <span className="font-mono text-[10px] uppercase tracking-wider text-text-muted">Live Stream</span>
         </div>
 
-        {/* Filter Pills matching OpenWeather screenshot: All, Alerts, Cases, Reports, Trigger Events */}
+        {/* Filter Pills matching OpenWeather screenshot */}
         <div className="flex flex-wrap items-center gap-1">
           {(
             [
@@ -137,7 +143,7 @@ export const EventStreamRail: React.FC = () => {
                 onClick={() => setFilter(tab.id)}
                 className={`py-1 px-2 rounded-full text-[10px] font-bold transition-all ${
                   isActive
-                    ? "bg-[#e87a53] text-slate-950 shadow-xs"
+                    ? "bg-orange-500 text-slate-950 shadow-xs"
                     : "bg-surface-secondary/70 text-text-muted hover:text-text-primary hover:bg-surface-secondary"
                 }`}
               >
@@ -147,23 +153,23 @@ export const EventStreamRail: React.FC = () => {
           })}
         </div>
 
-        {/* Chronological Event Stream grouped by dates matching OpenWeather */}
+        {/* Chronological Event Stream grouped by dates */}
         <div className="space-y-3.5 pt-1 max-h-72 overflow-y-auto pr-0.5">
           {Object.entries(groupedEvents).map(([dateLabel, items]) => (
             <div key={dateLabel} className="space-y-2">
-              <span className="text-xs font-black text-text-primary tracking-tight block pt-0.5">
+              <span className="font-mono text-[10px] tracking-wider uppercase font-bold text-text-muted block pt-0.5">
                 {dateLabel}
               </span>
               <div className="space-y-2">
                 {items.map((ev) => (
                   <div
                     key={ev.id}
-                    className="p-3 rounded-xl bg-surface-secondary/60 border border-border/80 space-y-1.5 shadow-sm hover:shadow-md hover:border-[#e87a53]/40 transition-all group"
+                    className={`p-3 rounded-xl bg-surface-secondary/60 border border-border/80 border-l-2 border-l-transparent ${ev.hoverBorder} space-y-1.5 shadow-xs hover:shadow-md transition-all group`}
                   >
                     <div className="flex items-center justify-between text-[11px]">
                       <div className="flex items-center gap-2 font-bold">
                         <span className={ev.tagColor}>{ev.type}</span>
-                        <span className={`h-2 w-2 rounded-full ${ev.dotColor} shadow-sm shadow-current`} />
+                        <span className={`h-2 w-2 rounded-full ${ev.dotColor}`} />
                       </div>
                       <span className="font-mono text-text-muted text-[11px] font-semibold">{ev.time}</span>
                     </div>
@@ -184,29 +190,29 @@ export const EventStreamRail: React.FC = () => {
       </div>
 
       {/* Operational Situation Summary Card */}
-      <div className="p-4 rounded-2xl bg-surface/90 dark:bg-[#18181b]/90 border border-border/80 shadow-md space-y-3.5 backdrop-blur-md">
-        <div className="flex items-center justify-between border-b border-border/60 pb-2">
+      <div className="p-4 rounded-2xl bg-surface/90 dark:bg-[#18181b]/90 border border-border/80 shadow-md space-y-4 backdrop-blur-md">
+        <div className="flex items-center justify-between border-b border-border/60 pb-2.5">
           <div>
-            <span className="text-[10px] uppercase font-bold text-text-muted tracking-wider block">
+            <span className="font-mono text-[10px] tracking-wider uppercase font-semibold text-text-muted block">
               Situation Summary
             </span>
             <span className="text-sm font-bold text-text-primary">
               {selectedLocation.name}
             </span>
           </div>
-          <Badge variant="scientific" className="font-mono text-[10px] bg-amber-500/10 text-[#e87a53] border-amber-500/20">
+          <Badge variant="scientific" className="font-mono text-[10px] bg-orange-500/10 text-orange-500 dark:text-orange-400 border-orange-500/20">
             +{leadTimeHours}h Horizon
           </Badge>
         </div>
 
-        {/* Forecast Value & Confidence */}
+        {/* Forecast Value & Confidence with loud contrast */}
         <div className="flex items-baseline justify-between">
           <div>
-            <span className="text-[10px] text-text-muted font-semibold block">
-              AETHER BLENDED
+            <span className="font-mono text-[10px] tracking-wider uppercase font-semibold text-text-muted block">
+              AETHER Blended
             </span>
-            <div className="flex items-baseline gap-1 mt-0.5">
-              <span className="text-3xl font-black font-mono text-text-primary">
+            <div className="flex items-baseline gap-1 mt-1">
+              <span className="text-4xl font-black font-mono tracking-tight text-text-primary">
                 {calibratedVal !== undefined ? calibratedVal : "--"}
               </span>
               <span className="text-xs font-bold font-mono text-text-muted">
@@ -216,22 +222,24 @@ export const EventStreamRail: React.FC = () => {
           </div>
 
           <div className="text-right">
-            <span className="text-[10px] text-text-muted font-semibold block">
-              CONFIDENCE
+            <span className="font-mono text-[10px] tracking-wider uppercase font-semibold text-text-muted block">
+              Confidence
             </span>
-            <span className="text-lg font-black font-mono text-emerald-600 dark:text-emerald-400">
-              {data?.confidence?.pct !== undefined ? `${data.confidence.pct}%` : "--"}
-            </span>
+            <div className="mt-1">
+              <span className="text-2xl font-black font-mono text-emerald-600 dark:text-emerald-400">
+                {data?.confidence?.pct !== undefined ? `${data.confidence.pct}%` : "--"}
+              </span>
+            </div>
           </div>
         </div>
 
         {/* Adaptive Model Trust Bars */}
-        <div className="space-y-2 pt-2 border-t border-border/60">
-          <span className="text-[10px] uppercase font-bold text-text-muted tracking-wider block">
+        <div className="space-y-2 pt-2.5 border-t border-border/60">
+          <span className="font-mono text-[10px] tracking-wider uppercase font-semibold text-text-muted block">
             Adaptive Model Trust
           </span>
           {data?.weights ? (
-            <div className="space-y-1.5">
+            <div className="space-y-2">
               {Object.entries(data.weights)
                 .sort((a, b) => b[1] - a[1])
                 .map(([name, w]) => {
@@ -251,7 +259,7 @@ export const EventStreamRail: React.FC = () => {
                         value={pct}
                         indicatorColor={
                           cleanName === "AIFS"
-                            ? "bg-[#e87a53]"
+                            ? "bg-orange-500"
                             : cleanName === "IFS"
                             ? "bg-sky-600"
                             : "bg-slate-500"
@@ -268,32 +276,32 @@ export const EventStreamRail: React.FC = () => {
         </div>
 
         {/* Extreme Risk Indicators */}
-        <div className="pt-2 border-t border-border/60">
-          <span className="text-[10px] uppercase font-bold text-text-muted tracking-wider block mb-1.5">
+        <div className="pt-2.5 border-t border-border/60">
+          <span className="font-mono text-[10px] tracking-wider uppercase font-semibold text-text-muted block mb-1.5">
             Extreme Risk
           </span>
-          <div className="grid grid-cols-3 gap-1.5 text-center">
-            <div className="p-1.5 rounded-xl bg-rose-500/10 border border-rose-500/20">
-              <span className="text-[9px] font-semibold text-rose-600 dark:text-rose-400 uppercase block">
+          <div className="grid grid-cols-3 gap-1.5 text-center font-mono">
+            <div className="p-2 rounded-xl bg-rose-500/10 border border-rose-500/20">
+              <span className="text-[9px] font-semibold text-rose-600 dark:text-rose-400 uppercase block font-sans">
                 Rain
               </span>
-              <span className="font-bold font-mono text-rose-700 dark:text-rose-300 text-xs">
+              <span className="font-bold text-rose-700 dark:text-rose-300 text-xs">
                 {data?.risk?.heavy_rain?.level || "HIGH"}
               </span>
             </div>
-            <div className="p-1.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
-              <span className="text-[9px] font-semibold text-emerald-600 dark:text-emerald-400 uppercase block">
+            <div className="p-2 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
+              <span className="text-[9px] font-semibold text-emerald-600 dark:text-emerald-400 uppercase block font-sans">
                 Heat
               </span>
-              <span className="font-bold font-mono text-emerald-700 dark:text-emerald-300 text-xs">
+              <span className="font-bold text-emerald-700 dark:text-emerald-300 text-xs">
                 {data?.risk?.heat?.level || "LOW"}
               </span>
             </div>
-            <div className="p-1.5 rounded-xl bg-sky-500/10 border border-sky-500/20">
-              <span className="text-[9px] font-semibold text-sky-600 dark:text-sky-400 uppercase block">
+            <div className="p-2 rounded-xl bg-amber-500/10 border border-amber-500/20">
+              <span className="text-[9px] font-semibold text-amber-600 dark:text-amber-400 uppercase block font-sans">
                 Wind
               </span>
-              <span className="font-bold font-mono text-sky-700 dark:text-sky-300 text-xs">
+              <span className="font-bold text-amber-700 dark:text-amber-300 text-xs">
                 {data?.risk?.high_wind?.level || "WATCH"}
               </span>
             </div>
@@ -303,13 +311,13 @@ export const EventStreamRail: React.FC = () => {
         {/* Inspect Forecast Trace Button */}
         <button
           onClick={openTraceDrawer}
-          className="w-full flex items-center justify-between p-2 rounded-xl bg-surface-secondary hover:bg-amber-500/10 dark:hover:bg-[#38231c]/50 text-text-secondary hover:text-[#e87a53] dark:hover:text-[#f89b78] text-xs font-semibold border border-border/70 transition group"
+          className="w-full flex items-center justify-between p-2.5 rounded-xl bg-surface-secondary hover:bg-orange-500/10 dark:hover:bg-orange-950/30 text-text-secondary hover:text-orange-500 dark:hover:text-orange-400 text-xs font-semibold border border-border/70 hover:border-orange-500/40 transition group"
         >
           <div className="flex items-center gap-1.5">
-            <Activity className="h-3.5 w-3.5 text-[#e87a53]" />
+            <Activity className="h-3.5 w-3.5 text-orange-500" />
             <span>Inspect Forecast Trace</span>
           </div>
-          <ChevronRight className="h-3.5 w-3.5 text-text-muted group-hover:text-[#e87a53] transition-transform group-hover:translate-x-0.5" />
+          <ChevronRight className="h-3.5 w-3.5 text-text-muted group-hover:text-orange-500 transition-transform group-hover:translate-x-0.5" />
         </button>
       </div>
     </div>

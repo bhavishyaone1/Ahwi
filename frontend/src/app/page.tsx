@@ -34,19 +34,27 @@ export default function OverviewPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-border min-w-0">
         <div className="min-w-0 space-y-1">
           <div className="flex flex-wrap items-center gap-2">
-            <div className="badge-scientific bg-sky-50 dark:bg-sky-950/70 text-sky-700 dark:text-sky-300 border border-sky-200 dark:border-sky-800">
-              <Sparkles className="h-3 w-3 text-sky-600 dark:text-sky-400 shrink-0" />
+            <div className="badge-scientific text-[10px] tracking-wider uppercase font-semibold text-text-muted bg-surface-secondary/70 border border-border">
+              <Sparkles className="h-3 w-3 text-sky-500 shrink-0" />
               <span>Operational Situation Room</span>
             </div>
-            <div className="badge-scientific bg-surface-secondary text-text-muted border border-border">
+            <div className="badge-scientific text-[10px] tracking-wider uppercase font-semibold text-text-muted bg-surface-secondary/70 border border-border">
               <span className="radar-telemetry-dot shrink-0" />
               <span className="font-mono">
                 {selectedLocation.latitude.toFixed(2)}°N, {selectedLocation.longitude.toFixed(2)}°E • {selectedLocation.region.toUpperCase()}
               </span>
             </div>
             {data?.weather_regime?.detected && (
-              <div className="badge-scientific bg-amber-50 dark:bg-amber-950/50 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-800">
-                <span className="h-1.5 w-1.5 rounded-full bg-amber-500 shrink-0" />
+              <div className={`badge-scientific text-[10px] tracking-wider uppercase font-semibold border ${
+                data.weather_regime.detected.toUpperCase().includes("HEAVY") || data.weather_regime.detected.toUpperCase().includes("SEVERE")
+                  ? "bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-400 border-rose-200 dark:border-rose-900/60"
+                  : "bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-400 border-amber-200 dark:border-amber-900/60"
+              }`}>
+                <span className={`h-1.5 w-1.5 rounded-full shrink-0 ${
+                  data.weather_regime.detected.toUpperCase().includes("HEAVY") || data.weather_regime.detected.toUpperCase().includes("SEVERE")
+                    ? "bg-rose-500"
+                    : "bg-amber-500"
+                }`} />
                 <span className="font-mono">REGIME: {data.weather_regime.detected}</span>
               </div>
             )}

@@ -71,18 +71,18 @@ export function MapControls({
                 onClick={() => onLayerChange(layer.id)}
                 className={`relative flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-all whitespace-nowrap ${
                   isActive
-                    ? "text-[#e87a53] dark:text-[#f89b78] font-bold"
-                    : "text-text-secondary hover:text-text-primary hover:bg-surface-secondary/80"
+                    ? "text-orange-500 dark:text-orange-400 font-bold"
+                    : "text-text-secondary hover:text-text-primary hover:bg-orange-500/10 hover:border-orange-500/30 hover:shadow-xs hover:-translate-y-0.5 border border-transparent"
                 }`}
               >
                 {isActive && (
                   <motion.div
                     layoutId="layer-active-capsule"
-                    className="absolute inset-0 rounded-full bg-amber-500/15 dark:bg-[#38231c] border border-amber-500/40 dark:border-[#e87a53]/50 shadow-md shadow-amber-500/20 dark:shadow-[#e87a53]/25"
+                    className="absolute inset-0 rounded-full bg-orange-500/15 dark:bg-orange-950/40 border border-orange-500/40 dark:border-orange-500/50 shadow-md shadow-orange-500/20 dark:shadow-orange-500/25"
                     transition={{ type: "spring", stiffness: 450, damping: 30 }}
                   />
                 )}
-                <Icon className={`relative z-10 h-3.5 w-3.5 ${isActive ? "text-[#e87a53] dark:text-[#f89b78]" : "text-text-muted"}`} />
+                <Icon className={`relative z-10 h-3.5 w-3.5 ${isActive ? "text-orange-500 dark:text-orange-400" : "text-text-muted"}`} />
                 <span className="relative z-10">{layer.label}</span>
               </button>
             );
@@ -126,7 +126,7 @@ export function MapControls({
               placeholder="Name or zip code..."
               value={searchQuery}
               onChange={(e) => onSearchChange(e.target.value)}
-              className="h-8 w-full pl-9 pr-3 rounded-full text-xs bg-surface/90 dark:bg-[#18181b]/90 border border-border/80 text-text-primary placeholder:text-text-muted/70 backdrop-blur-md shadow-md focus:outline-none focus:ring-1 focus:ring-[#e87a53]"
+              className="h-8 w-full pl-9 pr-3 rounded-full text-xs bg-surface/90 dark:bg-[#18181b]/90 border border-border/80 text-text-primary placeholder:text-text-muted/70 backdrop-blur-md shadow-md focus:outline-none focus:ring-1 focus:ring-orange-500"
             />
           </div>
         )}

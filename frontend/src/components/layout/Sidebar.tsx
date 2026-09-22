@@ -180,21 +180,21 @@ export const Sidebar: React.FC<SidebarProps> = ({
                       title={collapsed ? item.name : undefined}
                       className={`relative flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold transition-all ${
                         isActive
-                          ? "text-[#e87a53] dark:text-[#f89b78] font-bold"
+                          ? "text-orange-600 dark:text-orange-400 font-bold"
                           : "text-text-secondary hover:text-text-primary hover:bg-surface-secondary"
                       } ${collapsed ? "justify-center px-0" : ""}`}
                     >
                       {isActive && (
                         <motion.div
                           layoutId="sidebar-active-pill"
-                          className="absolute inset-0 rounded-xl bg-amber-500/20 dark:bg-[#38231c] border border-amber-500/40 dark:border-[#e87a53]/50 -z-10 shadow-md shadow-amber-500/20 dark:shadow-[#e87a53]/25"
+                          className="absolute inset-0 rounded-xl bg-orange-500/15 dark:bg-orange-950/40 border border-orange-500/30 dark:border-orange-500/40 -z-10 shadow-sm shadow-orange-500/15"
                           transition={{ type: "spring", stiffness: 450, damping: 32 }}
                         />
                       )}
                       <Icon
                         className={`h-4 w-4 shrink-0 ${
                           isActive
-                            ? "text-[#e87a53] dark:text-[#f89b78]"
+                            ? "text-orange-500 dark:text-orange-400"
                             : "text-text-muted group-hover:text-text-primary"
                         }`}
                       />
@@ -207,13 +207,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
           ))}
         </div>
 
-        {/* Highlight Action CTA: Ask a question (Warm Coral Oblong Button matching OpenWeather Reference) */}
+        {/* Highlight Action CTA: Ask a question (Oblong Button matching reference) */}
         {!collapsed && (
           <div className="p-3 border-t border-border">
             <Link
               href="/ask"
               onClick={onCloseMobile}
-              className="w-full flex items-center justify-center gap-2 py-3.5 px-4 rounded-2xl bg-gradient-to-r from-[#e87a53] via-[#ea580c] to-[#f97316] hover:from-[#f97316] hover:to-[#e87a53] hover:scale-[1.02] active:scale-[0.98] text-slate-950 font-black text-xs shadow-lg shadow-amber-600/35 transition-all"
+              className="w-full flex items-center justify-center gap-2 py-3.5 px-4 rounded-2xl bg-gradient-to-r from-orange-500 via-amber-500 to-orange-600 hover:from-orange-600 hover:to-orange-500 hover:scale-[1.02] active:scale-[0.98] text-slate-950 font-black text-xs shadow-lg shadow-orange-500/25 transition-all"
             >
               <Sparkles className="h-4 w-4 text-slate-950" />
               <span>Ask a question</span>
@@ -221,7 +221,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           </div>
         )}
 
-        {/* Bottom Dark Mode Switch (OpenWeather Reference Style: Moon icon + Dark mode label + coral toggle) */}
+        {/* Bottom Dark Mode Switch (OpenWeather Reference Style: Moon icon + Dark mode label + orange toggle) */}
         <div className="p-3 border-t border-border bg-surface-secondary/40 flex items-center justify-between">
           {!collapsed ? (
             <>
@@ -232,12 +232,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 </span>
               </div>
 
-              {/* iOS / OpenWeather style Toggle Switch with Coral active state */}
+              {/* iOS / OpenWeather style Toggle Switch with orange active state */}
               <button
                 onClick={toggleTheme}
                 title="Switch theme"
                 className={`relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                  theme === "dark" ? "bg-[#e87a53]" : "bg-slate-300 dark:bg-slate-700"
+                  theme === "dark" ? "bg-orange-500" : "bg-slate-300 dark:bg-slate-700"
                 }`}
               >
                 <span

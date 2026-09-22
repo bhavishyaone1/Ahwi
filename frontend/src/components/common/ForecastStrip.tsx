@@ -58,7 +58,7 @@ export const ForecastStrip: React.FC = () => {
                     onClick={() => setLeadTimeHours(h.horizon_hours)}
                     className={`py-2 px-3 text-center cursor-pointer transition rounded-t-lg font-mono ${
                       isActive
-                        ? "bg-amber-500/15 dark:bg-[#38231c] text-[#e87a53] dark:text-[#f89b78] font-bold border-b-2 border-[#e87a53]"
+                        ? "bg-orange-500/15 dark:bg-orange-950/40 text-orange-600 dark:text-orange-400 font-bold border-b-2 border-orange-500"
                         : "hover:bg-surface-secondary text-text-secondary"
                     }`}
                   >
@@ -83,7 +83,7 @@ export const ForecastStrip: React.FC = () => {
                     key={h.lead_time}
                     onClick={() => setLeadTimeHours(h.horizon_hours)}
                     className={`py-2.5 px-3 text-center cursor-pointer transition ${
-                      isActive ? "bg-amber-500/10 dark:bg-[#38231c]/50" : ""
+                      isActive ? "bg-orange-500/10 dark:bg-orange-950/30" : ""
                     }`}
                   >
                     <div className="flex justify-center items-center">
@@ -108,7 +108,7 @@ export const ForecastStrip: React.FC = () => {
                     key={h.lead_time}
                     onClick={() => setLeadTimeHours(h.horizon_hours)}
                     className={`py-2 px-3 text-center cursor-pointer transition text-[11px] ${
-                      isActive ? "bg-amber-500/10 dark:bg-[#38231c]/50" : ""
+                      isActive ? "bg-orange-500/10 dark:bg-orange-950/30" : ""
                     }`}
                   >
                     {hasAlert ? (
@@ -126,7 +126,7 @@ export const ForecastStrip: React.FC = () => {
             {/* Row 3: Temp (°C) / Rain (mm) (matching OpenWeather: Temp row with prominent numbers) */}
             <tr className="hover:bg-surface-secondary/40 transition font-mono tabular-nums">
               <td className="py-2.5 px-3 font-semibold text-text-primary flex items-center gap-2">
-                <span className="h-2 w-2 rounded-full bg-[#e87a53]" />
+                <span className="h-2 w-2 rounded-full bg-orange-500" />
                 <span className="font-sans">
                   {variable === "rainfall_mm" ? "Rainfall (mm)" : "Temp (°C)"}
                 </span>
@@ -138,7 +138,7 @@ export const ForecastStrip: React.FC = () => {
                     key={h.lead_time}
                     onClick={() => setLeadTimeHours(h.horizon_hours)}
                     className={`py-2.5 px-3 text-center cursor-pointer transition ${
-                      isActive ? "bg-amber-500/15 dark:bg-[#38231c]/60" : ""
+                      isActive ? "bg-orange-500/15 dark:bg-orange-950/40" : ""
                     }`}
                   >
                     <span className="font-black text-sm text-text-primary">
@@ -163,7 +163,7 @@ export const ForecastStrip: React.FC = () => {
                     key={h.lead_time}
                     onClick={() => setLeadTimeHours(h.horizon_hours)}
                     className={`py-2 px-3 text-center cursor-pointer text-text-secondary transition ${
-                      isActive ? "bg-amber-500/10 dark:bg-[#38231c]/50 text-text-primary font-bold" : ""
+                      isActive ? "bg-orange-500/10 dark:bg-orange-950/30 text-text-primary font-bold" : ""
                     }`}
                   >
                     {simulatedHumidity}

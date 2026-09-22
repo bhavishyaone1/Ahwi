@@ -137,7 +137,7 @@ export default function ForecastPage() {
               {isActive && (
                 <motion.div
                   layoutId="forecast-tab-pill"
-                  className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#e87a53] dark:bg-sky-400 rounded-full"
+                  className="absolute bottom-0 left-0 right-0 h-0.5 bg-orange-500 rounded-full"
                   transition={{ type: "spring", stiffness: 450, damping: 32 }}
                 />
               )}

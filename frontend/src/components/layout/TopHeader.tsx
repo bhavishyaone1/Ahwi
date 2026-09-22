@@ -94,14 +94,14 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
             onClick={() => setDropdownOpen(!dropdownOpen)}
             className="flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-surface border border-border/90 hover:bg-surface-secondary text-text-primary transition-all shadow-md hover:shadow-lg group"
           >
-            <MapPin className="h-4 w-4 text-[#e87a53] shrink-0" />
+            <MapPin className="h-4 w-4 text-orange-500 shrink-0" />
             <span className="text-xs font-semibold text-text-muted hidden sm:inline">
               Dashboard:
             </span>
             <span className="text-sm font-black tracking-tight text-text-primary">
               {selectedLocation.name}
             </span>
-            <ChevronDown className="h-3.5 w-3.5 text-[#e87a53] group-hover:translate-y-0.5 transition-transform" />
+            <ChevronDown className="h-3.5 w-3.5 text-orange-500 group-hover:translate-y-0.5 transition-transform" />
           </button>
 
           {dropdownOpen && (
@@ -129,7 +129,7 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
                     }}
                     className={`w-full text-left px-3.5 py-2.5 flex items-center justify-between hover:bg-surface-secondary transition ${
                       selectedLocation.name === st.name
-                        ? "text-[#e87a53] dark:text-[#f89b78] font-bold bg-amber-500/10 dark:bg-[#38231c]"
+                        ? "text-orange-600 dark:text-orange-400 font-bold bg-orange-500/10 dark:bg-orange-950/30"
                         : "text-text-secondary"
                     }`}
                   >
@@ -149,7 +149,7 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
       <div className="flex items-center gap-2 sm:gap-3">
         {/* Date / Timestamp from reference (fuller pill shape + shadow) */}
         <div className="hidden md:flex items-center gap-1.5 text-xs text-text-muted font-mono bg-surface-secondary/80 border border-border/80 px-3 py-1 rounded-full shadow-sm">
-          <Calendar className="h-3.5 w-3.5 text-[#e87a53]" />
+          <Calendar className="h-3.5 w-3.5 text-text-muted" />
           <span>{currentTime || "22 Sep 2026 • 00:00 UTC"}</span>
         </div>
 

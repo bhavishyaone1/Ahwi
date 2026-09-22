@@ -45,11 +45,11 @@ export function MapTimeline({
     <div className="absolute bottom-3 left-3 right-3 z-20 flex flex-col items-center">
       {/* Floating Active Time Indicator (OpenWeather reference style: "27 November at 11:00") */}
       <div className="mb-1 pointer-events-none flex flex-col items-center">
-        <div className="px-3 py-1 rounded-full bg-surface/95 dark:bg-[#18181b]/95 border border-[#e87a53]/50 shadow-md backdrop-blur-md text-[11px] font-mono font-bold text-text-primary flex items-center gap-1.5">
-          <span className="h-1.5 w-1.5 rounded-full bg-[#e87a53] animate-pulse" />
+        <div className="px-3 py-1 rounded-full bg-surface/95 dark:bg-[#18181b]/95 border border-orange-500/50 shadow-md backdrop-blur-md text-[11px] font-mono font-bold text-text-primary flex items-center gap-1.5">
+          <span className="h-1.5 w-1.5 rounded-full bg-orange-500 animate-pulse" />
           <span>22 September at {activeStep.label} UTC ({activeStep.lead})</span>
         </div>
-        <div className="w-0.5 h-1.5 bg-[#e87a53]" />
+        <div className="w-0.5 h-1.5 bg-orange-500" />
       </div>
 
       {/* Main Scrubber Capsule Bar */}
@@ -59,7 +59,7 @@ export function MapTimeline({
           <button
             type="button"
             onClick={onTogglePlay}
-            className="flex h-7 w-7 items-center justify-center rounded-full bg-[#e87a53] text-slate-950 hover:bg-[#de6e46] active:scale-95 transition shadow-md shadow-amber-600/30"
+            className="flex h-7 w-7 items-center justify-center rounded-full bg-orange-500 text-slate-950 hover:bg-orange-600 active:scale-95 transition shadow-md shadow-orange-500/35 ring-2 ring-orange-400/30"
             title={isPlaying ? "Pause Forecast Loop" : "Play Forecast Loop"}
           >
             {isPlaying ? <Pause className="h-3.5 w-3.5" /> : <Play className="h-3.5 w-3.5 ml-0.5" />}
@@ -86,14 +86,14 @@ export function MapTimeline({
                 onClick={() => onChangeHours(step.hours)}
                 className={`group relative flex flex-col items-center justify-center px-2 py-1 rounded-full text-xs font-mono transition-all ${
                   isActive
-                    ? "text-[#e87a53] dark:text-[#f89b78] font-bold"
+                    ? "text-orange-500 dark:text-orange-400 font-bold"
                     : "text-text-muted hover:text-text-primary"
                 }`}
               >
                 {isActive && (
                   <motion.div
                     layoutId="timeline-pill-highlight"
-                    className="absolute inset-0 rounded-full bg-amber-500/15 dark:bg-[#38231c] border border-amber-500/30 dark:border-[#e87a53]/40 shadow-sm shadow-amber-500/20"
+                    className="absolute inset-0 rounded-full bg-orange-500/20 dark:bg-orange-950/50 border-2 border-orange-500 ring-2 ring-orange-500/40 shadow-lg shadow-orange-500/35"
                     transition={{ type: "spring", stiffness: 450, damping: 30 }}
                   />
                 )}

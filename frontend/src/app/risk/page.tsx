@@ -47,26 +47,28 @@ export default function ExtremeRiskPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 pb-2">
         <div>
           <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-rose-50 text-rose-800 border border-rose-200 text-[11px] font-semibold">
-            <ShieldAlert className="h-3 w-3 text-rose-600" />
+            <ShieldAlert className="h-3 w-3 text-rose-600 dark:text-rose-400" />
             <span>High-Impact Hazard Guidance</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-slate-950 tracking-tight mt-1">
-            Extreme Weather Risk
+          <h1 className="text-2xl sm:text-3xl font-black text-text-primary tracking-tight mt-1">
+            Extreme Weather Risk Early Warning
           </h1>
-          <p className="text-xs text-slate-500 font-medium">
-            Probabilistic guidance for high-impact weather conditions.
+          <p className="text-xs text-text-muted font-medium">
+            Probabilistic hazard evaluation across synoptic precipitation, thermal heatwave, and gale wind thresholds.
           </p>
         </div>
 
         {/* Sub-tabs */}
-        <div className="flex bg-slate-100 p-0.5 rounded-md border border-slate-200 text-xs font-semibold">
+        <div className="flex bg-surface-secondary p-0.5 rounded-lg border border-border text-xs font-semibold">
           {(["overview", "details", "map"] as const).map((tab) => (
             <button
               key={tab}
               type="button"
               onClick={() => setSubTab(tab)}
-              className={`px-3 py-1 rounded-sm capitalize transition-all ${
-                subTab === tab ? "bg-white text-slate-900 shadow-xs" : "text-slate-600 hover:text-slate-900"
+              className={`px-3 py-1 rounded-md capitalize transition-all ${
+                subTab === tab
+                  ? "bg-surface text-text-primary shadow-xs font-bold"
+                  : "text-text-muted hover:text-text-primary"
               }`}
             >
               {tab}
@@ -96,17 +98,17 @@ export default function ExtremeRiskPage() {
 
         {/* Right: Risk Assessment Card */}
         <motion.div variants={fadeUp} className="lg:col-span-5 min-w-0 space-y-3">
-          <Card className="shadow-xs border-slate-200">
-            <CardHeader className="p-4 pb-2 border-b border-slate-100 flex flex-row items-center justify-between space-y-0">
+          <Card className="shadow-xs border-border bg-surface overflow-hidden">
+            <CardHeader className="p-4 pb-2 border-b border-border flex flex-row items-center justify-between space-y-0">
               <div>
-                <CardTitle className="text-sm font-bold text-slate-900">
+                <CardTitle className="text-sm font-bold text-text-primary">
                   {selectedLocation.name} — Risk Assessment
                 </CardTitle>
-                <span className="text-[11px] text-slate-400 font-mono">
+                <span className="text-[11px] text-text-muted font-mono">
                   +{leadTimeHours}h Horizon
                 </span>
               </div>
-              <Badge variant="destructive" className="font-bold text-[10px]">
+              <Badge variant="destructive" className="font-bold text-[10px] uppercase font-mono">
                 {data?.risk?.overall_level || "ELEVATED"} RISK
               </Badge>
             </CardHeader>
@@ -135,11 +137,11 @@ export default function ExtremeRiskPage() {
               </div>
 
               {/* Key Risk Drivers */}
-              <div className="space-y-2 pt-3 border-t border-slate-100">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">
+              <div className="space-y-2 pt-3 border-t border-border">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-text-muted block font-mono">
                   Key Risk Drivers
                 </span>
-                <div className="space-y-1.5 text-xs text-slate-700">
+                <div className="space-y-1.5 text-xs text-text-secondary">
                   {keyDrivers.map((driver, idx) => (
                     <div key={idx} className="flex items-start gap-2">
                       <span className="h-1.5 w-1.5 rounded-full bg-rose-500 mt-1.5 shrink-0" />
@@ -148,19 +150,19 @@ export default function ExtremeRiskPage() {
                   ))}
                 </div>
               </div>
+
+              {/* Mandatory Disclaimer */}
+              <div className="p-2.5 rounded-md bg-amber-500/10 border border-amber-500/20 text-[10px] text-amber-700 dark:text-amber-300 space-y-1">
+                <span className="font-bold block uppercase tracking-wider font-mono">
+                  Operational Safety Disclaimer
+                </span>
+                <p>
+                  {data?.risk?.disclaimer ||
+                    "AETHER model risk guidance represents AI/NWP blended diagnostic output and does NOT substitute for statutory warnings issued by India Meteorological Department (IMD)."}
+                </p>
+              </div>
             </CardContent>
           </Card>
-
-          {/* Mandatory IMD Disclaimer */}
-          <Alert variant="warning" className="border-amber-200 bg-amber-50/80">
-            <AlertTriangle className="h-4 w-4 text-amber-600" />
-            <AlertTitle className="text-xs font-bold text-amber-900">
-              AETHER MODEL RISK — NOT AN OFFICIAL METEOROLOGICAL WARNING
-            </AlertTitle>
-            <AlertDescription className="text-[11px] text-amber-800">
-              This probabilistic hazard assessment is synthesized algorithmically via multi-model ensemble consensus. For statutory warnings, please refer directly to the India Meteorological Department (IMD).
-            </AlertDescription>
-          </Alert>
         </motion.div>
       </div>
     </motion.div>

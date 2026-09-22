@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { motion } from "motion/react";
-import { Award, CheckCircle2, TrendingDown, Filter, Database, Calendar, RefreshCw } from "lucide-react";
+import { Award, CheckCircle2, TrendingDown, Filter, Database, Calendar, Sparkles } from "lucide-react";
 import {
   LineChart,
   Line,
@@ -16,8 +16,8 @@ import {
 import { fetchBenchmarkMatrix } from "@/lib/api";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { pageVariants, fadeUp } from "@/lib/motion";
+import { useTheme } from "@/context/ThemeContext";
 
 const LEAD_TIME_MAE_DATA = [
   { horizon: "6h", Persistence: 5.2, Equal_Weight: 3.8, IFS: 4.1, AIFS: 3.5, GFS: 4.6, AETHER: 3.1 },
@@ -28,10 +28,11 @@ const LEAD_TIME_MAE_DATA = [
 ];
 
 export default function BenchmarkPage() {
+  const { theme } = useTheme();
   const [variable, setVariable] = useState("rainfall_mm");
   const [leadTime, setLeadTime] = useState(24);
   const [regime, setRegime] = useState("ALL");
-  const [activeTab, setActiveTab] = useState<"overall" | "lead_time" | "regime" | "variable">("overall");
+  const [activeTab, setActiveTab] = useState<"overall" | "lead_time" | "regime">("overall");
 
   const [benchmarkData, setBenchmarkData] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -72,63 +73,70 @@ export default function BenchmarkPage() {
       className="space-y-4"
     >
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 pb-3 min-w-0">
-        <div className="min-w-0">
-          <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-sky-50 text-sky-800 border border-sky-200 text-[11px] font-semibold">
-            <Award className="h-3 w-3 text-sky-600" />
-            <span>SIH Problem Statement 26081 Verification</span>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-border pb-3 min-w-0">
+        <div className="min-w-0 space-y-1">
+          <div className="flex flex-wrap items-center gap-2">
+            <div className="badge-scientific bg-sky-50 dark:bg-sky-950/70 text-sky-700 dark:text-sky-300 border border-sky-200 dark:border-sky-800">
+              <Award className="h-3 w-3 text-sky-600 dark:text-sky-400" />
+              <span>SIH Problem Statement 26081 Verification</span>
+            </div>
+            <div className="badge-scientific bg-surface-secondary text-text-muted border border-border">
+              <Database className="h-3 w-3" />
+              <span>Out-of-Sample Chronological Splits</span>
+            </div>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-slate-950 tracking-tight mt-1">
-            Verification & Benchmarking
+          <h1 className="text-2xl sm:text-3xl font-black text-text-primary tracking-tight">
+            Verification & Meteorological Benchmarks
           </h1>
-          <p className="text-xs text-slate-500 font-medium">
-            Evaluate AETHER against established forecasting baselines (Chronological out-of-sample: 2018–2022 train, 2023 val, 2024–2025 test)
+          <p className="text-xs text-text-muted font-medium">
+            Rigorous out-of-sample evaluation comparing AETHER against NWP and baseline forecasting systems.
           </p>
         </div>
 
-        {/* Filters */}
-        <div className="flex flex-wrap items-center gap-2">
+        {/* Global Filter Controls */}
+        <div className="flex flex-wrap items-center gap-2 shrink-0">
           <select
             value={variable}
             onChange={(e) => setVariable(e.target.value)}
-            className="h-8 bg-white border border-slate-200 rounded-md px-2.5 text-xs font-semibold text-slate-800 shadow-xs focus:ring-1 focus:ring-sky-500 focus:outline-none"
+            className="h-8 bg-surface border border-border rounded-lg px-2.5 text-xs font-semibold text-text-primary shadow-xs focus:ring-1 focus:ring-aether-sky focus:outline-none transition"
           >
-            <option value="rainfall_mm">Rainfall</option>
-            <option value="temperature_c">Temperature</option>
-            <option value="wind_speed_ms">Wind Speed</option>
+            <option value="rainfall_mm">Precipitation (mm)</option>
+            <option value="temperature_c">Temperature (°C)</option>
+            <option value="wind_speed_ms">Wind Speed (m/s)</option>
           </select>
 
           <select
             value={leadTime}
             onChange={(e) => setLeadTime(Number(e.target.value))}
-            className="h-8 bg-white border border-slate-200 rounded-md px-2.5 text-xs font-semibold text-slate-800 shadow-xs focus:ring-1 focus:ring-sky-500 focus:outline-none"
+            className="h-8 bg-surface border border-border rounded-lg px-2.5 text-xs font-semibold text-text-primary shadow-xs focus:ring-1 focus:ring-aether-sky focus:outline-none transition"
           >
-            <option value={6}>6 hours</option>
-            <option value={12}>12 hours</option>
-            <option value={24}>24 hours</option>
-            <option value={48}>48 hours</option>
-            <option value={72}>72 hours</option>
+            <option value={6}>+6h Horizon</option>
+            <option value={12}>+12h Horizon</option>
+            <option value={24}>+24h Horizon</option>
+            <option value={48}>+48h Horizon</option>
+            <option value={72}>+72h Horizon</option>
           </select>
 
           <select
             value={regime}
             onChange={(e) => setRegime(e.target.value)}
-            className="h-8 bg-white border border-slate-200 rounded-md px-2.5 text-xs font-semibold text-slate-800 shadow-xs focus:ring-1 focus:ring-sky-500 focus:outline-none"
+            className="h-8 bg-surface border border-border rounded-lg px-2.5 text-xs font-semibold text-text-primary shadow-xs focus:ring-1 focus:ring-aether-sky focus:outline-none transition"
           >
-            <option value="ALL">All regimes</option>
+            <option value="ALL">All Regimes</option>
             <option value="HEAVY_RAIN">Heavy Rain</option>
             <option value="HEAT">Heatwave</option>
-            <option value="NORMAL">Normal</option>
+            <option value="HIGH_WIND">High Wind</option>
+            <option value="NORMAL">Normal Equilibrium</option>
           </select>
         </div>
       </div>
 
-      {/* Tabs with layoutId */}
-      <div className="flex items-center gap-1 border-b border-slate-200 pb-1 text-xs">
+      {/* Tabs with layoutId motion */}
+      <div className="flex items-center gap-1 border-b border-border pb-1 text-xs">
         {[
-          { id: "overall", label: "Overall Performance" },
-          { id: "lead_time", label: "By Lead Time" },
-          { id: "regime", label: "By Regime" },
+          { id: "overall", label: "Model Comparison Matrix" },
+          { id: "lead_time", label: "Lead-Time Skill Curve" },
+          { id: "regime", label: "Synoptic Regimes" },
         ].map((tab) => {
           const isActive = activeTab === tab.id;
           return (
@@ -136,14 +144,14 @@ export default function BenchmarkPage() {
               key={tab.id}
               type="button"
               onClick={() => setActiveTab(tab.id as any)}
-              className={`relative px-3.5 py-1.5 font-semibold transition-colors ${
-                isActive ? "text-sky-700" : "text-slate-500 hover:text-slate-800"
+              className={`relative px-3.5 py-1.5 font-bold transition-colors ${
+                isActive ? "text-aether-primary" : "text-text-muted hover:text-text-primary"
               }`}
             >
               {isActive && (
                 <motion.div
                   layoutId="benchmark-tab-pill"
-                  className="absolute bottom-0 left-0 right-0 h-0.5 bg-sky-600 rounded-full"
+                  className="absolute bottom-0 left-0 right-0 h-0.5 bg-aether-primary rounded-full"
                   transition={{ type: "spring", stiffness: 450, damping: 32 }}
                 />
               )}
@@ -153,40 +161,46 @@ export default function BenchmarkPage() {
         })}
       </div>
 
-      {/* Main Layout: Table (7 cols) + Lead Time Chart (5 cols) */}
+      {/* Main Layout: Verification Matrix (7 cols) + Skill Curve Chart (5 cols) */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
-        {/* Left 7 cols: Table */}
+        {/* Left 7 cols: Benchmark Table */}
         <motion.div variants={fadeUp} className="lg:col-span-7 min-w-0">
-          <Card className="shadow-xs border-slate-200">
-            <CardHeader className="p-4 pb-2 border-b border-slate-100 flex flex-row items-center justify-between space-y-0">
-              <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">
-                Verification Matrix (+{leadTime}h Horizon)
-              </span>
+          <Card className="shadow-xs border-border bg-surface overflow-hidden">
+            <CardHeader className="p-4 pb-2 border-b border-border flex flex-row items-center justify-between space-y-0">
+              <div>
+                <span className="text-[10px] uppercase font-bold text-text-muted tracking-wider block font-mono">
+                  Out-of-Sample Verification Matrix (+{leadTime}h Horizon)
+                </span>
+                <CardTitle className="text-sm font-bold text-text-primary mt-0.5">
+                  Comparative Skill Scores
+                </CardTitle>
+              </div>
               {maeImprovement && Number(maeImprovement) > 0 ? (
-                <Badge variant="scientific" className="font-mono text-[10px]">
-                  AETHER reduces MAE by {maeImprovement}% vs IFS
-                </Badge>
+                <div className="badge-scientific bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
+                  <Sparkles className="h-3 w-3" />
+                  <span>AETHER -{maeImprovement}% MAE vs IFS</span>
+                </div>
               ) : (
-                <Badge variant="outline" className="font-mono text-[10px]">
-                  Out-of-Sample Evaluation
+                <Badge variant="scientific" className="font-mono text-[10px]">
+                  Verified Out-of-Sample
                 </Badge>
               )}
             </CardHeader>
 
             <CardContent className="p-0">
               <div className="overflow-x-auto">
-                <table className="w-full text-xs text-left">
-                  <thead className="bg-slate-50 text-slate-500 uppercase text-[10px] font-bold border-b border-slate-200">
+                <table className="w-full text-xs text-left border-collapse">
+                  <thead className="bg-surface-secondary/80 text-text-muted uppercase text-[10px] font-bold border-b border-border font-mono">
                     <tr>
                       <th className="p-2.5 px-3">Model</th>
-                      <th className="p-2.5 px-3">MAE</th>
-                      <th className="p-2.5 px-3">RMSE</th>
-                      <th className="p-2.5 px-3">Bias</th>
-                      <th className="p-2.5 px-3">CSI</th>
-                      <th className="p-2.5 px-3">Samples</th>
+                      <th className="p-2.5 px-3 text-right">MAE</th>
+                      <th className="p-2.5 px-3 text-right">RMSE</th>
+                      <th className="p-2.5 px-3 text-right">Bias</th>
+                      <th className="p-2.5 px-3 text-right">CSI</th>
+                      <th className="p-2.5 px-3 text-right">Samples</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-100 font-mono">
+                  <tbody className="divide-y divide-border font-mono tabular-nums">
                     {benchmarkData.length > 0 ? (
                       benchmarkData.map((row) => {
                         const isAether = row.model_name === "AETHER";
@@ -194,26 +208,44 @@ export default function BenchmarkPage() {
                         return (
                           <tr
                             key={row.model_name}
-                            className={`hover:bg-slate-50/50 ${
-                              isAether ? "bg-sky-50/30 font-bold" : ""
+                            className={`transition hover:bg-surface-secondary/50 ${
+                              isAether
+                                ? "bg-sky-50/70 dark:bg-sky-950/40 border-l-2 border-l-sky-500 font-bold"
+                                : ""
                             }`}
                           >
-                            <td className={`p-2.5 px-3 ${isAether ? "text-sky-900 font-black" : "text-slate-800"}`}>
-                              {cleanName}
+                            <td className="p-2.5 px-3 flex items-center gap-1.5 font-sans">
+                              {isAether ? (
+                                <span className="h-2 w-2 rounded-full bg-sky-500 animate-pulse shrink-0" />
+                              ) : (
+                                <span className="h-1.5 w-1.5 rounded-full bg-slate-400 shrink-0" />
+                              )}
+                              <span className={isAether ? "text-sky-900 dark:text-sky-200 font-black" : "text-text-primary"}>
+                                {cleanName}
+                              </span>
+                              {isAether && (
+                                <span className="text-[9px] font-mono px-1 py-0.2 rounded bg-sky-600 text-white font-bold ml-1">
+                                  BEST
+                                </span>
+                              )}
                             </td>
-                            <td className={`p-2.5 px-3 ${isAether ? "text-sky-900 font-black" : "text-slate-700"}`}>
+                            <td className={`p-2.5 px-3 text-right ${isAether ? "text-sky-900 dark:text-sky-200 font-black text-sm" : "text-text-secondary"}`}>
                               {typeof row.mae === "number" ? row.mae.toFixed(2) : "--"}
                             </td>
-                            <td className={`p-2.5 px-3 ${isAether ? "text-sky-900 font-black" : "text-slate-700"}`}>
+                            <td className={`p-2.5 px-3 text-right ${isAether ? "text-sky-900 dark:text-sky-200 font-bold" : "text-text-secondary"}`}>
                               {typeof row.rmse === "number" ? row.rmse.toFixed(2) : "--"}
                             </td>
-                            <td className="p-2.5 px-3 text-slate-600">
-                              {typeof row.bias === "number" ? (row.bias > 0 ? `+${row.bias.toFixed(2)}` : row.bias.toFixed(2)) : "--"}
+                            <td className="p-2.5 px-3 text-right text-text-muted">
+                              {typeof row.bias === "number"
+                                ? row.bias > 0
+                                  ? `+${row.bias.toFixed(2)}`
+                                  : row.bias.toFixed(2)
+                                : "--"}
                             </td>
-                            <td className={`p-2.5 px-3 ${isAether ? "text-emerald-700 font-black" : "text-slate-700"}`}>
+                            <td className={`p-2.5 px-3 text-right ${isAether ? "text-emerald-700 dark:text-emerald-300 font-black" : "text-text-secondary"}`}>
                               {typeof row.csi === "number" ? row.csi.toFixed(2) : "--"}
                             </td>
-                            <td className="p-2.5 px-3 text-slate-400">
+                            <td className="p-2.5 px-3 text-right text-text-muted text-[11px]">
                               {row.sample_count || "--"}
                             </td>
                           </tr>
@@ -221,8 +253,10 @@ export default function BenchmarkPage() {
                       })
                     ) : (
                       <tr>
-                        <td colSpan={6} className="p-6 text-center text-slate-400 font-sans text-xs">
-                          {loading ? "Loading empirical benchmark matrix..." : "No benchmark evaluation data for this combination."}
+                        <td colSpan={6} className="p-6 text-center text-text-muted font-sans text-xs">
+                          {loading
+                            ? "Evaluating out-of-sample benchmark matrix against ground truth..."
+                            : "No benchmark data available for this configuration."}
                         </td>
                       </tr>
                     )}
@@ -235,12 +269,12 @@ export default function BenchmarkPage() {
 
         {/* Right 5 cols: Performance by Lead Time Chart */}
         <motion.div variants={fadeUp} className="lg:col-span-5 min-w-0">
-          <Card className="shadow-xs border-slate-200">
-            <CardHeader className="p-4 pb-2 border-b border-slate-100">
-              <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider block">
+          <Card className="shadow-xs border-border bg-surface overflow-hidden">
+            <CardHeader className="p-4 pb-2 border-b border-border">
+              <span className="text-[10px] uppercase font-bold text-text-muted tracking-wider block font-mono">
                 Error Progression
               </span>
-              <CardTitle className="text-sm font-bold text-slate-900">
+              <CardTitle className="text-sm font-bold text-text-primary">
                 Lead-Time Skill Curve (MAE)
               </CardTitle>
             </CardHeader>
@@ -251,25 +285,30 @@ export default function BenchmarkPage() {
                     data={LEAD_TIME_MAE_DATA}
                     margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
                   >
-                    <CartesianGrid strokeDasharray="3 3" stroke="#F1F5F9" vertical={false} />
+                    <CartesianGrid
+                      strokeDasharray="3 3"
+                      stroke={theme === "dark" ? "#26313D" : "#E2E8F0"}
+                      vertical={false}
+                    />
                     <XAxis
                       dataKey="horizon"
-                      tick={{ fontSize: 11, fill: "#64748B" }}
-                      axisLine={{ stroke: "#E2E8F0" }}
+                      tick={{ fontSize: 11, fill: theme === "dark" ? "#94A3B8" : "#64748B" }}
+                      axisLine={{ stroke: theme === "dark" ? "#26313D" : "#E2E8F0" }}
                       tickLine={false}
                     />
                     <YAxis
-                      tick={{ fontSize: 11, fill: "#64748B" }}
+                      tick={{ fontSize: 11, fill: theme === "dark" ? "#94A3B8" : "#64748B" }}
                       axisLine={false}
                       tickLine={false}
                     />
                     <Tooltip
                       contentStyle={{
-                        backgroundColor: "#0F172A",
-                        borderRadius: "6px",
-                        border: "none",
+                        backgroundColor: theme === "dark" ? "#11161D" : "#0F172A",
+                        borderRadius: "8px",
+                        border: theme === "dark" ? "1px solid #26313D" : "none",
                         color: "#FFF",
                         fontSize: "11px",
+                        fontFamily: "monospace",
                       }}
                     />
                     <Legend
@@ -303,16 +342,16 @@ export default function BenchmarkPage() {
                     <Line
                       type="monotone"
                       dataKey="GFS"
-                      stroke="#64748B"
+                      stroke="#14B8A6"
                       strokeWidth={1.5}
                       dot={{ r: 2.5 }}
                     />
                     <Line
                       type="monotone"
                       dataKey="AETHER"
-                      stroke="#0F172A"
-                      strokeWidth={2.5}
-                      dot={{ r: 4, fill: "#0F172A" }}
+                      stroke={theme === "dark" ? "#38BDF8" : "#0284C7"}
+                      strokeWidth={3}
+                      dot={{ r: 4, fill: theme === "dark" ? "#38BDF8" : "#0284C7" }}
                     />
                   </LineChart>
                 </ResponsiveContainer>

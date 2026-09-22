@@ -128,16 +128,16 @@ export default function AskAetherPage() {
       className="space-y-4"
     >
       {/* Header */}
-      <div className="border-b border-slate-200 pb-3 min-w-0">
-        <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-sky-50 text-sky-800 border border-sky-200 text-[11px] font-semibold">
-          <HelpCircle className="h-3 w-3 text-sky-600" />
+      <div className="border-b border-border pb-3 min-w-0 space-y-1">
+        <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-sky-50 dark:bg-sky-950/70 text-sky-700 dark:text-sky-300 border border-sky-200 dark:border-sky-800 text-[11px] font-semibold">
+          <HelpCircle className="h-3 w-3 text-sky-600 dark:text-sky-400" />
           <span>Operator Intelligence Assistant</span>
         </div>
-        <h1 className="text-2xl sm:text-3xl font-bold text-slate-950 tracking-tight mt-1">
-          Ask AETHER
+        <h1 className="text-2xl sm:text-3xl font-black text-text-primary tracking-tight">
+          Ask AETHER Assistant
         </h1>
-        <p className="text-xs text-slate-500 font-medium">
-          Query the forecast, model evidence and risk signals in natural language.
+        <p className="text-xs text-text-muted font-medium">
+          Query multi-model forecast consensus, causal model weighting, and risk telemetry in natural language.
         </p>
       </div>
 
@@ -145,13 +145,13 @@ export default function AskAetherPage() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
         {/* Left 4 Cols: Suggested Questions */}
         <motion.div variants={fadeUp} className="lg:col-span-4 min-w-0 space-y-3">
-          <Card className="shadow-xs border-slate-200">
-            <CardHeader className="p-4 pb-2 border-b border-slate-100">
-              <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider block">
-                Suggested Questions
+          <Card className="shadow-xs border-border bg-surface overflow-hidden">
+            <CardHeader className="p-4 pb-2 border-b border-border">
+              <span className="text-[10px] uppercase font-bold text-text-muted tracking-wider block font-mono">
+                Suggested Inquiries
               </span>
-              <CardTitle className="text-sm font-bold text-slate-900">
-                Operational Inquiries
+              <CardTitle className="text-sm font-bold text-text-primary">
+                Operational Queries
               </CardTitle>
             </CardHeader>
             <CardContent className="p-4 space-y-2">
@@ -160,14 +160,14 @@ export default function AskAetherPage() {
                   key={i}
                   type="button"
                   onClick={() => handleSend(sq)}
-                  className="w-full text-left p-2.5 rounded-md border border-slate-200/80 bg-slate-50/60 hover:bg-sky-50 hover:border-sky-200 text-xs text-slate-700 font-medium transition flex items-center justify-between group"
+                  className="w-full text-left p-2.5 rounded-lg border border-border bg-surface-secondary/60 hover:bg-sky-50/70 dark:hover:bg-sky-950/50 hover:border-sky-300 dark:hover:border-sky-700 text-xs text-text-secondary hover:text-text-primary font-medium transition flex items-center justify-between group"
                 >
                   <span className="line-clamp-2">{sq}</span>
-                  <ChevronRight className="h-3.5 w-3.5 text-slate-400 group-hover:text-sky-600 shrink-0 ml-1.5" />
+                  <ChevronRight className="h-3.5 w-3.5 text-text-muted group-hover:text-sky-600 dark:group-hover:text-sky-400 shrink-0 ml-1.5 transition-transform group-hover:translate-x-0.5" />
                 </button>
               ))}
 
-              <div className="pt-3 border-t border-slate-100 text-[11px] text-slate-400 leading-relaxed">
+              <div className="pt-3 border-t border-border text-[11px] text-text-muted leading-relaxed font-mono">
                 * All responses are grounded in active pipeline telemetry. Zero hallucinated numerical forecasts.
               </div>
             </CardContent>
@@ -177,12 +177,12 @@ export default function AskAetherPage() {
         {/* Right 8 Cols: Grounded Intelligence Feed */}
         <motion.div variants={fadeUp} className="lg:col-span-8 min-w-0 flex flex-col space-y-3">
           {/* Chat Container */}
-          <Card className="shadow-xs border-slate-200 bg-slate-50/40 p-4 space-y-4 min-h-[380px] max-h-[480px] overflow-y-auto">
+          <Card className="shadow-xs border-border bg-surface-secondary/30 p-4 space-y-4 min-h-[380px] max-h-[480px] overflow-y-auto">
             {chatHistory.map((msg, i) => {
               if (msg.sender === "user") {
                 return (
                   <div key={i} className="flex justify-end">
-                    <div className="bg-sky-600 text-white text-xs font-medium px-3.5 py-2 rounded-lg rounded-tr-xs shadow-xs max-w-md">
+                    <div className="bg-sky-600 dark:bg-sky-500 text-white text-xs font-semibold px-3.5 py-2 rounded-xl rounded-tr-xs shadow-xs max-w-md">
                       {msg.content}
                     </div>
                   </div>
@@ -193,19 +193,19 @@ export default function AskAetherPage() {
 
               return (
                 <div key={i} className="flex justify-start">
-                  <div className="bg-white border border-slate-200 rounded-lg rounded-tl-xs p-4 shadow-xs max-w-xl space-y-3 text-xs">
+                  <div className="bg-surface border border-border rounded-xl rounded-tl-xs p-4 shadow-xs max-w-xl space-y-3 text-xs border-l-3 border-l-sky-500">
                     {/* Bot header */}
-                    <div className="flex items-center justify-between border-b border-slate-100 pb-2">
+                    <div className="flex items-center justify-between border-b border-border pb-2">
                       <div className="flex items-center gap-1.5">
-                        <div className="h-5 w-5 rounded bg-sky-600 text-white font-bold text-[10px] flex items-center justify-center">
+                        <div className="h-5 w-5 rounded bg-sky-600 text-white font-black text-[10px] flex items-center justify-center">
                           Æ
                         </div>
-                        <span className="font-bold text-slate-900 text-xs">AETHER</span>
+                        <span className="font-bold text-text-primary text-xs">AETHER</span>
                         <Badge variant="scientific" className="text-[10px] py-0 px-1.5">
                           Grounded Pipeline
                         </Badge>
                       </div>
-                      <span className="text-[10px] font-mono text-slate-400 flex items-center gap-1">
+                      <span className="text-[10px] font-mono text-text-muted flex items-center gap-1">
                         <Clock className="h-3 w-3" />
                         {timestamp || "Active"}
                       </span>
@@ -213,10 +213,10 @@ export default function AskAetherPage() {
 
                     {/* ANSWER */}
                     <div>
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-1">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-text-muted block mb-1 font-mono">
                         ANSWER
                       </span>
-                      <p className="text-slate-900 font-semibold leading-relaxed">
+                      <p className="text-text-primary font-semibold leading-relaxed">
                         {headline}
                       </p>
                     </div>
@@ -224,10 +224,10 @@ export default function AskAetherPage() {
                     {/* WHY */}
                     {why && why.length > 0 && (
                       <div className="space-y-1 pt-1">
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">
-                          WHY
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-text-muted block font-mono">
+                          DIAGNOSTIC EVIDENCE
                         </span>
-                        <ul className="space-y-1 text-slate-700 pl-1">
+                        <ul className="space-y-1 text-text-secondary pl-1">
                           {why.map((reason: string, rIdx: number) => (
                             <li key={rIdx} className="flex items-start gap-1.5">
                               <span className="h-1.5 w-1.5 rounded-full bg-sky-500 mt-1.5 shrink-0" />
@@ -240,15 +240,15 @@ export default function AskAetherPage() {
 
                     {/* EVIDENCE */}
                     {models && (
-                      <div className="p-2.5 bg-slate-50 rounded-md border border-slate-100 space-y-1">
-                        <span className="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">
-                          EVIDENCE (Source Models)
+                      <div className="p-2.5 bg-surface-secondary/70 rounded-lg border border-border space-y-1.5">
+                        <span className="text-[10px] uppercase font-bold text-text-muted block tracking-wider font-mono">
+                          SOURCE NWP / AI TELEMETRY
                         </span>
-                        <div className="grid grid-cols-3 gap-2 font-mono text-xs">
+                        <div className="grid grid-cols-3 gap-2 font-mono text-xs tabular-nums">
                           {Object.entries(models).map(([mName, val]) => (
-                            <div key={mName} className="p-1.5 bg-white rounded border border-slate-200/60">
-                              <span className="text-[10px] text-slate-500 block truncate">{mName}</span>
-                              <span className="font-bold text-slate-900">{String(val)}</span>
+                            <div key={mName} className="p-1.5 bg-surface rounded border border-border">
+                              <span className="text-[10px] text-text-muted block truncate font-sans">{mName}</span>
+                              <span className="font-bold text-text-primary">{String(val)}</span>
                             </div>
                           ))}
                         </div>
@@ -256,25 +256,25 @@ export default function AskAetherPage() {
                     )}
 
                     {/* Action buttons matching prompt */}
-                    <div className="pt-2 border-t border-slate-100 flex flex-wrap gap-2">
+                    <div className="pt-2 border-t border-border flex flex-wrap gap-2">
                       <Button
-                        variant="outline"
-                        size="xs"
+                        variant="secondary"
+                        size="sm"
+                        className="text-[11px] h-7 font-mono flex items-center gap-1.5"
                         onClick={openTraceDrawer}
-                        className="gap-1 text-sky-700"
                       >
-                        <Activity className="h-3 w-3" />
-                        <span>View Forecast Trace</span>
+                        <Activity className="h-3 w-3 text-sky-500" />
+                        <span>Inspect Lineage DAG</span>
                       </Button>
                       <Link href="/models">
-                        <Button variant="outline" size="xs" className="gap-1 text-slate-700">
-                          <Cpu className="h-3 w-3" />
+                        <Button variant="outline" size="sm" className="text-[11px] h-7 font-mono flex items-center gap-1.5">
+                          <Cpu className="h-3 w-3 text-text-muted" />
                           <span>View SHAP Attribution</span>
                         </Button>
                       </Link>
                       <Link href="/forecast">
-                        <Button variant="outline" size="xs" className="gap-1 text-slate-700">
-                          <Layers className="h-3 w-3" />
+                        <Button variant="outline" size="sm" className="text-[11px] h-7 font-mono flex items-center gap-1.5">
+                          <Layers className="h-3 w-3 text-text-muted" />
                           <span>View Models</span>
                         </Button>
                       </Link>
@@ -293,13 +293,13 @@ export default function AskAetherPage() {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && handleSend()}
-              className="h-10 text-xs bg-white"
+              className="h-10 text-xs bg-surface border-border text-text-primary placeholder:text-text-muted"
             />
             <Button
               variant="default"
               onClick={() => handleSend()}
               disabled={loading || !query.trim()}
-              className="h-10 px-4 gap-1.5"
+              className="h-10 px-4 gap-1.5 bg-sky-600 hover:bg-sky-500 text-white font-bold text-xs shrink-0 shadow-xs"
             >
               <Send className="h-3.5 w-3.5" />
               <span>Query</span>

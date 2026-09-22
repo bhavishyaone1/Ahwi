@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { motion } from "motion/react";
 import { useTheme } from "@/context/ThemeContext";
 import { useAetherData } from "../../context/AetherDataContext";
-import { INDIAN_STATIONS } from "../../components/WeatherMap";
+import { INDIAN_STATIONS } from "@/components/map/WeatherMap";
 import {
   Line,
   XAxis,

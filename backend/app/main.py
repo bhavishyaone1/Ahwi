@@ -3,6 +3,7 @@ AETHER FastAPI Application Entrypoint
 MoES / NCMRWF Problem Statement 26081: Hybrid AI–NWP Multi-Model Forecast Blending System
 """
 from datetime import datetime
+from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from backend.app.api.benchmark import router as benchmark_router
@@ -18,12 +19,21 @@ from backend.app.core.config import settings
 from backend.app.core.database import init_db
 from backend.app.services.aether_service import aether_service
 
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Initializes database tables on application start."""
+    init_db()
+    yield
+
+
 app = FastAPI(
     title=settings.APP_NAME,
     description="Adaptive Hybrid Weather Intelligence & Multi-Model Forecast Blending System",
     version="1.0.0",
     docs_url=f"{settings.API_PREFIX}/docs",
-    openapi_url=f"{settings.API_PREFIX}/openapi.json"
+    openapi_url=f"{settings.API_PREFIX}/openapi.json",
+    lifespan=lifespan,
 )
 
 # CORS Middleware allowing Next.js local frontend and production domains
@@ -34,12 +44,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-
-@app.on_event("startup")
-def on_startup():
-    """Initializes database tables on application start."""
-    init_db()
 
 
 @app.get(f"{settings.API_PREFIX}/status", tags=["System"])

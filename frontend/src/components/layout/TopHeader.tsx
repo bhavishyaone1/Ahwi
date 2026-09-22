@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useAetherData } from "@/context/AetherDataContext";
-import { INDIAN_STATIONS } from "@/components/WeatherMap";
+import { INDIAN_STATIONS } from "@/components/map/WeatherMap";
 import { SystemStatus } from "@/lib/types";
 import { fetchSystemStatus } from "@/lib/api";
 import {

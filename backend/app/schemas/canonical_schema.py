@@ -9,10 +9,10 @@ from pydantic import BaseModel, Field
 
 
 class LocationInfo(BaseModel):
-    name: str = Field(..., example="Delhi NCR")
-    latitude: float = Field(..., example=28.6139)
-    longitude: float = Field(..., example=77.2090)
-    region: str = Field("North India", example="North India")
+    name: str = Field(..., examples=["Delhi NCR"])
+    latitude: float = Field(..., examples=[28.6139])
+    longitude: float = Field(..., examples=[77.2090])
+    region: str = Field("North India", examples=["North India"])
 
 
 class DataFreshness(BaseModel):
@@ -128,11 +128,11 @@ class CanonicalForecastResponse(BaseModel):
     location: LocationInfo
     timestamp: datetime
     target_time: datetime
-    data_mode: str = Field(..., example="DEMO")
-    data_source: str = Field(..., example="SYNTHETIC_SCENARIO")
+    data_mode: str = Field(..., examples=["DEMO"])
+    data_source: str = Field(..., examples=["SYNTHETIC_SCENARIO"])
     data_freshness: DataFreshness = Field(default_factory=DataFreshness)
-    variable: str = Field(..., example="rainfall_mm")
-    lead_time_hours: int = Field(..., example=24)
+    variable: str = Field(..., examples=["rainfall_mm"])
+    lead_time_hours: int = Field(..., examples=[24])
     forecasts: Dict[str, float] = Field(..., description="Raw model forecasts {ECMWF_IFS: 39.1, ECMWF_AIFS: 44.8, GFS: 42.9}")
     aether_forecast: AetherForecastOutput
     weights: Dict[str, float] = Field(..., description="Normalized softmax weights summing to 1.0")

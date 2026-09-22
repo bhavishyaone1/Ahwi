@@ -3,7 +3,7 @@
 import React from "react";
 import { motion } from "motion/react";
 import { useAetherData } from "@/context/AetherDataContext";
-import { WeatherMap } from "@/components/WeatherMap";
+import { WeatherMap } from "@/components/map/WeatherMap";
 import { EventStreamRail } from "@/components/layout/EventStreamRail";
 import { ForecastStrip } from "@/components/common/ForecastStrip";
 import { pageVariants, fadeUp } from "@/lib/motion";

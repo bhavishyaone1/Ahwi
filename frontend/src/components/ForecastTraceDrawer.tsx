@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { motion, AnimatePresence } from "motion/react";
+import { motion, AnimatePresence, useReducedMotion } from "motion/react";
 import { useAetherData } from "../context/AetherDataContext";
 import {
   X,
@@ -20,6 +20,7 @@ import { Badge } from "@/components/ui/badge";
 
 export const ForecastTraceDrawer: React.FC = () => {
   const { isTraceOpen, setIsTraceOpen, traceData, loadingTrace } = useAetherData();
+  const shouldReduceMotion = useReducedMotion();
 
   const getStepIcon = (index: number) => {
     switch (index) {
@@ -56,21 +57,25 @@ export const ForecastTraceDrawer: React.FC = () => {
         <div className="fixed inset-0 z-50 overflow-hidden">
           {/* Backdrop with Motion Fade */}
           <motion.div
-            initial={{ opacity: 0 }}
+            initial={shouldReduceMotion ? false : { opacity: 0 }}
             animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            className="absolute inset-0 bg-slate-900/40 backdrop-blur-xs"
+            exit={shouldReduceMotion ? undefined : { opacity: 0 }}
+            transition={shouldReduceMotion ? { duration: 0 } : { duration: 0.18 }}
+            className="absolute inset-0 bg-slate-900/50 backdrop-blur-xs"
             onClick={() => setIsTraceOpen(false)}
           />
 
           <div className="fixed inset-y-0 right-0 max-w-full flex pl-10">
             {/* Drawer with Motion Slide */}
             <motion.div
-              initial={{ x: "100%" }}
+              initial={shouldReduceMotion ? false : { x: "100%" }}
               animate={{ x: 0 }}
-              exit={{ x: "100%" }}
-              transition={{ type: "spring", stiffness: 350, damping: 32 }}
+              exit={shouldReduceMotion ? undefined : { x: "100%" }}
+              transition={
+                shouldReduceMotion
+                  ? { duration: 0 }
+                  : { type: "spring", stiffness: 350, damping: 32 }
+              }
               className="w-screen max-w-md bg-surface shadow-2xl border-l border-border text-text-primary flex flex-col elevated-glow"
             >
               {/* Header */}

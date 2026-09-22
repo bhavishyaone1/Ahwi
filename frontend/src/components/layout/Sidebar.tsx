@@ -3,7 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { motion } from "motion/react";
+import { motion, useReducedMotion } from "motion/react";
 import {
   CloudSun,
   Activity,
@@ -79,6 +79,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   onCloseMobile,
 }) => {
   const pathname = usePathname();
+  const shouldReduceMotion = useReducedMotion();
   const { theme, toggleTheme } = useTheme();
 
   return (
@@ -188,7 +189,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
                         <motion.div
                           layoutId="sidebar-active-pill"
                           className="absolute inset-0 rounded-xl bg-accent/15 dark:bg-accent/20 border border-accent/40 -z-10 shadow-md shadow-accent/25"
-                          transition={{ type: "spring", stiffness: 450, damping: 32 }}
+                          transition={
+                            shouldReduceMotion
+                              ? { duration: 0 }
+                              : { type: "spring", stiffness: 450, damping: 32 }
+                          }
                         />
                       )}
                       <Icon

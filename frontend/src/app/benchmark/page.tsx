@@ -89,7 +89,7 @@ export default function BenchmarkPage() {
             Verification & Meteorological Benchmarks
           </h1>
           <p className="text-xs text-text-muted font-medium">
-            Rigorous out-of-sample evaluation comparing AETHER against NWP and baseline forecasting systems.
+            Adaptive multi-model NWP & AI blending engine — rigorous out-of-sample verification against operational ECMWF IFS, AIFS, and NOAA GFS (MoES PS 26081).
           </p>
         </div>
 

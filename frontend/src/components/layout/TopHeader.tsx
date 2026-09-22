@@ -15,16 +15,21 @@ import {
   Activity,
   Layers,
   Radio,
+  Search,
+  Command as CommandIcon,
 } from "lucide-react";
+import { toast } from "sonner";
 
 interface TopHeaderProps {
   onToggleMobileSidebar: () => void;
   onOpenHealthModal: () => void;
+  onOpenCommandPalette?: () => void;
 }
 
 export const TopHeader: React.FC<TopHeaderProps> = ({
   onToggleMobileSidebar,
   onOpenHealthModal,
+  onOpenCommandPalette,
 }) => {
   const {
     selectedLocation,
@@ -143,6 +148,22 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
             </>
           )}
         </div>
+
+        {/* Command Palette Quick Trigger */}
+        {onOpenCommandPalette && (
+          <button
+            type="button"
+            onClick={onOpenCommandPalette}
+            className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-surface border border-border/80 hover:bg-surface-secondary text-text-muted hover:text-text-primary transition shadow-sm text-xs"
+            title="Open Command Palette (Cmd+K / Ctrl+K)"
+          >
+            <Search className="h-3.5 w-3.5 text-accent" />
+            <span className="font-sans text-[11px] hidden md:inline">Command Palette</span>
+            <kbd className="font-mono text-[9px] px-1.5 py-0.5 rounded bg-surface-secondary border border-border text-text-muted">
+              ⌘K
+            </kbd>
+          </button>
+        )}
       </div>
 
       {/* Center / Right Metadata & Status Bar */}
@@ -180,9 +201,18 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
           <span>Trace</span>
         </button>
 
-        {/* Refresh pipeline */}
+        {/* Refresh pipeline with Sonner Toast */}
         <button
-          onClick={refresh}
+          onClick={async () => {
+            try {
+              await refresh();
+              toast.success("Telemetry pipeline re-assimilated", {
+                description: `Refreshed multi-model blend for ${selectedLocation.name}`,
+              });
+            } catch {
+              toast.error("Failed to refresh forecast pipeline");
+            }
+          }}
           title="Refresh forecast pipeline"
           className="p-1.5 rounded-lg border border-border text-text-muted hover:text-text-primary hover:bg-surface-secondary transition"
         >

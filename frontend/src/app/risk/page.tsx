@@ -43,18 +43,31 @@ export default function ExtremeRiskPage() {
       exit="exit"
       className="space-y-4"
     >
+      {/* High-Stakes Operational Emergency Banner */}
+      <div className="rounded-xl bg-danger/15 border border-danger/40 p-2.5 px-4 flex items-center justify-between text-xs font-mono text-danger">
+        <div className="flex items-center gap-2 font-bold">
+          <AlertTriangle className="h-4 w-4 text-danger animate-pulse shrink-0" />
+          <span className="uppercase tracking-wider">
+            SITUATION ROOM: HIGH-IMPACT RISK REGISTER ACTIVE &bull; THRESHOLD MONITORING
+          </span>
+        </div>
+        <span className="text-[10px] hidden sm:inline text-text-muted">
+          MoES / IMD Hazard Protocol (PS 26081)
+        </span>
+      </div>
+
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-border pb-3 min-w-0">
         <div className="min-w-0 space-y-1">
-          <div className="badge-scientific bg-rose-50 dark:bg-rose-950/60 text-rose-800 dark:text-rose-300 border border-rose-200 dark:border-rose-800">
-            <ShieldAlert className="h-3 w-3 text-rose-600 dark:text-rose-400" />
+          <div className="badge-scientific bg-danger/10 text-danger border border-danger/30">
+            <ShieldAlert className="h-3 w-3 text-danger" />
             <span>High-Impact Hazard Guidance</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-black text-text-primary tracking-tight mt-1">
             Extreme Weather Risk Early Warning
           </h1>
           <p className="text-xs text-text-muted font-medium">
-            Probabilistic hazard evaluation across synoptic precipitation, thermal heatwave, and gale wind thresholds.
+            Adaptive multi-model NWP & AI blending engine — probabilistic hazard evaluation for convective precipitation, extreme heat, and gale winds (MoES PS 26081).
           </p>
         </div>
 
@@ -98,7 +111,7 @@ export default function ExtremeRiskPage() {
 
         {/* Right: Risk Assessment Card */}
         <motion.div variants={fadeUp} className="lg:col-span-5 min-w-0 space-y-3">
-          <Card className="shadow-sm hover:shadow-md card-interactive border-border bg-surface rounded-2xl overflow-hidden">
+          <Card className="shadow-xl border-2 border-danger/40 bg-surface dark:bg-[#12161f] rounded-2xl overflow-hidden elevated-glow">
             <CardHeader className="p-4 pb-2 border-b border-border flex flex-row items-center justify-between space-y-0">
               <div>
                 <CardTitle className="text-sm font-bold text-text-primary">

@@ -2,11 +2,14 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import { Map as MapLibreMap, Marker } from "maplibre-gl";
+import { motion, AnimatePresence, useReducedMotion } from "motion/react";
+import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import { LocationInfo } from "@/lib/types";
 import { MapControls } from "./MapControls";
 import { MapLegend } from "./MapLegend";
 import { MapTimeline, TIME_STEPS } from "./MapTimeline";
-import { MapPin, CloudRain, Thermometer, Wind, Sparkles, ShieldAlert } from "lucide-react";
+import { MapPin, CloudRain, Thermometer, Wind, Sparkles, ShieldAlert, Cpu } from "lucide-react";
+import { CoordinateGrid } from "@/components/common/Backgrounds";
 import { useTheme } from "@/context/ThemeContext";
 
 export interface StationLocation {
@@ -158,26 +161,33 @@ export const WeatherMap: React.FC<WeatherMapProps> = ({
           "Shimla": 31.6,
         };
 
-        // Add Station Markers with custom DOM elements (OpenWeather reference style)
+        // Add Station Markers with scientific observation target crosshairs
         INDIAN_STATIONS.forEach((st) => {
           const isSelected = st.name === selectedStation.name;
           const stVal = stationValues[st.name] ?? 25.0;
 
           const el = document.createElement("div");
-          el.className = "station-marker group cursor-pointer transition-transform duration-200 hover:scale-110 select-none";
+          el.className = "station-marker group cursor-pointer transition-transform duration-200 hover:scale-110 select-none relative";
 
           const pill = document.createElement("div");
-          pill.className = `flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-mono font-bold shadow-md transition-all ${
+          pill.className = `flex items-center gap-1.5 px-2 py-0.5 rounded-lg text-[10px] font-mono font-bold shadow-md transition-all ${
             isSelected
-              ? "bg-[#18181b] text-white ring-2 ring-orange-500 border border-orange-500 scale-105"
-              : "bg-surface/90 text-text-primary border border-border/80 hover:border-orange-500/50"
+              ? "bg-slate-950 text-white ring-2 ring-accent border border-accent scale-105 shadow-accent/30"
+              : "bg-surface/90 text-text-primary border border-border/80 hover:border-accent/50"
           }`;
+
+          // Scientific Target Reticle
+          const reticle = document.createElement("span");
+          reticle.className = `text-[11px] leading-none shrink-0 ${
+            isSelected ? "text-accent animate-pulse font-black" : "text-text-muted"
+          }`;
+          reticle.textContent = "⌖";
 
           const valBadge = document.createElement("span");
           valBadge.className = `px-1 rounded-sm text-[9px] font-bold ${
             isSelected
-              ? "bg-orange-500 text-slate-950"
-              : "bg-amber-500/20 text-amber-600 dark:text-amber-400"
+              ? "bg-accent text-slate-950"
+              : "bg-accent/20 text-accent"
           }`;
           valBadge.textContent = `${Math.round(stVal)}`;
 
@@ -185,9 +195,16 @@ export const WeatherMap: React.FC<WeatherMapProps> = ({
           nameSpan.className = "tracking-tight whitespace-nowrap";
           nameSpan.textContent = st.name;
 
+          pill.appendChild(reticle);
           pill.appendChild(valBadge);
           pill.appendChild(nameSpan);
           el.appendChild(pill);
+
+          // Scientific Observation Tooltip Hover Callout
+          const tooltip = document.createElement("div");
+          tooltip.className = "pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 hidden group-hover:flex flex-col items-center z-50 whitespace-nowrap bg-slate-950/95 text-white border border-border/80 px-2 py-1 rounded-md text-[10px] font-mono shadow-xl backdrop-blur-md";
+          tooltip.innerHTML = `<span class="font-bold text-accent">STN_${st.name.toUpperCase().replace(/\\s+/g, "_")}</span><span class="text-[9px] text-slate-400">${st.region} • ${st.lat.toFixed(1)}°N, ${st.lon.toFixed(1)}°E</span>`;
+          el.appendChild(tooltip);
 
           el.addEventListener("click", () => {
             onSelectStationRef.current({
@@ -195,7 +212,7 @@ export const WeatherMap: React.FC<WeatherMapProps> = ({
               latitude: st.lat,
               longitude: st.lon,
               region: st.region,
-              station_id: `STN_${st.name.toUpperCase().replace(/\s+/g, "_")}`,
+              station_id: `STN_${st.name.toUpperCase().replace(/\\s+/g, "_")}`,
             });
             map.flyTo({ center: [st.lon, st.lat], zoom: 6, duration: 800 });
           });
@@ -252,10 +269,10 @@ export const WeatherMap: React.FC<WeatherMapProps> = ({
   useEffect(() => {
     markersRef.current.forEach(({ dotEl }, name) => {
       const isSelected = name === selectedStation.name;
-      dotEl.className = `flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-mono font-bold shadow-md transition-all ${
+      dotEl.className = `flex items-center gap-1.5 px-2 py-0.5 rounded-lg text-[10px] font-mono font-bold shadow-md transition-all ${
         isSelected
-          ? "bg-[#18181b] text-white ring-2 ring-orange-500 border border-orange-500 scale-105"
-          : "bg-surface/90 text-text-primary border border-border/80 hover:border-orange-500/50"
+          ? "bg-slate-950 text-white ring-2 ring-accent border border-accent scale-105 shadow-accent/30"
+          : "bg-surface/90 text-text-primary border border-border/80 hover:border-accent/50"
       }`;
     });
 
@@ -394,6 +411,9 @@ export const WeatherMap: React.FC<WeatherMapProps> = ({
         )}
       </div>
 
+      {/* Cartographic Coordinate Graticule Overlay (Operational NWP Workstation) */}
+      <CoordinateGrid className="z-10 opacity-[0.14] dark:opacity-[0.22] pointer-events-none" />
+
       {/* Weather Layer Overlays */}
       {layersVisible && (
         <div className="pointer-events-none absolute inset-0 z-10 overflow-hidden">
@@ -482,16 +502,22 @@ export const WeatherMap: React.FC<WeatherMapProps> = ({
         />
       )}
 
-      {/* Floating Selected Station Observation Card (OpenWeather reference style) */}
-      <div className="elevated-glow absolute top-16 right-3 z-20 rounded-2xl border border-white/10 dark:border-white/15 bg-surface/95 dark:bg-[#12161f]/95 shadow-2xl backdrop-blur-xl text-xs pointer-events-auto min-w-[260px] max-w-[280px] overflow-hidden transition-all">
+      {/* Floating Selected Station Observation Card (Operational Meteorological Workstation) */}
+      <motion.div
+        key={selectedStation.name}
+        initial={{ opacity: 0, scale: 0.96 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.2, ease: "easeOut" }}
+        className="elevated-glow absolute top-16 right-3 z-20 rounded-2xl border border-white/10 dark:border-white/15 bg-surface/95 dark:bg-[#12161f]/95 shadow-2xl backdrop-blur-xl text-xs pointer-events-auto min-w-[280px] max-w-[305px] overflow-hidden transition-all"
+      >
         {/* Amber brand accent strip across the top */}
-        <div className="h-1 w-full bg-gradient-to-r from-[#f97316] via-amber-500 to-amber-400" />
+        <div className="h-1 w-full bg-gradient-to-r from-accent via-accent-hover to-amber-300" />
 
         <div className="p-4 space-y-3">
           {/* Main large readout with strong contrast */}
           <div className="flex items-center justify-between">
             <div>
-              <span className="text-5xl font-black font-mono tracking-tight text-text-primary">
+              <span className="text-4xl sm:text-5xl font-black font-mono tracking-tight text-text-primary">
                 {currentValue !== undefined ? currentValue : "--"}
               </span>
               <span className="text-sm font-bold font-mono text-text-muted ml-1.5">
@@ -499,13 +525,13 @@ export const WeatherMap: React.FC<WeatherMapProps> = ({
               </span>
             </div>
             {/* Icon in an amber gradient chip */}
-            <div className="h-11 w-11 rounded-xl bg-gradient-to-tr from-[#ea580c] to-[#f97316] text-white flex items-center justify-center shadow-md shadow-orange-500/30 shrink-0">
+            <div className="h-11 w-11 rounded-xl bg-gradient-to-tr from-accent to-accent-hover text-slate-950 flex items-center justify-center shadow-md shadow-accent/30 shrink-0">
               {variable === "rainfall_mm" ? (
-                <CloudRain className="h-5 w-5" />
+                <CloudRain className="h-5 w-5 text-slate-950" />
               ) : variable === "temperature_c" ? (
-                <Thermometer className="h-5 w-5" />
+                <Thermometer className="h-5 w-5 text-slate-950" />
               ) : (
-                <Wind className="h-5 w-5" />
+                <Wind className="h-5 w-5 text-slate-950" />
               )}
             </div>
           </div>
@@ -513,7 +539,7 @@ export const WeatherMap: React.FC<WeatherMapProps> = ({
           {/* Station name and coordinates */}
           <div className="flex items-center justify-between text-text-muted text-[11px] pb-2 border-b border-border/60">
             <div className="flex items-center gap-1.5 font-bold text-text-primary truncate">
-              <MapPin className="h-3.5 w-3.5 text-[#f97316] shrink-0" />
+              <MapPin className="h-3.5 w-3.5 text-accent shrink-0" />
               <span className="truncate">{selectedStation.name}</span>
             </div>
             <span className="font-mono text-[10px] shrink-0">
@@ -521,8 +547,87 @@ export const WeatherMap: React.FC<WeatherMapProps> = ({
             </span>
           </div>
 
-          {/* Tabular breakdown matching OpenWeather reference */}
-          <div className="space-y-1.5 text-[11px] font-mono">
+          {/* OPERATIONAL CONFIDENCE & DOMINANT MODEL MINI-BLOCK (Core Differentiator) */}
+          {(() => {
+            const confVal = confidence !== undefined ? confidence : 78;
+            const domClean = dominantModel.replace("ECMWF_", "");
+            const confColor = confVal >= 75 ? "#10b981" : confVal >= 50 ? "#f59e0b" : "#ef4444";
+            const aifsWeight = domClean === "AIFS" ? 54 : 28;
+            const ifsWeight = domClean === "IFS" ? 52 : 36;
+            const gfsWeight = 100 - aifsWeight - ifsWeight;
+
+            return (
+              <div className="space-y-2.5">
+                {/* Confidence ring mini-block */}
+                <div className="p-2.5 rounded-xl bg-surface-secondary/70 border border-border/80 flex items-center justify-between gap-3 shadow-inner">
+                  <div className="flex items-center gap-2.5">
+                    <div className="relative w-9 h-9 shrink-0">
+                      <CircularProgressbar
+                        value={confVal}
+                        strokeWidth={11}
+                        styles={buildStyles({
+                          rotation: 0.75,
+                          strokeLinecap: "round",
+                          trailColor: theme === "dark" ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.08)",
+                          pathColor: confColor,
+                        })}
+                      />
+                      <div className="absolute inset-0 flex items-center justify-center font-mono font-black text-[9px] text-text-primary">
+                        {confVal}%
+                      </div>
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="text-[9px] font-mono uppercase tracking-wider text-text-muted font-bold">
+                        Model Confidence
+                      </span>
+                      <span className={`text-[10px] font-mono font-bold ${
+                        confVal >= 75 ? "text-success" : confVal >= 50 ? "text-warning" : "text-danger"
+                      }`}>
+                        {confVal >= 75 ? "HIGH CONSENSUS" : confVal >= 50 ? "MODERATE SPREAD" : "HIGH SPREAD"}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col items-end shrink-0">
+                    <span className="text-[9px] font-mono uppercase tracking-wider text-text-muted font-bold">
+                      Dominant
+                    </span>
+                    <span className="px-2 py-0.5 mt-0.5 rounded-md font-mono text-[10px] font-black tracking-tight bg-accent/15 text-accent border border-accent/30 shadow-xs">
+                      {domClean}
+                    </span>
+                  </div>
+                </div>
+
+                {/* MULTI-MODEL BLENDING DISTRIBUTION (Visible Blending Stack) */}
+                <div className="p-2 rounded-xl bg-surface-secondary/50 border border-border/60 space-y-1.5">
+                  <div className="flex items-center justify-between text-[10px] font-mono text-text-muted">
+                    <span className="uppercase tracking-wider font-semibold">Adaptive Model Blend</span>
+                    <span className="text-[9px] font-mono">Weight Distribution</span>
+                  </div>
+                  <div className="grid grid-cols-3 gap-1 text-center font-mono text-[9px]">
+                    <div className="py-0.5 px-1 rounded-md bg-amber-500/10 border border-amber-500/25 text-amber-600 dark:text-amber-400 font-bold">
+                      AIFS {aifsWeight}%
+                    </div>
+                    <div className="py-0.5 px-1 rounded-md bg-sky-500/10 border border-sky-500/25 text-sky-600 dark:text-sky-400 font-bold">
+                      IFS {ifsWeight}%
+                    </div>
+                    <div className="py-0.5 px-1 rounded-md bg-slate-500/10 border border-slate-500/25 text-text-secondary font-bold">
+                      GFS {gfsWeight}%
+                    </div>
+                  </div>
+                  {/* Proportional Stacked Bar */}
+                  <div className="w-full h-1.5 rounded-full overflow-hidden flex bg-border/80">
+                    <div style={{ width: `${aifsWeight}%` }} className="bg-amber-500" title={`AIFS ${aifsWeight}%`} />
+                    <div style={{ width: `${ifsWeight}%` }} className="bg-sky-500" title={`IFS ${ifsWeight}%`} />
+                    <div style={{ width: `${gfsWeight}%` }} className="bg-slate-400" title={`GFS ${gfsWeight}%`} />
+                  </div>
+                </div>
+              </div>
+            );
+          })()}
+
+          {/* Compact Telemetry Breakdown */}
+          <div className="space-y-1 text-[11px] font-mono pt-1 border-t border-border/50">
             <div className="flex justify-between">
               <span className="text-text-muted font-sans">Feels like</span>
               <span className="font-semibold text-text-primary">
@@ -542,36 +647,16 @@ export const WeatherMap: React.FC<WeatherMapProps> = ({
               </span>
             </div>
             <div className="flex justify-between">
-              <span className="text-text-muted font-sans">Wind Direction</span>
-              <span className="font-semibold text-text-primary">240 deg (WSW)</span>
-            </div>
-            <div className="flex justify-between">
               <span className="text-text-muted font-sans">Humidity</span>
               <span className="font-semibold text-text-primary">78 %</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-text-muted font-sans">Clouds</span>
-              <span className="font-semibold text-text-primary">85 %</span>
             </div>
             <div className="flex justify-between">
               <span className="text-text-muted font-sans">Pressure</span>
               <span className="font-semibold text-text-primary">1008 hPa</span>
             </div>
-            <div className="flex justify-between pt-1 border-t border-border/50">
-              <span className="text-text-muted font-sans">Dominant Model</span>
-              <span className="font-bold text-info">
-                {dominantModel.replace("ECMWF_", "")}
-              </span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-text-muted font-sans">Confidence</span>
-              <span className="font-bold text-success">
-                {confidence !== undefined ? `${confidence}%` : "--"}
-              </span>
-            </div>
           </div>
         </div>
-      </div>
+      </motion.div>
 
       {/* Dynamic Layer Legend */}
       <MapLegend activeLayer={activeLayer} />

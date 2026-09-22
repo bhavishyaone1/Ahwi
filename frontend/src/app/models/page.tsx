@@ -64,7 +64,7 @@ export default function ModelIntelligencePage() {
             Model Skill & Adaptive Trust
           </h1>
           <p className="text-xs text-text-muted font-medium">
-            Understand model performance, dynamic weights, and empirical SHAP key drivers.
+            Adaptive multi-model NWP & AI blending engine — dynamic softmax weights, causal explainability, and empirical SHAP attributions (MoES PS 26081).
           </p>
         </div>
 

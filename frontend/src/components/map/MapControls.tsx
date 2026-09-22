@@ -17,7 +17,7 @@ import {
   EyeOff,
   RotateCcw,
 } from "lucide-react";
-import { motion } from "motion/react";
+import { motion, useReducedMotion } from "motion/react";
 
 export const MAP_LAYERS = [
   { id: "temperature", label: "Temperature", icon: Thermometer },
@@ -56,6 +56,8 @@ export function MapControls({
   layersVisible = true,
   onToggleLayersVisible,
 }: MapControlsProps) {
+  const shouldReduceMotion = useReducedMotion();
+
   return (
     <>
       {/* Top Floating Layer Selector Capsule (OpenWeather reference style) */}
@@ -79,7 +81,11 @@ export function MapControls({
                   <motion.div
                     layoutId="layer-active-capsule"
                     className="absolute inset-0 rounded-full bg-accent/15 dark:bg-accent/20 border border-accent/40 shadow-md shadow-accent/20"
-                    transition={{ type: "spring", stiffness: 450, damping: 30 }}
+                    transition={
+                      shouldReduceMotion
+                        ? { duration: 0 }
+                        : { type: "spring", stiffness: 450, damping: 30 }
+                    }
                   />
                 )}
                 <Icon className={`relative z-10 h-3.5 w-3.5 ${isActive ? "text-accent" : "text-text-muted"}`} />

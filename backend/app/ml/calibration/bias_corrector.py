@@ -62,3 +62,17 @@ class BiasCorrector:
             calibrated = max(0.0, calibrated)
 
         return round(float(calibrated), 2), shrunk_bias
+
+    def save(self, filepath: str):
+        import os
+        import pickle
+        os.makedirs(os.path.dirname(filepath), exist_ok=True)
+        with open(filepath, "wb") as f:
+            pickle.dump(self.bias_table, f)
+
+    def load(self, filepath: str):
+        import os
+        import pickle
+        if os.path.exists(filepath):
+            with open(filepath, "rb") as f:
+                self.bias_table = pickle.load(f)

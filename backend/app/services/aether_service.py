@@ -86,6 +86,24 @@ class AetherService:
 
         # Pre-seed cache with aligned baseline history
         self._bootstrap_pipeline_memory()
+        self._load_trained_models()
+
+    def _load_trained_models(self):
+        """Loads trained weights for Regime Classifier, LSTM, XGBoost, and Bias Corrector if present."""
+        models_dir = settings.BASE_DIR / "models"
+        regime_path = models_dir / "regime_classifier.pkl"
+        lstm_path = models_dir / "causal_lstm.pt"
+        weighting_path = models_dir / "adaptive_xgboost.pkl"
+        bias_path = models_dir / "bias_corrector.pkl"
+
+        if regime_path.exists():
+            self.regime_classifier.load(str(regime_path))
+        if lstm_path.exists():
+            self.lstm_extractor.load(str(lstm_path))
+        if weighting_path.exists():
+            self.weighting_engine.load(str(weighting_path))
+        if bias_path.exists():
+            self.bias_corrector.load(str(bias_path))
 
     def _bootstrap_pipeline_memory(self):
         """Generates realistic initial history to prime rolling error memory and baselines."""

@@ -47,11 +47,11 @@ export default function ExtremeRiskPage() {
       <div className="rounded-xl bg-danger/15 border border-danger/40 p-2.5 px-4 flex items-center justify-between text-xs font-mono text-danger">
         <div className="flex items-center gap-2 font-bold">
           <AlertTriangle className="h-4 w-4 text-danger animate-pulse shrink-0" />
-          <span className="uppercase tracking-wider">
+          <span className="text-overline text-danger">
             SITUATION ROOM: HIGH-IMPACT RISK REGISTER ACTIVE &bull; THRESHOLD MONITORING
           </span>
         </div>
-        <span className="text-[10px] hidden sm:inline text-text-muted">
+        <span className="text-overline hidden sm:inline text-text-muted">
           MoES / IMD Hazard Protocol (PS 26081)
         </span>
       </div>
@@ -59,8 +59,8 @@ export default function ExtremeRiskPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-border pb-3 min-w-0">
         <div className="min-w-0 space-y-1">
-          <div className="badge-scientific bg-danger/10 text-danger border border-danger/30">
-            <ShieldAlert className="h-3 w-3 text-danger" />
+          <div className="badge-scientific text-overline bg-danger/10 text-danger border border-danger/30">
+            <ShieldAlert className="h-3 w-3 text-danger shrink-0" />
             <span>High-Impact Hazard Guidance</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-black text-text-primary tracking-tight mt-1">
@@ -117,11 +117,11 @@ export default function ExtremeRiskPage() {
                 <CardTitle className="text-sm font-bold text-text-primary">
                   {selectedLocation.name} — Risk Assessment
                 </CardTitle>
-                <span className="text-[11px] text-text-muted font-mono">
+                <span className="text-overline text-text-muted block">
                   +{leadTimeHours}h Horizon
                 </span>
               </div>
-              <Badge variant="destructive" className="font-bold text-[10px] uppercase font-mono">
+              <Badge variant="destructive" className="font-bold text-overline">
                 {data?.risk?.overall_level || "ELEVATED"} RISK
               </Badge>
             </CardHeader>
@@ -151,13 +151,13 @@ export default function ExtremeRiskPage() {
 
               {/* Key Risk Drivers */}
               <div className="space-y-2 pt-3 border-t border-border">
-                <span className="font-mono text-[10px] uppercase font-semibold text-text-muted tracking-wider block">
+                <span className="text-overline text-text-muted block font-semibold">
                   Key Risk Drivers
                 </span>
                 <div className="space-y-1.5 text-xs text-text-secondary">
                   {keyDrivers.map((driver, idx) => (
                     <div key={idx} className="flex items-start gap-2">
-                      <span className="h-1.5 w-1.5 rounded-full bg-rose-500 mt-1.5 shrink-0" />
+                      <span className="h-1.5 w-1.5 rounded-full bg-danger mt-1.5 shrink-0" />
                       <span>{driver}</span>
                     </div>
                   ))}
@@ -165,8 +165,8 @@ export default function ExtremeRiskPage() {
               </div>
 
               {/* Mandatory Disclaimer */}
-              <div className="p-2.5 rounded-md bg-amber-500/10 border border-amber-500/20 text-[10px] text-amber-700 dark:text-amber-300 space-y-1">
-                <span className="font-bold block uppercase tracking-wider font-mono">
+              <div className="p-2.5 rounded-xl bg-warning/10 border border-warning/20 text-[10px] text-warning space-y-1">
+                <span className="font-bold block text-overline text-warning">
                   Operational Safety Disclaimer
                 </span>
                 <p>

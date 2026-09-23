@@ -58,8 +58,8 @@ export default function ForecastPage() {
       <div className="relative flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-border pb-3">
         <WeatherContourHeader />
         <div>
-          <div className="badge-scientific bg-sky-50 dark:bg-sky-950/70 text-sky-700 dark:text-sky-300 border border-sky-200 dark:border-sky-800">
-            <Activity className="h-3 w-3 text-sky-600 dark:text-sky-400" />
+          <div className="badge-scientific text-overline bg-info/10 text-info border border-info/30">
+            <Activity className="h-3 w-3 text-info shrink-0" />
             <span>Multi-Model Synthesis</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-black text-text-primary tracking-tight mt-1">
@@ -136,7 +136,7 @@ export default function ForecastPage() {
               {isActive && (
                 <motion.div
                   layoutId="forecast-tab-pill"
-                  className="absolute bottom-0 left-0 right-0 h-0.5 bg-orange-500 rounded-full"
+                  className="absolute bottom-0 left-0 right-0 h-0.5 bg-accent rounded-full"
                   transition={{ type: "spring", stiffness: 450, damping: 32 }}
                 />
               )}
@@ -264,24 +264,24 @@ export default function ForecastPage() {
                 <div className="overflow-x-auto">
                   <table className="w-full text-left text-xs">
                     <thead>
-                      <tr className="border-b border-border text-[11px] uppercase tracking-wider text-text-muted bg-surface-secondary/50">
-                        <th className="py-2 px-3">Horizon</th>
-                        <th className="py-2 px-3">ECMWF IFS</th>
-                        <th className="py-2 px-3">ECMWF AIFS</th>
-                        <th className="py-2 px-3">NOAA GFS</th>
-                        <th className="py-2 px-3 font-bold text-text-primary">AETHER Blend</th>
+                      <tr className="border-b border-border text-overline text-text-muted bg-surface-secondary/50">
+                        <th className="py-2.5 px-3">Horizon</th>
+                        <th className="py-2.5 px-3">ECMWF IFS</th>
+                        <th className="py-2.5 px-3">ECMWF AIFS</th>
+                        <th className="py-2.5 px-3">NOAA GFS</th>
+                        <th className="py-2.5 px-3 font-bold text-text-primary">AETHER Blend</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-border font-mono">
+                    <tbody className="divide-y divide-border font-mono tabular-nums">
                       {chartData.map((pt) => (
                         <tr key={pt.lead_time} className="hover:bg-surface-secondary/50">
                           <td className="py-2.5 px-3 font-semibold text-text-primary">
                             {pt.lead_time}
                           </td>
                           <td className="py-2.5 px-3 text-text-secondary">{pt.ECMWF} {getUnit()}</td>
-                          <td className="py-2.5 px-3 text-aether-sky font-medium">{pt.AIFS} {getUnit()}</td>
+                          <td className="py-2.5 px-3 text-info font-medium">{pt.AIFS} {getUnit()}</td>
                           <td className="py-2.5 px-3 text-text-muted">{pt.GFS} {getUnit()}</td>
-                          <td className="py-2.5 px-3 font-bold text-text-primary bg-aether-sky/10">
+                          <td className="py-2.5 px-3 font-bold text-text-primary bg-accent/10">
                             {pt.AETHER} {getUnit()}
                           </td>
                         </tr>
@@ -292,12 +292,12 @@ export default function ForecastPage() {
               )}
 
               {activeTab === "uncertainty" && (
-                <div className="p-4 bg-surface-secondary/60 rounded-lg space-y-3 border border-border">
+                <div className="p-4 bg-surface-secondary/60 rounded-xl space-y-3 border border-border">
                   <div className="flex items-center justify-between">
                     <span className="text-xs font-semibold text-text-primary">
                       Gaussian Calibrated Spread (σ)
                     </span>
-                    <span className="font-mono text-xs font-bold text-aether-sky">
+                    <span className="font-mono tabular-nums text-xs font-bold text-info">
                       σ = {data?.confidence.spread_sigma !== undefined ? data.confidence.spread_sigma : "--"} {getUnit()}
                     </span>
                   </div>
@@ -317,16 +317,16 @@ export default function ForecastPage() {
         <motion.div variants={fadeUp} className="lg:col-span-4 min-w-0 space-y-3">
           <Card className="shadow-sm hover:shadow-md card-interactive border-border bg-surface rounded-2xl">
             <CardHeader className="p-4 pb-2 border-b border-border">
-              <span className="font-mono text-[10px] font-semibold uppercase tracking-wider text-text-muted block">
-                Key Forecast ({leadTimeHours}h)
+              <span className="text-overline text-text-muted block font-semibold">
+                Key Forecast ({leadTimeHours}h Horizon)
               </span>
-              <CardTitle className="text-sm font-extrabold text-text-primary uppercase tracking-tight">
-                AETHER BLENDED FORECAST
+              <CardTitle className="text-sm font-extrabold text-text-primary tracking-tight">
+                AETHER Blended Forecast
               </CardTitle>
             </CardHeader>
             <CardContent className="p-4 space-y-4">
               <div className="flex items-baseline gap-1.5">
-                <span className="text-5xl font-black font-mono text-text-primary tracking-tight">
+                <span className="text-5xl font-black font-mono tabular-nums text-text-primary tracking-tight">
                   {data?.aether_forecast.calibrated_value !== undefined ? (
                     <NumberTicker value={data.aether_forecast.calibrated_value} decimals={1} />
                   ) : (
@@ -342,19 +342,19 @@ export default function ForecastPage() {
               <div className="space-y-2 pt-3 border-t border-border text-xs">
                 <div className="flex justify-between items-center">
                   <span className="text-text-secondary font-medium">ECMWF IFS:</span>
-                  <span className="font-mono font-semibold text-text-primary">
+                  <span className="font-mono tabular-nums font-semibold text-text-primary">
                     {data?.forecasts?.["ECMWF_IFS"] !== undefined ? `${data.forecasts["ECMWF_IFS"]} ${getUnit()}` : "--"}
                   </span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-text-secondary font-medium">ECMWF AIFS:</span>
-                  <span className="font-mono font-semibold text-aether-sky">
+                  <span className="font-mono tabular-nums font-semibold text-info">
                     {data?.forecasts?.["ECMWF_AIFS"] !== undefined ? `${data.forecasts["ECMWF_AIFS"]} ${getUnit()}` : "--"}
                   </span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-text-secondary font-medium">NOAA GFS:</span>
-                  <span className="font-mono font-semibold text-text-muted">
+                  <span className="font-mono tabular-nums font-semibold text-text-muted">
                     {data?.forecasts?.["GFS"] !== undefined ? `${data.forecasts["GFS"]} ${getUnit()}` : "--"}
                   </span>
                 </div>
@@ -364,13 +364,13 @@ export default function ForecastPage() {
               <div className="pt-3 border-t border-border space-y-2.5">
                 <div className="flex justify-between items-center text-xs">
                   <span className="text-text-secondary font-medium">Forecast Confidence:</span>
-                  <span className="font-mono font-bold text-emerald-500">
+                  <span className="font-mono tabular-nums font-bold text-success">
                     {data?.confidence.pct !== undefined ? `${data.confidence.pct}%` : "--"}
                   </span>
                 </div>
                 <div className="w-full bg-surface-secondary rounded-full h-1.5 overflow-hidden">
                   <div
-                    className="bg-emerald-500 h-full rounded-full"
+                    className="bg-success h-full rounded-full"
                     style={{ width: `${data?.confidence.pct ?? 0}%` }}
                   />
                 </div>
@@ -379,10 +379,10 @@ export default function ForecastPage() {
                   <span className="text-text-secondary font-medium">Model Agreement:</span>
                   <span className={`px-2 py-0.5 rounded text-[11px] font-semibold border ${
                     (data?.confidence.spread_sigma ?? 2.8) < 3.0
-                      ? "text-emerald-500 bg-emerald-500/10 border-emerald-500/20"
+                      ? "text-success bg-success/10 border-success/20"
                       : (data?.confidence.spread_sigma ?? 2.8) < 6.0
-                      ? "text-amber-500 bg-amber-500/10 border-amber-500/20"
-                      : "text-rose-500 bg-rose-500/10 border-rose-500/20"
+                      ? "text-warning bg-warning/10 border-warning/20"
+                      : "text-danger bg-danger/10 border-danger/20"
                   }`}>
                     {(data?.confidence.spread_sigma ?? 2.8) < 3.0
                       ? "High"
@@ -412,14 +412,14 @@ export default function ForecastPage() {
         <Card className="shadow-sm hover:shadow-md card-interactive border-border bg-surface-secondary/40 rounded-2xl">
           <CardHeader className="p-3.5 pb-1 flex flex-row items-center justify-between space-y-0">
             <CardTitle className="text-xs font-bold text-text-primary flex items-center gap-1.5">
-              <Layers className="h-3.5 w-3.5 text-aether-sky" />
+              <Layers className="h-3.5 w-3.5 text-accent" />
               <span>Forecast Pipeline Execution Trace</span>
             </CardTitle>
             <Button
               variant="ghost"
               size="xs"
               onClick={openTraceDrawer}
-              className="text-aether-sky font-bold hover:text-aether-sky-hover"
+              className="text-accent font-bold hover:text-accent-hover"
             >
               Open Full Drawer
             </Button>
@@ -450,7 +450,7 @@ export default function ForecastPage() {
                 6. Softmax Weights
               </span>
               <ArrowRight className="h-3 w-3 text-text-muted" />
-              <span className="px-2 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/20 font-bold text-emerald-500">
+              <span className="px-2 py-0.5 rounded bg-success/10 border border-success/20 font-bold text-success">
                 7. AETHER Calibrated Blend
               </span>
             </div>

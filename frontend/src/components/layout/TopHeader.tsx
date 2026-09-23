@@ -92,21 +92,21 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
           <Menu className="h-5 w-5" />
         </button>
 
-        {/* Location Dropdown selector (Dashboard: Location ▼) */}
+        {/* Location Dropdown selector (Station: Location ▼) */}
         <div className="relative">
           <button
             type="button"
             onClick={() => setDropdownOpen(!dropdownOpen)}
-            className="flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-surface border border-border/90 hover:bg-surface-secondary text-text-primary transition-all shadow-md hover:shadow-lg group"
+            className="flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-surface border border-border/90 hover:bg-surface-secondary text-text-primary transition-all shadow-sm hover:shadow group"
           >
-            <MapPin className="h-4 w-4 text-orange-500 shrink-0" />
-            <span className="text-xs font-semibold text-text-muted hidden sm:inline">
-              Dashboard:
+            <MapPin className="h-3.5 w-3.5 text-accent shrink-0" />
+            <span className="text-[10px] font-mono uppercase tracking-wider font-bold text-text-muted hidden sm:inline">
+              Station:
             </span>
-            <span className="text-sm font-black tracking-tight text-text-primary">
+            <span className="text-xs sm:text-sm font-bold tracking-tight text-text-primary">
               {selectedLocation.name}
             </span>
-            <ChevronDown className="h-3.5 w-3.5 text-orange-500 group-hover:translate-y-0.5 transition-transform" />
+            <ChevronDown className="h-3 w-3 text-accent group-hover:translate-y-0.5 transition-transform" />
           </button>
 
           {dropdownOpen && (
@@ -115,35 +115,37 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
                 className="fixed inset-0 z-20"
                 onClick={() => setDropdownOpen(false)}
               />
-              <div className="elevated-glow absolute left-0 mt-2 w-60 rounded-2xl bg-surface border border-border/90 shadow-2xl py-2 z-30 text-xs font-medium max-h-80 overflow-y-auto">
-                <span className="px-3.5 py-1 text-[10px] font-semibold text-text-muted uppercase tracking-wider block font-mono">
-                  Select Observation Station
+              <div className="elevated-glow absolute left-0 mt-2 w-64 rounded-2xl bg-surface border border-border shadow-2xl py-2 z-30 text-xs font-medium max-h-80 overflow-y-auto">
+                <span className="px-3.5 py-1.5 text-[10px] font-bold text-text-muted uppercase tracking-[0.08em] block font-mono border-b border-border/50">
+                  Observation Stations (MoES Grid)
                 </span>
-                {INDIAN_STATIONS.map((st) => (
-                  <button
-                    key={st.name}
-                    type="button"
-                    onClick={() => {
-                      setSelectedLocation({
-                        name: st.name,
-                        latitude: st.lat,
-                        longitude: st.lon,
-                        region: st.region,
-                      });
-                      setDropdownOpen(false);
-                    }}
-                    className={`w-full text-left px-3.5 py-2.5 flex items-center justify-between hover:bg-surface-secondary transition ${
-                      selectedLocation.name === st.name
-                        ? "text-orange-600 dark:text-orange-400 font-bold bg-orange-500/10 dark:bg-orange-950/30"
-                        : "text-text-secondary"
-                    }`}
-                  >
-                    <span>{st.name}</span>
-                    <span className="text-[10px] font-mono text-text-muted">
-                      {st.region}
-                    </span>
-                  </button>
-                ))}
+                <div className="py-1">
+                  {INDIAN_STATIONS.map((st) => (
+                    <button
+                      key={st.name}
+                      type="button"
+                      onClick={() => {
+                        setSelectedLocation({
+                          name: st.name,
+                          latitude: st.lat,
+                          longitude: st.lon,
+                          region: st.region,
+                        });
+                        setDropdownOpen(false);
+                      }}
+                      className={`w-full text-left px-3.5 py-2 flex items-center justify-between hover:bg-surface-secondary transition ${
+                        selectedLocation.name === st.name
+                          ? "text-accent font-bold bg-accent/10"
+                          : "text-text-secondary"
+                      }`}
+                    >
+                      <span className="font-semibold text-text-primary">{st.name}</span>
+                      <span className="text-[10px] font-mono text-text-muted">
+                        {st.lat.toFixed(1)}°N, {st.lon.toFixed(1)}°E
+                      </span>
+                    </button>
+                  ))}
+                </div>
               </div>
             </>
           )}
@@ -154,12 +156,12 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
           <button
             type="button"
             onClick={onOpenCommandPalette}
-            className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-surface border border-border/80 hover:bg-surface-secondary text-text-muted hover:text-text-primary transition shadow-sm text-xs"
+            className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-surface border border-border/80 hover:bg-surface-secondary text-text-muted hover:text-text-primary transition shadow-xs text-xs"
             title="Open Command Palette (Cmd+K / Ctrl+K)"
           >
             <Search className="h-3.5 w-3.5 text-accent" />
-            <span className="font-sans text-[11px] hidden md:inline">Command Palette</span>
-            <kbd className="font-mono text-[9px] px-1.5 py-0.5 rounded bg-surface-secondary border border-border text-text-muted">
+            <span className="font-sans text-[11px] font-medium hidden md:inline text-text-muted">Command Palette</span>
+            <kbd className="font-mono text-[9px] font-bold px-1.5 py-0.5 rounded bg-surface-secondary border border-border text-text-muted">
               ⌘K
             </kbd>
           </button>
@@ -167,38 +169,38 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
       </div>
 
       {/* Center / Right Metadata & Status Bar */}
-      <div className="flex items-center gap-2 sm:gap-3">
-        {/* Date / Timestamp from reference (fuller pill shape + shadow) */}
-        <div className="hidden md:flex items-center gap-1.5 text-xs text-text-muted font-mono bg-surface-secondary/80 border border-border/80 px-3 py-1 rounded-full shadow-sm">
-          <Calendar className="h-3.5 w-3.5 text-text-muted" />
-          <span>{currentTime || "22 Sep 2026 • 00:00 UTC"}</span>
+      <div className="flex items-center gap-2 sm:gap-2.5">
+        {/* Date / Timestamp */}
+        <div className="hidden md:flex items-center gap-1.5 text-[11px] text-text-muted font-mono bg-surface-secondary/80 border border-border/80 px-3 py-1 rounded-full shadow-xs">
+          <Calendar className="h-3.5 w-3.5 text-text-muted shrink-0" />
+          <span className="font-bold tracking-tight">{currentTime || "23 Sep 2026 • 00:00 UTC"}</span>
         </div>
 
-        {/* Status Pill (fuller pill shape + shadow) */}
+        {/* Status Pill */}
         <div
           onClick={onOpenHealthModal}
-          className={`cursor-pointer flex items-center gap-1.5 px-3 py-1 rounded-full border text-xs font-bold transition shadow-sm ${
+          className={`cursor-pointer flex items-center gap-1.5 px-3 py-1 rounded-full border text-[10px] font-mono font-bold tracking-wider uppercase transition shadow-xs ${
             isReal
-              ? "bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300 border-emerald-300 dark:border-emerald-700 shadow-emerald-500/20"
-              : "bg-amber-50 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300 border-amber-300 dark:border-amber-700 shadow-amber-500/20"
+              ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/30"
+              : "bg-amber-500/10 text-amber-500 border-amber-500/30"
           }`}
           title="Click to view telemetry & data mode health"
         >
           <span
-            className={`h-2 w-2 rounded-full ${
+            className={`h-1.5 w-1.5 rounded-full ${
               isReal ? "bg-emerald-500 animate-pulse" : "bg-amber-500"
             }`}
           />
-          <span>{isReal ? "REAL DATA" : "DEMO MODE"}</span>
+          <span>{isReal ? "LIVE INGESTION" : "DEMO REPLAY"}</span>
         </div>
 
-        {/* Forecast Trace CTA Button (fuller pill shape + shadow) */}
+        {/* Forecast Trace CTA Button */}
         <button
           onClick={openTraceDrawer}
-          className="hidden sm:flex items-center gap-1.5 px-3 py-1 rounded-full bg-sky-500/10 dark:bg-sky-950/60 border border-sky-400/30 dark:border-sky-700 text-sky-700 dark:text-sky-300 text-xs font-bold hover:bg-sky-500/20 shadow-sm shadow-sky-500/20 transition"
+          className="hidden sm:flex items-center gap-1.5 px-3 py-1 rounded-full bg-sky-500/10 dark:bg-sky-950/50 border border-sky-400/30 text-sky-600 dark:text-sky-400 text-[10px] font-mono font-bold tracking-wider uppercase hover:bg-sky-500/20 transition shadow-xs"
         >
-          <Activity className="h-3.5 w-3.5 text-sky-500" />
-          <span>Trace</span>
+          <Activity className="h-3 w-3 text-sky-500" />
+          <span>Trace DAG</span>
         </button>
 
         {/* Refresh pipeline with Sonner Toast */}
@@ -216,7 +218,7 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
           title="Refresh forecast pipeline"
           className="p-1.5 rounded-lg border border-border text-text-muted hover:text-text-primary hover:bg-surface-secondary transition"
         >
-          <RefreshCw className={`h-4 w-4 ${loading ? "animate-spin text-sky-600" : ""}`} />
+          <RefreshCw className={`h-4 w-4 ${loading ? "animate-spin text-sky-500" : ""}`} />
         </button>
       </div>
     </header>

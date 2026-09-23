@@ -188,19 +188,19 @@ export default function WeightMapPage() {
       className="space-y-4"
     >
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-border pb-2 min-w-0">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-border pb-3 min-w-0">
         <div className="min-w-0 space-y-1">
           <div className="flex flex-wrap items-center gap-2">
-            <div className="badge-scientific bg-sky-50 dark:bg-sky-950/70 text-sky-700 dark:text-sky-300 border border-sky-200 dark:border-sky-800">
-              <Layers className="h-3 w-3 text-sky-600 dark:text-sky-400" />
+            <div className="badge-scientific text-overline bg-info/10 text-info border border-info/30">
+              <Layers className="h-3 w-3 text-info" />
               <span>0.25° Spatial Dominance</span>
             </div>
-            <div className="badge-scientific bg-surface-secondary text-text-muted border border-border">
+            <div className="badge-scientific text-overline bg-surface-secondary text-text-muted border border-border">
               <MapPin className="h-3 w-3" />
-              <span>{weightPoints.length} Indian Reference Stations</span>
+              <span className="font-mono tabular-nums">{weightPoints.length} Indian Reference Stations</span>
             </div>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-black text-text-primary tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-black text-text-primary tracking-tight mt-1">
             Spatial Model Contribution Map
           </h1>
           <p className="text-xs text-text-muted font-medium">
@@ -258,21 +258,21 @@ export default function WeightMapPage() {
             {/* Top Overlay Indicator */}
             <div className="absolute top-3 left-3 z-10 glass-panel rounded-lg px-3 py-1.5 text-xs font-semibold text-text-primary shadow-sm flex items-center gap-2">
               <span className="radar-telemetry-dot shrink-0" />
-              <span className="font-mono">Layer: {selectedModel} (+{leadTimeHours}h Horizon)</span>
+              <span className="font-mono text-overline text-text-primary">Layer: {selectedModel} (+{leadTimeHours}h Horizon)</span>
             </div>
 
             {/* Bottom Legend */}
             <div className="absolute bottom-3 left-3 z-10 glass-panel rounded-xl p-3 shadow-md text-xs space-y-2 max-w-xs">
-              <span className="font-mono text-[10px] uppercase font-semibold text-text-muted tracking-wider block">
+              <span className="text-overline text-text-muted block font-semibold">
                 Model Allocation Palette
               </span>
-              <div className="flex items-center gap-3 text-[11px] font-medium">
+              <div className="flex items-center gap-3 text-[11px] font-medium font-mono">
                 <div className="flex items-center gap-1.5">
-                  <span className="h-2.5 w-2.5 rounded-full bg-sky-500 shrink-0" />
+                  <span className="h-2.5 w-2.5 rounded-full bg-accent shrink-0" />
                   <span className="font-semibold text-text-primary">AIFS</span>
                 </div>
                 <div className="flex items-center gap-1.5">
-                  <span className="h-2.5 w-2.5 rounded-full bg-blue-600 shrink-0" />
+                  <span className="h-2.5 w-2.5 rounded-full bg-sky-500 shrink-0" />
                   <span className="font-semibold text-text-primary">IFS</span>
                 </div>
                 <div className="flex items-center gap-1.5">
@@ -291,7 +291,7 @@ export default function WeightMapPage() {
         <motion.div variants={fadeUp} className="lg:col-span-4 min-w-0 space-y-3">
           <Card className="shadow-sm hover:shadow-md card-interactive border-border bg-surface rounded-2xl overflow-hidden">
             <CardHeader className="p-4 pb-2 border-b border-border">
-              <span className="font-mono text-[10px] uppercase font-semibold text-text-muted tracking-wider block">
+              <span className="text-overline text-text-muted block font-semibold">
                 Regional Inspection
               </span>
               <CardTitle className="text-base font-bold text-text-primary">
@@ -302,48 +302,48 @@ export default function WeightMapPage() {
               {selectedPoint ? (
                 <>
                   <div className="flex items-center justify-between text-xs pb-2 border-b border-border">
-                    <span className="text-text-muted">Coordinates:</span>
-                    <span className="font-mono text-text-primary font-semibold">
+                    <span className="text-overline text-text-muted">Coordinates:</span>
+                    <span className="font-mono tabular-nums text-text-primary font-semibold text-xs">
                       {selectedPoint.latitude.toFixed(2)}°N, {selectedPoint.longitude.toFixed(2)}°E
                     </span>
                   </div>
 
                   {/* Model Weight Breakdown */}
                   <div className="space-y-2.5">
-                    <span className="font-mono text-[10px] uppercase font-semibold text-text-muted tracking-wider block">
+                    <span className="text-overline text-text-muted block font-semibold">
                       Dynamic Weight Attribution
                     </span>
                     <div className="space-y-2.5">
                       <div>
                         <div className="flex justify-between text-xs font-semibold mb-1">
-                          <span className="text-sky-700 dark:text-sky-300">ECMWF AIFS (AI)</span>
-                          <span className="font-mono font-bold text-sky-700 dark:text-sky-300">
+                          <span className="text-accent">ECMWF AIFS (AI)</span>
+                          <span className="font-mono tabular-nums font-bold text-accent">
                             {Math.round((selectedPoint.weights["ECMWF_AIFS"] || 0) * 100)}%
                           </span>
                         </div>
                         <Progress
                           value={Math.round((selectedPoint.weights["ECMWF_AIFS"] || 0) * 100)}
+                          indicatorColor="bg-accent"
+                          className="h-2"
+                        />
+                      </div>
+                      <div>
+                        <div className="flex justify-between text-xs font-semibold mb-1">
+                          <span className="text-sky-600 dark:text-sky-400">ECMWF IFS (NWP)</span>
+                          <span className="font-mono tabular-nums font-bold text-sky-600 dark:text-sky-400">
+                            {Math.round((selectedPoint.weights["ECMWF_IFS"] || 0) * 100)}%
+                          </span>
+                        </div>
+                        <Progress
+                          value={Math.round((selectedPoint.weights["ECMWF_IFS"] || 0) * 100)}
                           indicatorColor="bg-sky-500"
                           className="h-2"
                         />
                       </div>
                       <div>
                         <div className="flex justify-between text-xs font-semibold mb-1">
-                          <span className="text-blue-700 dark:text-blue-300">ECMWF IFS (NWP)</span>
-                          <span className="font-mono font-bold text-blue-700 dark:text-blue-300">
-                            {Math.round((selectedPoint.weights["ECMWF_IFS"] || 0) * 100)}%
-                          </span>
-                        </div>
-                        <Progress
-                          value={Math.round((selectedPoint.weights["ECMWF_IFS"] || 0) * 100)}
-                          indicatorColor="bg-blue-600"
-                          className="h-2"
-                        />
-                      </div>
-                      <div>
-                        <div className="flex justify-between text-xs font-semibold mb-1">
-                          <span className="text-slate-700 dark:text-slate-300">NOAA GFS (NWP)</span>
-                          <span className="font-mono font-bold text-slate-700 dark:text-slate-300">
+                          <span className="text-slate-600 dark:text-slate-400">NOAA GFS (NWP)</span>
+                          <span className="font-mono tabular-nums font-bold text-slate-600 dark:text-slate-400">
                             {Math.round((selectedPoint.weights["GFS"] || 0) * 100)}%
                           </span>
                         </div>
@@ -358,19 +358,19 @@ export default function WeightMapPage() {
 
                   <div className="pt-3 border-t border-border space-y-2.5 text-xs font-mono tabular-nums">
                     <div className="flex justify-between items-center">
-                      <span className="text-text-muted font-sans">AETHER Blend:</span>
+                      <span className="text-text-muted font-sans text-overline">AETHER Blend:</span>
                       <span className="font-black text-sm text-text-primary">
                         {selectedPoint.blended_forecast} {variable === "rainfall_mm" ? "mm" : "°C"}
                       </span>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span className="text-text-muted font-sans">Confidence:</span>
-                      <span className="font-bold text-emerald-600 dark:text-emerald-400">
+                      <span className="text-text-muted font-sans text-overline">Confidence:</span>
+                      <span className="font-bold text-success">
                         {Math.round(selectedPoint.confidence)}%
                       </span>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span className="text-text-muted font-sans">Regime:</span>
+                      <span className="text-text-muted font-sans text-overline">Regime:</span>
                       <Badge variant="scientific" className="text-[10px]">
                         {selectedPoint.regime}
                       </Badge>

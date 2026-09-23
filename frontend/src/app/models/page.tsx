@@ -56,8 +56,8 @@ export default function ModelIntelligencePage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-border pb-3 min-w-0">
         <div className="min-w-0 space-y-1">
-          <div className="badge-scientific bg-sky-50 dark:bg-sky-950/70 text-sky-700 dark:text-sky-300 border border-sky-200 dark:border-sky-800">
-            <Cpu className="h-3 w-3 text-sky-600 dark:text-sky-400" />
+          <div className="badge-scientific text-overline bg-info/10 text-info border border-info/30">
+            <Cpu className="h-3 w-3 text-info shrink-0" />
             <span>Explainable Model Trust</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-black text-text-primary tracking-tight mt-1">
@@ -110,7 +110,7 @@ export default function ModelIntelligencePage() {
         <motion.div variants={fadeUp} className="lg:col-span-4 min-w-0">
           <Card className="shadow-sm hover:shadow-md card-interactive border-border bg-surface rounded-2xl">
             <CardHeader className="p-4 pb-2 border-b border-border">
-              <span className="font-mono text-[10px] uppercase font-semibold text-text-muted tracking-wider block">
+              <span className="text-overline text-text-muted block font-semibold">
                 Adaptive Model Weights
               </span>
               <CardTitle className="text-sm font-bold text-text-primary">
@@ -138,7 +138,7 @@ export default function ModelIntelligencePage() {
         <motion.div variants={fadeUp} className="lg:col-span-8 min-w-0">
           <Card className="shadow-sm hover:shadow-md card-interactive border-border bg-surface rounded-2xl">
             <CardHeader className="p-4 pb-2 border-b border-border">
-              <span className="font-mono text-[10px] uppercase font-semibold text-text-muted tracking-wider block">
+              <span className="text-overline text-text-muted block font-semibold">
                 Verification Matrix
               </span>
               <CardTitle className="text-sm font-bold text-text-primary">
@@ -148,7 +148,7 @@ export default function ModelIntelligencePage() {
             <CardContent className="p-4">
               <div className="overflow-x-auto">
                 <table className="w-full text-xs text-left">
-                  <thead className="bg-surface-secondary/50 text-text-muted uppercase text-[10px] font-bold border-b border-border">
+                  <thead className="bg-surface-secondary/50 text-text-muted text-overline border-b border-border">
                     <tr>
                       <th className="p-2.5 px-3">Model</th>
                       <th className="p-2.5 px-3">MAE (mm)</th>
@@ -158,28 +158,28 @@ export default function ModelIntelligencePage() {
                       <th className="p-2.5 px-3">Status</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-border font-mono">
+                  <tbody className="divide-y divide-border font-mono tabular-nums">
                     <tr className="hover:bg-surface-secondary/40">
                       <td className="p-2.5 px-3 font-semibold text-text-primary">ECMWF IFS</td>
                       <td className="p-2.5 px-3 text-text-secondary">5.42</td>
                       <td className="p-2.5 px-3 text-text-secondary">8.76</td>
-                      <td className="p-2.5 px-3 text-rose-500">-1.22</td>
+                      <td className="p-2.5 px-3 text-danger">-1.22</td>
                       <td className="p-2.5 px-3 font-semibold text-text-secondary">0.68</td>
                       <td className="p-2.5 px-3">
-                        <Badge variant="outline" className="text-emerald-500 bg-emerald-500/10 border-emerald-500/20">
+                        <Badge variant="outline" className="text-success bg-success/10 border-success/20">
                           Active
                         </Badge>
                       </td>
                     </tr>
-                    <tr className="hover:bg-surface-secondary/40 bg-aether-sky/10">
-                      <td className="p-2.5 px-3 font-bold text-aether-sky flex items-center gap-1.5">
+                    <tr className="hover:bg-surface-secondary/40 bg-accent/10">
+                      <td className="p-2.5 px-3 font-bold text-accent flex items-center gap-1.5">
                         <Award className="h-3.5 w-3.5" />
                         ECMWF AIFS
                       </td>
-                      <td className="p-2.5 px-3 font-bold text-aether-sky">4.31</td>
-                      <td className="p-2.5 px-3 font-bold text-aether-sky">6.94</td>
-                      <td className="p-2.5 px-3 text-emerald-500">-0.47</td>
-                      <td className="p-2.5 px-3 font-bold text-aether-sky">0.76</td>
+                      <td className="p-2.5 px-3 font-bold text-accent">4.31</td>
+                      <td className="p-2.5 px-3 font-bold text-accent">6.94</td>
+                      <td className="p-2.5 px-3 text-success">-0.47</td>
+                      <td className="p-2.5 px-3 font-bold text-accent">0.76</td>
                       <td className="p-2.5 px-3">
                         <Badge variant="scientific">Dominant</Badge>
                       </td>
@@ -188,20 +188,20 @@ export default function ModelIntelligencePage() {
                       <td className="p-2.5 px-3 font-semibold text-text-primary">NOAA GFS</td>
                       <td className="p-2.5 px-3 text-text-secondary">6.87</td>
                       <td className="p-2.5 px-3 text-text-secondary">11.23</td>
-                      <td className="p-2.5 px-3 text-rose-500">-2.14</td>
+                      <td className="p-2.5 px-3 text-danger">-2.14</td>
                       <td className="p-2.5 px-3 font-semibold text-text-secondary">0.54</td>
                       <td className="p-2.5 px-3">
-                        <Badge variant="outline" className="text-emerald-500 bg-emerald-500/10 border-emerald-500/20">
+                        <Badge variant="outline" className="text-success bg-success/10 border-success/20">
                           Active
                         </Badge>
                       </td>
                     </tr>
                     <tr className="bg-surface-secondary font-bold border-t-2 border-border text-text-primary">
-                      <td className="p-2.5 px-3 font-black text-aether-sky">AETHER (Blend)</td>
-                      <td className="p-2.5 px-3 font-black text-aether-sky">3.82</td>
-                      <td className="p-2.5 px-3 font-black text-aether-sky">6.12</td>
-                      <td className="p-2.5 px-3 font-black text-emerald-500">-0.12</td>
-                      <td className="p-2.5 px-3 font-black text-aether-sky">0.81</td>
+                      <td className="p-2.5 px-3 font-black text-accent">AETHER (Blend)</td>
+                      <td className="p-2.5 px-3 font-black text-accent">3.82</td>
+                      <td className="p-2.5 px-3 font-black text-accent">6.12</td>
+                      <td className="p-2.5 px-3 font-black text-success">-0.12</td>
+                      <td className="p-2.5 px-3 font-black text-accent">0.81</td>
                       <td className="p-2.5 px-3">
                         <Badge variant="success">Optimal</Badge>
                       </td>
@@ -220,7 +220,7 @@ export default function ModelIntelligencePage() {
         <motion.div variants={fadeUp} className="lg:col-span-6">
           <Card className="shadow-sm hover:shadow-md card-interactive border-border bg-surface rounded-2xl">
             <CardHeader className="p-4 pb-2 border-b border-border">
-              <span className="font-mono text-[10px] uppercase font-semibold text-text-muted tracking-wider block">
+              <span className="text-overline text-text-muted block font-semibold">
                 Explainability Drivers
               </span>
               <CardTitle className="text-sm font-bold text-text-primary">
@@ -234,8 +234,8 @@ export default function ModelIntelligencePage() {
                     <div className="flex justify-between items-center text-xs">
                       <span className="text-text-secondary font-medium">{f.feature}</span>
                       <span
-                        className={`font-mono font-bold ${
-                          f.attribution >= 0 ? "text-emerald-500" : "text-rose-500"
+                        className={`font-mono tabular-nums font-bold ${
+                          f.attribution >= 0 ? "text-success" : "text-danger"
                         }`}
                       >
                         {f.attribution >= 0 ? "+" : ""}
@@ -245,7 +245,7 @@ export default function ModelIntelligencePage() {
                     <div className="w-full bg-surface-secondary rounded-full h-2 overflow-hidden">
                       <div
                         className={`h-full rounded-full transition-all duration-500 ${
-                          f.attribution >= 0 ? "bg-aether-sky" : "bg-rose-500"
+                          f.attribution >= 0 ? "bg-accent" : "bg-danger"
                         }`}
                         style={{ width: `${Math.abs(f.attribution) * 500}%` }}
                       />
@@ -261,7 +261,7 @@ export default function ModelIntelligencePage() {
         <motion.div variants={fadeUp} className="lg:col-span-6">
           <Card className="shadow-sm hover:shadow-md card-interactive border-border bg-surface rounded-2xl">
             <CardHeader className="p-4 pb-2 border-b border-border">
-              <span className="font-mono text-[10px] uppercase font-semibold text-text-muted tracking-wider block">
+              <span className="text-overline text-text-muted block font-semibold">
                 Causal Decision Boundary
               </span>
               <CardTitle className="text-sm font-bold text-text-primary">
@@ -276,8 +276,8 @@ export default function ModelIntelligencePage() {
       </div>
 
       {/* Mandatory IMD Meteorological Disclaimer */}
-      <div className="p-3 bg-amber-500/10 border border-amber-500/20 rounded-md flex items-center gap-2 text-xs text-amber-600 dark:text-amber-400">
-        <AlertTriangle className="h-4 w-4 text-amber-500 shrink-0" />
+      <div className="p-3 bg-warning/10 border border-warning/20 rounded-xl flex items-center gap-2 text-xs text-warning">
+        <AlertTriangle className="h-4 w-4 text-warning shrink-0" />
         <span>
           <strong>AETHER MODEL RISK NOTICE:</strong> This intelligence is computed algorithmically via the AETHER multi-model fusion pipeline. It does not constitute an official warning from the India Meteorological Department (IMD).
         </span>

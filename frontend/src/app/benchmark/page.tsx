@@ -76,16 +76,16 @@ export default function BenchmarkPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-border pb-3 min-w-0">
         <div className="min-w-0 space-y-1">
           <div className="flex flex-wrap items-center gap-2">
-            <div className="badge-scientific bg-sky-50 dark:bg-sky-950/70 text-sky-700 dark:text-sky-300 border border-sky-200 dark:border-sky-800">
-              <Award className="h-3 w-3 text-sky-600 dark:text-sky-400" />
+            <div className="badge-scientific text-overline bg-info/10 text-info border border-info/30">
+              <Award className="h-3 w-3 text-info" />
               <span>SIH Problem Statement 26081 Verification</span>
             </div>
-            <div className="badge-scientific bg-surface-secondary text-text-muted border border-border">
+            <div className="badge-scientific text-overline bg-surface-secondary text-text-muted border border-border">
               <Database className="h-3 w-3" />
               <span>Out-of-Sample Chronological Splits</span>
             </div>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-black text-text-primary tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-black text-text-primary tracking-tight mt-1">
             Verification & Meteorological Benchmarks
           </h1>
           <p className="text-xs text-text-muted font-medium">
@@ -168,7 +168,7 @@ export default function BenchmarkPage() {
           <Card className="shadow-sm hover:shadow-md card-interactive border-border bg-surface rounded-2xl overflow-hidden">
             <CardHeader className="p-4 pb-2 border-b border-border flex flex-row items-center justify-between space-y-0">
               <div>
-                <span className="font-mono text-[10px] uppercase font-semibold text-text-muted tracking-wider block">
+                <span className="text-overline text-text-muted block font-semibold">
                   Out-of-Sample Verification Matrix (+{leadTime}h Horizon)
                 </span>
                 <CardTitle className="text-sm font-bold text-text-primary mt-0.5">
@@ -176,12 +176,12 @@ export default function BenchmarkPage() {
                 </CardTitle>
               </div>
               {maeImprovement && Number(maeImprovement) > 0 ? (
-                <div className="badge-scientific bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
+                <div className="badge-scientific text-overline bg-success/10 text-success border border-success/30">
                   <Sparkles className="h-3 w-3" />
                   <span>AETHER -{maeImprovement}% MAE vs IFS</span>
                 </div>
               ) : (
-                <Badge variant="scientific" className="font-mono text-[10px]">
+                <Badge variant="scientific" className="font-mono tabular-nums text-[10px]">
                   Verified Out-of-Sample
                 </Badge>
               )}
@@ -190,7 +190,7 @@ export default function BenchmarkPage() {
             <CardContent className="p-0">
               <div className="overflow-x-auto">
                 <table className="w-full text-xs text-left border-collapse">
-                  <thead className="bg-surface-secondary/80 text-text-muted uppercase text-[10px] font-semibold border-b border-border font-mono">
+                  <thead className="bg-surface-secondary/80 text-text-muted text-overline border-b border-border font-mono">
                     <tr>
                       <th className="p-2.5 px-3">Model</th>
                       <th className="p-2.5 px-3 text-right">MAE</th>
@@ -210,29 +210,29 @@ export default function BenchmarkPage() {
                             key={row.model_name}
                             className={`transition hover:bg-surface-secondary/50 ${
                               isAether
-                                ? "bg-sky-50/70 dark:bg-sky-950/40 border-l-2 border-l-sky-500 font-bold"
+                                ? "bg-accent/10 border-l-2 border-l-accent font-bold"
                                 : ""
                             }`}
                           >
                             <td className="p-2.5 px-3 flex items-center gap-1.5 font-sans">
                               {isAether ? (
-                                <span className="h-2 w-2 rounded-full bg-sky-500 animate-pulse shrink-0" />
+                                <span className="h-2 w-2 rounded-full bg-accent animate-pulse shrink-0" />
                               ) : (
                                 <span className="h-1.5 w-1.5 rounded-full bg-slate-400 shrink-0" />
                               )}
-                              <span className={isAether ? "text-sky-900 dark:text-sky-200 font-black" : "text-text-primary"}>
+                              <span className={isAether ? "text-accent font-black" : "text-text-primary"}>
                                 {cleanName}
                               </span>
                               {isAether && (
-                                <span className="text-[9px] font-mono px-1 py-0.2 rounded bg-sky-600 text-white font-bold ml-1">
+                                <span className="text-[9px] font-mono px-1 py-0.2 rounded bg-accent text-slate-950 font-black ml-1">
                                   BEST
                                 </span>
                               )}
                             </td>
-                            <td className={`p-2.5 px-3 text-right ${isAether ? "text-sky-900 dark:text-sky-200 font-black text-sm" : "text-text-secondary"}`}>
+                            <td className={`p-2.5 px-3 text-right ${isAether ? "text-accent font-black text-sm" : "text-text-secondary"}`}>
                               {typeof row.mae === "number" ? row.mae.toFixed(2) : "--"}
                             </td>
-                            <td className={`p-2.5 px-3 text-right ${isAether ? "text-sky-900 dark:text-sky-200 font-bold" : "text-text-secondary"}`}>
+                            <td className={`p-2.5 px-3 text-right ${isAether ? "text-accent font-bold" : "text-text-secondary"}`}>
                               {typeof row.rmse === "number" ? row.rmse.toFixed(2) : "--"}
                             </td>
                             <td className="p-2.5 px-3 text-right text-text-muted">
@@ -242,7 +242,7 @@ export default function BenchmarkPage() {
                                   : row.bias.toFixed(2)
                                 : "--"}
                             </td>
-                            <td className={`p-2.5 px-3 text-right ${isAether ? "text-emerald-700 dark:text-emerald-300 font-black" : "text-text-secondary"}`}>
+                            <td className={`p-2.5 px-3 text-right ${isAether ? "text-success font-black" : "text-text-secondary"}`}>
                               {typeof row.csi === "number" ? row.csi.toFixed(2) : "--"}
                             </td>
                             <td className="p-2.5 px-3 text-right text-text-muted text-[11px]">

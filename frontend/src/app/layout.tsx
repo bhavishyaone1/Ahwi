@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "../context/ThemeContext";
 import { AetherDataProvider } from "../context/AetherDataContext";
@@ -11,8 +11,14 @@ const inter = Inter({
   variable: "--font-inter",
 });
 
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-mono",
+});
+
 export const metadata: Metadata = {
-  title: "AETHER — Adaptive Hybrid Weather Intelligence",
+  title: "AETHER — Meteorological Intelligence Workstation",
   description:
     "Dynamic Multi-Model Meteorological Blending, Confidence & Extreme Weather Decision Support (MoES PS 26081)",
 };
@@ -23,7 +29,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={inter.className} suppressHydrationWarning>
+    <html
+      lang="en"
+      className={`${inter.variable} ${jetbrainsMono.variable} ${inter.className}`}
+      suppressHydrationWarning
+    >
       <body>
         <ThemeProvider>
           <AetherDataProvider>

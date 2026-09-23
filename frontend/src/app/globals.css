@@ -61,11 +61,43 @@ body {
   transition: background-color 0.2s cubic-bezier(0.16, 1, 0.3, 1), color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Ensure all numbers render with tabular figures */
+/* Ensure all numbers render with tabular figures and crisp tracking */
 .font-mono,
 .tabular-nums {
   font-variant-numeric: tabular-nums;
-  font-feature-settings: "tnum";
+  font-feature-settings: "tnum" 1, "zero" 1;
+}
+
+h1, h2, h3, h4 {
+  letter-spacing: -0.03em;
+}
+
+/* Micro Typography Tokens */
+.text-overline {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.625rem;
+  line-height: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.text-metric-hero {
+  font-family: var(--font-mono, monospace);
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-primary);
+}
+
+.text-metric-unit {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-muted);
 }
 
 /* Scientific Glass Panel */

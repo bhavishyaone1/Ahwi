@@ -47,8 +47,8 @@ export const ForecastStrip: React.FC = () => {
         <table className="w-full text-xs text-left border-collapse">
           <thead>
             <tr className="border-b border-border/70 text-[11px] text-text-muted font-mono">
-              <th className="py-2 px-3 w-40 font-semibold uppercase tracking-wider text-text-muted/80">
-                Synthesis
+              <th className="py-2.5 px-3 w-44 text-[10px] font-bold uppercase tracking-[0.08em] text-text-muted/80">
+                Operational Horizon
               </th>
               {horizons.map((h) => {
                 const isActive = leadTimeHours === h.horizon_hours;
@@ -58,23 +58,23 @@ export const ForecastStrip: React.FC = () => {
                     onClick={() => setLeadTimeHours(h.horizon_hours)}
                     className={`py-2 px-3 text-center cursor-pointer transition rounded-t-lg font-mono ${
                       isActive
-                        ? "bg-orange-500/15 dark:bg-orange-950/40 text-orange-600 dark:text-orange-400 font-bold border-b-2 border-orange-500"
+                        ? "bg-accent/15 text-accent font-bold border-b-2 border-accent"
                         : "hover:bg-surface-secondary text-text-secondary"
                     }`}
                   >
-                    <div className="text-xs">{getHorizonTimeLabel(h.lead_time, h.horizon_hours)}</div>
-                    <div className="text-[9px] opacity-70 font-normal">{h.lead_time}</div>
+                    <div className="text-xs font-bold tracking-tight">{getHorizonTimeLabel(h.lead_time, h.horizon_hours)}</div>
+                    <div className="text-[9px] opacity-70 font-semibold">{h.lead_time}</div>
                   </th>
                 );
               })}
             </tr>
           </thead>
           <tbody className="divide-y divide-border/50">
-            {/* Row 1: Weather Condition Icon (matching OpenWeather: Weather row) */}
+            {/* Row 1: Weather Condition Icon */}
             <tr className="hover:bg-surface-secondary/40 transition">
-              <td className="py-2.5 px-3 font-medium text-text-secondary flex items-center gap-2">
-                <CloudSun className="h-4 w-4 text-text-muted" />
-                <span className="font-sans">Weather</span>
+              <td className="py-2.5 px-3 font-semibold text-text-secondary flex items-center gap-2">
+                <CloudSun className="h-4 w-4 text-text-muted shrink-0" />
+                <span className="font-sans text-[11px]">Sky Condition</span>
               </td>
               {horizons.map((h, idx) => {
                 const isActive = leadTimeHours === h.horizon_hours;
@@ -83,7 +83,7 @@ export const ForecastStrip: React.FC = () => {
                     key={h.lead_time}
                     onClick={() => setLeadTimeHours(h.horizon_hours)}
                     className={`py-2.5 px-3 text-center cursor-pointer transition ${
-                      isActive ? "bg-orange-500/10 dark:bg-orange-950/30" : ""
+                      isActive ? "bg-accent/10" : ""
                     }`}
                   >
                     <div className="flex justify-center items-center">
@@ -94,11 +94,11 @@ export const ForecastStrip: React.FC = () => {
               })}
             </tr>
 
-            {/* Row 2: Alert (matching OpenWeather: Alert row) */}
+            {/* Row 2: Convective Advisory */}
             <tr className="hover:bg-surface-secondary/40 transition font-mono">
               <td className="py-2 px-3 text-text-secondary flex items-center gap-2">
-                <AlertCircle className="h-4 w-4 text-text-muted" />
-                <span className="font-sans">Alert</span>
+                <AlertCircle className="h-4 w-4 text-text-muted shrink-0" />
+                <span className="font-sans text-[11px] font-semibold">Advisory Tier</span>
               </td>
               {horizons.map((h) => {
                 const isActive = leadTimeHours === h.horizon_hours;
@@ -108,27 +108,27 @@ export const ForecastStrip: React.FC = () => {
                     key={h.lead_time}
                     onClick={() => setLeadTimeHours(h.horizon_hours)}
                     className={`py-2 px-3 text-center cursor-pointer transition text-[11px] ${
-                      isActive ? "bg-orange-500/10 dark:bg-orange-950/30" : ""
+                      isActive ? "bg-accent/10" : ""
                     }`}
                   >
                     {hasAlert ? (
-                      <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-rose-500/20 text-rose-600 dark:text-rose-400">
+                      <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-danger/15 text-danger border border-danger/30">
                         Rain Alert
                       </span>
                     ) : (
-                      <span className="text-text-muted">-</span>
+                      <span className="text-text-muted font-bold">-</span>
                     )}
                   </td>
                 );
               })}
             </tr>
 
-            {/* Row 3: Temp (°C) / Rain (mm) (matching OpenWeather: Temp row with prominent numbers) */}
+            {/* Row 3: Blended Consensus */}
             <tr className="hover:bg-surface-secondary/40 transition font-mono tabular-nums">
-              <td className="py-2.5 px-3 font-semibold text-text-primary flex items-center gap-2">
-                <span className="h-2 w-2 rounded-full bg-orange-500" />
-                <span className="font-sans">
-                  {variable === "rainfall_mm" ? "Rainfall (mm)" : "Temp (°C)"}
+              <td className="py-2.5 px-3 font-bold text-text-primary flex items-center gap-2">
+                <span className="h-2 w-2 rounded-full bg-accent shrink-0" />
+                <span className="font-sans text-[11px]">
+                  {variable === "rainfall_mm" ? "Blended Rain (mm)" : "Blended Temp (°C)"}
                 </span>
               </td>
               {horizons.map((h) => {
@@ -138,10 +138,10 @@ export const ForecastStrip: React.FC = () => {
                     key={h.lead_time}
                     onClick={() => setLeadTimeHours(h.horizon_hours)}
                     className={`py-2.5 px-3 text-center cursor-pointer transition ${
-                      isActive ? "bg-orange-500/15 dark:bg-orange-950/40" : ""
+                      isActive ? "bg-accent/15" : ""
                     }`}
                   >
-                    <span className="font-black text-sm text-text-primary">
+                    <span className="font-black text-sm font-mono tracking-tight text-text-primary">
                       {Math.round(h.AETHER)}
                     </span>
                   </td>
@@ -149,11 +149,11 @@ export const ForecastStrip: React.FC = () => {
               })}
             </tr>
 
-            {/* Row 4: Relative Humidity % / Consensus (matching OpenWeather: Relative Humidity % row) */}
+            {/* Row 4: Relative Humidity % */}
             <tr className="hover:bg-surface-secondary/40 transition font-mono tabular-nums text-[11px]">
               <td className="py-2 px-3 text-text-muted flex items-center gap-2">
-                <span className="h-1.5 w-1.5 rounded-full bg-slate-400" />
-                <span className="font-sans">Relative Humidity %</span>
+                <span className="h-1.5 w-1.5 rounded-full bg-slate-400 shrink-0" />
+                <span className="font-sans text-[11px]">Relative Humidity (%)</span>
               </td>
               {horizons.map((h, idx) => {
                 const isActive = leadTimeHours === h.horizon_hours;
@@ -163,10 +163,10 @@ export const ForecastStrip: React.FC = () => {
                     key={h.lead_time}
                     onClick={() => setLeadTimeHours(h.horizon_hours)}
                     className={`py-2 px-3 text-center cursor-pointer text-text-secondary transition ${
-                      isActive ? "bg-orange-500/10 dark:bg-orange-950/30 text-text-primary font-bold" : ""
+                      isActive ? "bg-accent/10 text-text-primary font-bold" : ""
                     }`}
                   >
-                    {simulatedHumidity}
+                    {simulatedHumidity}%
                   </td>
                 );
               })}

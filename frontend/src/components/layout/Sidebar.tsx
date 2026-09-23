@@ -115,12 +115,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   <span className="text-base font-black tracking-tight text-text-primary">
                     AETHER
                   </span>
-                  <span className="text-[9px] uppercase font-bold px-1.5 py-0.2 rounded bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20">
+                  <span className="text-[9px] font-mono uppercase font-bold px-1.5 py-0.5 rounded bg-accent/15 text-accent border border-accent/30">
                     PS 26081
                   </span>
                 </div>
-                <span className="text-[10px] text-text-muted font-medium truncate">
-                  Adaptive Weather Intelligence
+                <span className="text-[9px] font-mono uppercase tracking-[0.08em] font-bold text-text-muted truncate">
+                  Meteorological Intel
                 </span>
               </div>
             )}
@@ -135,17 +135,17 @@ export const Sidebar: React.FC<SidebarProps> = ({
           </button>
         </div>
 
-        {/* User Profile Pill (OpenWeather reference style: Avatar + Name + Logout) */}
+        {/* User Profile Pill */}
         {!collapsed && (
           <div className="px-3 pt-3 pb-1">
             <div className="flex items-center justify-between p-2 rounded-xl bg-surface-secondary/70 border border-border">
               <div className="flex items-center gap-2.5 min-w-0">
-                <div className="h-8 w-8 rounded-full bg-gradient-to-tr from-amber-500 to-rose-500 text-white flex items-center justify-center text-xs font-black shadow-sm shrink-0">
-                  E
+                <div className="h-8 w-8 rounded-full bg-gradient-to-tr from-accent to-accent-hover text-slate-950 flex items-center justify-center text-xs font-black shadow-xs shrink-0">
+                  IMD
                 </div>
                 <div className="flex flex-col min-w-0">
-                  <span className="text-xs font-bold text-text-primary truncate">IMD / MoES Ops</span>
-                  <span className="text-[10px] text-text-muted truncate">Station Delhi NCR</span>
+                  <span className="text-xs font-bold text-text-primary truncate">MoES / IMD Ops</span>
+                  <span className="text-[10px] font-mono text-text-muted truncate">STN_DELHI_NCR</span>
                 </div>
               </div>
               <button
@@ -164,7 +164,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           {NAV_GROUPS.map((grp) => (
             <div key={grp.group} className="space-y-1">
               {!collapsed && (
-                <span className="px-2 text-[10px] font-semibold text-text-muted uppercase tracking-wider block font-mono">
+                <span className="px-2.5 text-[10px] font-bold text-text-muted uppercase tracking-[0.1em] block font-mono">
                   {grp.group}
                 </span>
               )}
@@ -212,16 +212,16 @@ export const Sidebar: React.FC<SidebarProps> = ({
           ))}
         </div>
 
-        {/* Highlight Action CTA: Ask a question (Oblong Button matching reference) */}
+        {/* Highlight Action CTA: Ask AETHER Assistant */}
         {!collapsed && (
           <div className="p-3 border-t border-border">
             <Link
               href="/ask"
               onClick={onCloseMobile}
-              className="w-full flex items-center justify-center gap-2 py-3.5 px-4 rounded-2xl bg-gradient-to-r from-orange-500 via-amber-500 to-orange-600 hover:from-orange-600 hover:to-orange-500 hover:scale-[1.02] active:scale-[0.98] text-slate-950 font-black text-xs shadow-lg shadow-orange-500/25 transition-all duration-200"
+              className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-gradient-to-r from-accent via-amber-500 to-amber-600 hover:opacity-95 hover:scale-[1.01] active:scale-[0.99] text-slate-950 font-black text-xs shadow-md shadow-accent/20 transition-all duration-200"
             >
-              <Sparkles className="h-4 w-4 text-slate-950" />
-              <span>Ask a question</span>
+              <Sparkles className="h-4 w-4 text-slate-950 shrink-0" />
+              <span className="font-mono uppercase tracking-wider text-[11px]">Ask AETHER AI</span>
             </Link>
           </div>
         )}

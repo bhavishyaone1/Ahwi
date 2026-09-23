@@ -517,10 +517,10 @@ export const WeatherMap: React.FC<WeatherMapProps> = ({
           {/* Main large readout with strong contrast */}
           <div className="flex items-center justify-between">
             <div>
-              <span className="text-4xl sm:text-5xl font-black font-mono tracking-tight text-text-primary">
+              <span className="text-metric-hero font-mono font-black tracking-tight text-text-primary">
                 {currentValue !== undefined ? currentValue : "--"}
               </span>
-              <span className="text-sm font-bold font-mono text-text-muted ml-1.5">
+              <span className="text-metric-unit font-mono font-bold text-text-muted ml-1.5">
                 {variable === "rainfall_mm" ? "mm" : variable === "temperature_c" ? "°C" : "m/s"}
               </span>
             </div>
@@ -542,8 +542,8 @@ export const WeatherMap: React.FC<WeatherMapProps> = ({
               <MapPin className="h-3.5 w-3.5 text-accent shrink-0" />
               <span className="truncate">{selectedStation.name}</span>
             </div>
-            <span className="font-mono text-[10px] shrink-0">
-              {selectedStation.latitude.toFixed(1)}°N, {selectedStation.longitude.toFixed(1)}°E
+            <span className="font-mono tabular-nums text-overline text-text-muted shrink-0">
+              {selectedStation.latitude.toFixed(2)}°N, {selectedStation.longitude.toFixed(2)}°E
             </span>
           </div>
 
@@ -577,7 +577,7 @@ export const WeatherMap: React.FC<WeatherMapProps> = ({
                       </div>
                     </div>
                     <div className="flex flex-col">
-                      <span className="text-[9px] font-mono uppercase tracking-wider text-text-muted font-bold">
+                      <span className="text-overline text-text-muted font-bold">
                         Model Confidence
                       </span>
                       <span className={`text-[10px] font-mono font-bold ${
@@ -589,7 +589,7 @@ export const WeatherMap: React.FC<WeatherMapProps> = ({
                   </div>
 
                   <div className="flex flex-col items-end shrink-0">
-                    <span className="text-[9px] font-mono uppercase tracking-wider text-text-muted font-bold">
+                    <span className="text-overline text-text-muted font-bold">
                       Dominant
                     </span>
                     <span className="px-2 py-0.5 mt-0.5 rounded-md font-mono text-[10px] font-black tracking-tight bg-accent/15 text-accent border border-accent/30 shadow-xs">
@@ -600,11 +600,11 @@ export const WeatherMap: React.FC<WeatherMapProps> = ({
 
                 {/* MULTI-MODEL BLENDING DISTRIBUTION (Visible Blending Stack) */}
                 <div className="p-2 rounded-xl bg-surface-secondary/50 border border-border/60 space-y-1.5">
-                  <div className="flex items-center justify-between text-[10px] font-mono text-text-muted">
-                    <span className="uppercase tracking-wider font-semibold">Adaptive Model Blend</span>
-                    <span className="text-[9px] font-mono">Weight Distribution</span>
+                  <div className="flex items-center justify-between text-overline text-text-muted">
+                    <span className="font-semibold">Adaptive Model Blend</span>
+                    <span className="font-mono">Weight Distribution</span>
                   </div>
-                  <div className="grid grid-cols-3 gap-1 text-center font-mono text-[9px]">
+                  <div className="grid grid-cols-3 gap-1 text-center font-mono text-[9px] tabular-nums">
                     <div className="py-0.5 px-1 rounded-md bg-amber-500/10 border border-amber-500/25 text-amber-600 dark:text-amber-400 font-bold">
                       AIFS {aifsWeight}%
                     </div>
@@ -627,31 +627,31 @@ export const WeatherMap: React.FC<WeatherMapProps> = ({
           })()}
 
           {/* Compact Telemetry Breakdown */}
-          <div className="space-y-1 text-[11px] font-mono pt-1 border-t border-border/50">
-            <div className="flex justify-between">
-              <span className="text-text-muted font-sans">Feels like</span>
+          <div className="space-y-1.5 text-[11px] font-mono tabular-nums pt-1 border-t border-border/50">
+            <div className="flex justify-between items-center">
+              <span className="text-text-muted font-sans text-overline">Feels like</span>
               <span className="font-semibold text-text-primary">
                 {variable === "temperature_c" && currentValue ? `${(currentValue + 2.1).toFixed(1)} °C` : "32.4 °C"}
               </span>
             </div>
-            <div className="flex justify-between">
-              <span className="text-text-muted font-sans">Precipitation</span>
+            <div className="flex justify-between items-center">
+              <span className="text-text-muted font-sans text-overline">Precipitation</span>
               <span className="font-semibold text-text-primary">
                 {variable === "rainfall_mm" && currentValue ? `${currentValue} mm` : "1.2 mm"}
               </span>
             </div>
-            <div className="flex justify-between">
-              <span className="text-text-muted font-sans">Wind speed</span>
+            <div className="flex justify-between items-center">
+              <span className="text-text-muted font-sans text-overline">Wind speed</span>
               <span className="font-semibold text-text-primary">
                 {variable === "wind_speed_ms" && currentValue ? `${currentValue} m/s` : "4.8 m/s"}
               </span>
             </div>
-            <div className="flex justify-between">
-              <span className="text-text-muted font-sans">Humidity</span>
+            <div className="flex justify-between items-center">
+              <span className="text-text-muted font-sans text-overline">Humidity</span>
               <span className="font-semibold text-text-primary">78 %</span>
             </div>
-            <div className="flex justify-between">
-              <span className="text-text-muted font-sans">Pressure</span>
+            <div className="flex justify-between items-center">
+              <span className="text-text-muted font-sans text-overline">Pressure</span>
               <span className="font-semibold text-text-primary">1008 hPa</span>
             </div>
           </div>

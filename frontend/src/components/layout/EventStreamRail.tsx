@@ -109,7 +109,7 @@ export const EventStreamRail: React.FC = () => {
           <div className="space-y-0.5">
             <div className="flex items-center gap-1.5">
               <span className="h-2 w-2 rounded-full bg-accent animate-pulse" />
-              <span className="font-mono text-[10px] tracking-wider uppercase font-black text-accent">
+              <span className="text-overline text-accent font-black">
                 Adaptive Model Trust
               </span>
             </div>
@@ -119,7 +119,7 @@ export const EventStreamRail: React.FC = () => {
           </div>
           <Badge
             variant="scientific"
-            className="font-mono text-[10px] bg-accent/10 text-accent border-accent/30 font-bold"
+            className="font-mono tabular-nums text-[10px] bg-accent/10 text-accent border-accent/30 font-bold"
           >
             +{leadTimeHours}h Horizon
           </Badge>
@@ -128,11 +128,11 @@ export const EventStreamRail: React.FC = () => {
         {/* Forecast Value & Confidence Hero Readout */}
         <div className="flex items-baseline justify-between pt-0.5">
           <div>
-            <span className="font-mono text-[10px] tracking-wider uppercase font-semibold text-text-muted block">
+            <span className="text-overline text-text-muted block">
               Blended Consensus
             </span>
             <div className="flex items-baseline gap-1 mt-0.5">
-              <span className="text-3xl font-black font-mono tracking-tight text-text-primary">
+              <span className="text-3xl font-black font-mono tabular-nums tracking-tight text-text-primary">
                 {calibratedVal !== undefined ? calibratedVal : "--"}
               </span>
               <span className="text-xs font-bold font-mono text-text-muted">
@@ -142,17 +142,17 @@ export const EventStreamRail: React.FC = () => {
           </div>
 
           <div className="text-right">
-            <span className="font-mono text-[10px] tracking-wider uppercase font-semibold text-text-muted block">
+            <span className="text-overline text-text-muted block">
               Confidence
             </span>
             <div className="mt-0.5">
               <span
-                className={`text-2xl font-black font-mono ${
+                className={`text-2xl font-black font-mono tabular-nums ${
                   confPct >= 75
-                    ? "text-emerald-500"
+                    ? "text-success"
                     : confPct >= 50
-                    ? "text-amber-500"
-                    : "text-rose-500"
+                    ? "text-warning"
+                    : "text-danger"
                 }`}
               >
                 {confPct}%
@@ -164,7 +164,7 @@ export const EventStreamRail: React.FC = () => {
         {/* ADAPTIVE MODEL TRUST: Visual multi-model weight allocation */}
         <div className="space-y-2.5 pt-2 border-t border-border/60">
           <div className="flex items-center justify-between">
-            <span className="font-mono text-[10px] tracking-wider uppercase font-bold text-text-muted">
+            <span className="text-overline text-text-muted font-bold">
               Dynamically Blended Weights
             </span>
             <span className="text-[10px] font-mono font-bold text-accent">
@@ -182,7 +182,7 @@ export const EventStreamRail: React.FC = () => {
                   const isLeader = cleanName === dominantModel;
                   return (
                     <div key={name} className="space-y-1">
-                      <div className="flex justify-between text-[11px] font-mono">
+                      <div className="flex justify-between text-[11px] font-mono tabular-nums">
                         <span className={`font-semibold flex items-center gap-1.5 ${
                           isLeader ? "text-text-primary font-bold" : "text-text-secondary"
                         }`}>
@@ -199,7 +199,7 @@ export const EventStreamRail: React.FC = () => {
                         value={pct}
                         indicatorColor={
                           cleanName === "AIFS"
-                            ? "bg-amber-500"
+                            ? "bg-accent"
                             : cleanName === "IFS"
                             ? "bg-sky-500"
                             : "bg-slate-500"
@@ -217,31 +217,31 @@ export const EventStreamRail: React.FC = () => {
 
         {/* Extreme Risk Indicators */}
         <div className="pt-2 border-t border-border/60">
-          <span className="font-mono text-[10px] tracking-wider uppercase font-semibold text-text-muted block mb-1.5">
+          <span className="text-overline text-text-muted block mb-1.5 font-semibold">
             Operational Risk Assessment
           </span>
           <div className="grid grid-cols-3 gap-1.5 text-center font-mono">
-            <div className="p-2 rounded-xl bg-rose-500/10 border border-rose-500/25">
-              <span className="text-[9px] font-semibold text-rose-600 dark:text-rose-400 uppercase block font-sans">
+            <div className="p-2 rounded-xl bg-danger/10 border border-danger/25">
+              <span className="text-[9px] font-semibold text-danger uppercase block font-sans">
                 Rain
               </span>
-              <span className="font-bold text-rose-700 dark:text-rose-300 text-xs">
+              <span className="font-bold text-danger text-xs">
                 {data?.risk?.heavy_rain?.level || "HIGH"}
               </span>
             </div>
-            <div className="p-2 rounded-xl bg-emerald-500/10 border border-emerald-500/25">
-              <span className="text-[9px] font-semibold text-emerald-600 dark:text-emerald-400 uppercase block font-sans">
+            <div className="p-2 rounded-xl bg-success/10 border border-success/25">
+              <span className="text-[9px] font-semibold text-success uppercase block font-sans">
                 Heat
               </span>
-              <span className="font-bold text-emerald-700 dark:text-emerald-300 text-xs">
+              <span className="font-bold text-success text-xs">
                 {data?.risk?.heat?.level || "LOW"}
               </span>
             </div>
-            <div className="p-2 rounded-xl bg-amber-500/10 border border-amber-500/25">
-              <span className="text-[9px] font-semibold text-amber-600 dark:text-amber-400 uppercase block font-sans">
+            <div className="p-2 rounded-xl bg-warning/10 border border-warning/25">
+              <span className="text-[9px] font-semibold text-warning uppercase block font-sans">
                 Wind
               </span>
-              <span className="font-bold text-amber-700 dark:text-amber-300 text-xs">
+              <span className="font-bold text-warning text-xs">
                 {data?.risk?.high_wind?.level || "WATCH"}
               </span>
             </div>
@@ -269,8 +269,8 @@ export const EventStreamRail: React.FC = () => {
             <span>22 September 2026</span>
             <ChevronsRight className="h-4 w-4 text-accent" />
           </div>
-          <div className="flex items-center gap-1 text-[10px] font-mono uppercase tracking-wider text-text-muted">
-            <Radio className="h-3 w-3 text-emerald-500 animate-pulse" />
+          <div className="flex items-center gap-1 text-overline text-text-muted">
+            <Radio className="h-3 w-3 text-success animate-pulse" />
             <span>Ops Feed</span>
           </div>
         </div>
@@ -307,7 +307,7 @@ export const EventStreamRail: React.FC = () => {
         <div className="space-y-3 pt-1 max-h-72 overflow-y-auto pr-0.5">
           {Object.entries(groupedEvents).map(([dateLabel, items]) => (
             <div key={dateLabel} className="space-y-2">
-              <span className="font-mono text-[10px] tracking-wider uppercase font-bold text-text-muted block pt-0.5">
+              <span className="text-overline text-text-muted block pt-0.5 font-bold">
                 {dateLabel}
               </span>
               <div className="space-y-2">
@@ -323,11 +323,11 @@ export const EventStreamRail: React.FC = () => {
                       animate={{ opacity: 1, y: 0 }}
                       className={`p-3 rounded-xl space-y-1.5 shadow-xs hover:shadow-md transition-all ${
                         isTrigger
-                          ? "bg-amber-500/10 dark:bg-amber-950/20 border-l-4 border-l-amber-500 border border-amber-500/30"
+                          ? "bg-warning/10 dark:bg-amber-950/20 border-l-4 border-l-warning border border-warning/30"
                           : isCritical
-                          ? "bg-rose-500/10 dark:bg-rose-950/20 border-l-4 border-l-rose-500 border border-rose-500/30"
+                          ? "bg-danger/10 dark:bg-rose-950/20 border-l-4 border-l-danger border border-danger/30"
                           : isAlert
-                          ? "bg-sky-500/5 dark:bg-sky-950/15 border-l-2 border-l-sky-500 border border-border/80"
+                          ? "bg-info/5 dark:bg-sky-950/15 border-l-2 border-l-info border border-border/80"
                           : "bg-surface-secondary/60 border-l border-l-border border border-border/70"
                       }`}
                     >
@@ -336,12 +336,12 @@ export const EventStreamRail: React.FC = () => {
                           <span
                             className={
                               isTrigger
-                                ? "text-amber-600 dark:text-amber-400"
+                                ? "text-warning"
                                 : isCritical
-                                ? "text-rose-600 dark:text-rose-400"
+                                ? "text-danger"
                                 : isAlert
-                                ? "text-sky-600 dark:text-sky-400"
-                                : "text-emerald-600 dark:text-emerald-400"
+                                ? "text-info"
+                                : "text-success"
                             }
                           >
                             {ev.type}
@@ -349,16 +349,16 @@ export const EventStreamRail: React.FC = () => {
                           <span
                             className={`h-2 w-2 rounded-full ${
                               isTrigger
-                                ? "bg-amber-500 shadow-sm shadow-amber-500/50"
+                                ? "bg-warning shadow-sm shadow-warning/50"
                                 : isCritical
-                                ? "bg-rose-500 shadow-sm shadow-rose-500/50"
+                                ? "bg-danger shadow-sm shadow-danger/50"
                                 : isAlert
-                                ? "bg-sky-500 shadow-sm shadow-sky-500/50"
-                                : "bg-emerald-500"
+                                ? "bg-info shadow-sm shadow-info/50"
+                                : "bg-success"
                             }`}
                           />
                         </div>
-                        <span className="font-mono text-text-muted text-[10px] font-semibold">
+                        <span className="font-mono tabular-nums text-text-muted text-[10px] font-semibold">
                           {ev.time}
                         </span>
                       </div>

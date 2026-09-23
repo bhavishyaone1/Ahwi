@@ -31,28 +31,28 @@ export default function OverviewPage() {
       className="space-y-4"
     >
       {/* Overview Situation Room Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-border min-w-0">
-        <div className="min-w-0 space-y-1">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-border min-w-0">
+        <div className="min-w-0 space-y-1.5">
           <div className="flex flex-wrap items-center gap-2">
-            <div className="badge-scientific text-[10px] tracking-wider uppercase font-semibold text-text-muted bg-surface-secondary/70 border border-border">
-              <Sparkles className="h-3 w-3 text-sky-500 shrink-0" />
+            <div className="badge-scientific text-overline text-text-muted bg-surface-secondary/80 border border-border">
+              <Sparkles className="h-3 w-3 text-accent shrink-0" />
               <span>Operational Situation Room</span>
             </div>
-            <div className="badge-scientific text-[10px] tracking-wider uppercase font-semibold text-text-muted bg-surface-secondary/70 border border-border">
+            <div className="badge-scientific text-overline text-text-muted bg-surface-secondary/80 border border-border">
               <span className="radar-telemetry-dot shrink-0" />
-              <span className="font-mono">
+              <span className="font-mono tabular-nums">
                 {selectedLocation.latitude.toFixed(2)}°N, {selectedLocation.longitude.toFixed(2)}°E • {selectedLocation.region.toUpperCase()}
               </span>
             </div>
             {data?.weather_regime?.detected && (
-              <div className={`badge-scientific text-[10px] tracking-wider uppercase font-semibold border ${
+              <div className={`badge-scientific text-overline border ${
                 data.weather_regime.detected.toUpperCase().includes("HEAVY") || data.weather_regime.detected.toUpperCase().includes("SEVERE")
                   ? "bg-danger/10 text-danger border-danger/30"
                   : "bg-warning/10 text-warning border-warning/30"
               }`}>
                 <span className={`h-1.5 w-1.5 rounded-full shrink-0 ${
                   data.weather_regime.detected.toUpperCase().includes("HEAVY") || data.weather_regime.detected.toUpperCase().includes("SEVERE")
-                    ? "bg-danger"
+                    ? "bg-danger animate-pulse"
                     : "bg-warning"
                 }`} />
                 <span className="font-mono">REGIME: {data.weather_regime.detected}</span>
@@ -73,8 +73,8 @@ export default function OverviewPage() {
             onClick={openTraceDrawer}
             className="card-interactive flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface border border-border/90 text-text-primary text-xs font-semibold hover:bg-surface-secondary shadow-sm hover:shadow-md transition"
           >
-            <Activity className="h-3.5 w-3.5 text-sky-600 dark:text-sky-400" />
-            <span className="font-mono">Trace Execution DAG</span>
+            <Activity className="h-3.5 w-3.5 text-accent" />
+            <span className="font-mono text-overline text-text-primary">Trace Execution DAG</span>
           </button>
         </div>
       </div>

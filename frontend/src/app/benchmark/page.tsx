@@ -17,6 +17,7 @@ import { fetchBenchmarkMatrix } from "@/lib/api";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { pageVariants, fadeUp } from "@/lib/motion";
+import { WeatherContourHeader } from "@/components/common/Backgrounds";
 import { useTheme } from "@/context/ThemeContext";
 
 const LEAD_TIME_MAE_DATA = [
@@ -73,8 +74,9 @@ export default function BenchmarkPage() {
       className="space-y-4"
     >
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-border pb-3 min-w-0">
-        <div className="min-w-0 space-y-1">
+      <div className="relative flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-border pb-3 min-w-0">
+        <WeatherContourHeader />
+        <div className="min-w-0 space-y-1 relative z-10">
           <div className="flex flex-wrap items-center gap-2">
             <div className="badge-scientific text-overline bg-info/10 text-info border border-info/30">
               <Award className="h-3 w-3 text-info" />
@@ -85,7 +87,7 @@ export default function BenchmarkPage() {
               <span>Out-of-Sample Chronological Splits</span>
             </div>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-black text-text-primary tracking-tight mt-1">
+          <h1 className="text-2xl sm:text-3xl font-black text-text-primary tracking-tight mt-1 font-display">
             Verification & Meteorological Benchmarks
           </h1>
           <p className="text-xs text-text-muted font-medium">

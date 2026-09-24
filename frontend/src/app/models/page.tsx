@@ -22,6 +22,7 @@ import { ModelWeightDonut } from "@/components/models/ModelWeightDonut";
 import { ModelFlowBeam } from "@/components/models/ModelFlowBeam";
 import { ShapWaterfall } from "@/components/models/ShapWaterfall";
 import { pageVariants, fadeUp } from "@/lib/motion";
+import { WeatherContourHeader } from "@/components/common/Backgrounds";
 
 export default function ModelIntelligencePage() {
   const { data } = useAetherData();
@@ -54,13 +55,14 @@ export default function ModelIntelligencePage() {
       className="space-y-4"
     >
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-border pb-3 min-w-0">
-        <div className="min-w-0 space-y-1">
+      <div className="relative flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-border pb-3 min-w-0">
+        <WeatherContourHeader />
+        <div className="min-w-0 space-y-1 relative z-10">
           <div className="badge-scientific text-overline bg-info/10 text-info border border-info/30">
             <Cpu className="h-3 w-3 text-info shrink-0" />
             <span>Explainable Model Trust</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-black text-text-primary tracking-tight mt-1">
+          <h1 className="text-2xl sm:text-3xl font-black text-text-primary tracking-tight mt-1 font-display">
             Model Skill & Adaptive Trust
           </h1>
           <p className="text-xs text-text-muted font-medium">

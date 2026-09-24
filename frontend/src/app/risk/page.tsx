@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import { RiskRing } from "@/components/risk/RiskRing";
 import { pageVariants, fadeUp } from "@/lib/motion";
+import { WeatherContourHeader, WeatherGrid } from "@/components/common/Backgrounds";
 
 export default function ExtremeRiskPage() {
   const {
@@ -57,13 +58,14 @@ export default function ExtremeRiskPage() {
       </div>
 
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-border pb-3 min-w-0">
-        <div className="min-w-0 space-y-1">
+      <div className="relative flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-border pb-3 min-w-0">
+        <WeatherContourHeader />
+        <div className="min-w-0 space-y-1 relative z-10">
           <div className="badge-scientific text-overline bg-danger/10 text-danger border border-danger/30">
             <ShieldAlert className="h-3 w-3 text-danger shrink-0" />
             <span>High-Impact Hazard Guidance</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-black text-text-primary tracking-tight mt-1">
+          <h1 className="text-2xl sm:text-3xl font-black text-text-primary tracking-tight mt-1 font-display">
             Extreme Weather Risk Early Warning
           </h1>
           <p className="text-xs text-text-muted font-medium">

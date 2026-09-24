@@ -84,11 +84,21 @@ h1, h2, h3, h4 {
 }
 
 .text-metric-hero {
-  font-family: var(--font-mono, monospace);
+  font-family: var(--font-numeric, var(--font-mono, monospace));
   font-weight: 900;
   letter-spacing: -0.04em;
   font-variant-numeric: tabular-nums;
   color: var(--text-primary);
+}
+
+.font-display {
+  font-family: var(--font-display, var(--font-inter, sans-serif));
+}
+
+.font-numeric {
+  font-family: var(--font-numeric, var(--font-mono, monospace));
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1, "zero" 1;
 }
 
 .text-metric-unit {

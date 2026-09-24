@@ -21,6 +21,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { pageVariants, fadeUp } from "@/lib/motion";
+import { WeatherContourHeader } from "@/components/common/Backgrounds";
 
 const SUGGESTED_QUESTIONS = [
   "Why does AETHER trust AIFS for rainfall in Delhi?",
@@ -128,17 +129,20 @@ export default function AskAetherPage() {
       className="space-y-4"
     >
       {/* Header */}
-      <div className="border-b border-border pb-3 min-w-0 space-y-1">
-        <div className="badge-scientific text-overline bg-info/10 text-info border border-info/30">
-          <HelpCircle className="h-3 w-3 text-info shrink-0" />
-          <span>Operator Intelligence Assistant</span>
+      <div className="relative border-b border-border pb-3 min-w-0 space-y-1">
+        <WeatherContourHeader />
+        <div className="relative z-10 space-y-1">
+          <div className="badge-scientific text-overline bg-info/10 text-info border border-info/30">
+            <HelpCircle className="h-3 w-3 text-info shrink-0" />
+            <span>Operator Intelligence Assistant</span>
+          </div>
+          <h1 className="text-2xl sm:text-3xl font-black text-text-primary tracking-tight mt-1 font-display">
+            Ask AETHER Assistant
+          </h1>
+          <p className="text-xs text-text-muted font-medium">
+            Query multi-model forecast consensus, causal model weighting, and risk telemetry in natural language.
+          </p>
         </div>
-        <h1 className="text-2xl sm:text-3xl font-black text-text-primary tracking-tight mt-1">
-          Ask AETHER Assistant
-        </h1>
-        <p className="text-xs text-text-muted font-medium">
-          Query multi-model forecast consensus, causal model weighting, and risk telemetry in natural language.
-        </p>
       </div>
 
       {/* Main Two-Column Layout */}

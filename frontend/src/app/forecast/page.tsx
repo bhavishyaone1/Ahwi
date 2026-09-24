@@ -22,7 +22,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { NumberTicker } from "@/components/common/NumberTicker";
 import { pageVariants, fadeUp } from "@/lib/motion";
-import { WeatherContourHeader } from "@/components/common/Backgrounds";
+import { WeatherContourHeader, WeatherGrid } from "@/components/common/Backgrounds";
 
 export default function ForecastPage() {
   const { theme } = useTheme();
@@ -62,7 +62,7 @@ export default function ForecastPage() {
             <Activity className="h-3 w-3 text-info shrink-0" />
             <span>Multi-Model Synthesis</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-black text-text-primary tracking-tight mt-1">
+          <h1 className="text-2xl sm:text-3xl font-black text-text-primary tracking-tight mt-1 font-display">
             Forecast Exploration
           </h1>
           <p className="text-xs text-text-muted font-medium">
@@ -315,8 +315,9 @@ export default function ForecastPage() {
 
         {/* Right 4 cols: Key Forecast Card */}
         <motion.div variants={fadeUp} className="lg:col-span-4 min-w-0 space-y-3">
-          <Card className="shadow-sm hover:shadow-md card-interactive border-border bg-surface rounded-2xl">
-            <CardHeader className="p-4 pb-2 border-b border-border">
+          <Card className="relative overflow-hidden shadow-sm hover:shadow-md card-interactive border-border bg-surface rounded-2xl">
+            <WeatherGrid className="opacity-[0.03]" />
+            <CardHeader className="p-4 pb-2 border-b border-border relative z-10">
               <span className="text-overline text-text-muted block font-semibold">
                 Key Forecast ({leadTimeHours}h Horizon)
               </span>
@@ -324,9 +325,9 @@ export default function ForecastPage() {
                 AETHER Blended Forecast
               </CardTitle>
             </CardHeader>
-            <CardContent className="p-4 space-y-4">
+            <CardContent className="p-4 space-y-4 relative z-10">
               <div className="flex items-baseline gap-1.5">
-                <span className="text-5xl font-black font-mono tabular-nums text-text-primary tracking-tight">
+                <span className="text-5xl font-black font-numeric font-mono tabular-nums text-text-primary tracking-tight">
                   {data?.aether_forecast.calibrated_value !== undefined ? (
                     <NumberTicker value={data.aether_forecast.calibrated_value} decimals={1} />
                   ) : (

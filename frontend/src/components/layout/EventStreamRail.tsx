@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
+import { WeatherGrid } from "@/components/common/Backgrounds";
 
 type FilterCategory = "all" | "alerts" | "cases" | "reports" | "triggers";
 
@@ -102,10 +103,11 @@ export const EventStreamRail: React.FC = () => {
     <div className="w-full lg:w-80 flex flex-col space-y-4 shrink-0 select-none">
       {/* 1. ADAPTIVE MODEL TRUST & SITUATION SUMMARY (Top 2-3 most visually prominent element) */}
       <div className="p-4 rounded-2xl bg-surface/95 dark:bg-[#151922]/95 border border-border/90 shadow-xl space-y-4 backdrop-blur-md relative overflow-hidden">
+        <WeatherGrid className="opacity-[0.035]" />
         {/* Subtle accent corner glow */}
         <div className="absolute top-0 right-0 w-32 h-32 bg-accent/5 rounded-full blur-2xl pointer-events-none" />
 
-        <div className="flex items-center justify-between border-b border-border/70 pb-2.5">
+        <div className="flex items-center justify-between border-b border-border/70 pb-2.5 relative z-10">
           <div className="space-y-0.5">
             <div className="flex items-center gap-1.5">
               <span className="h-2 w-2 rounded-full bg-accent animate-pulse" />
@@ -126,13 +128,13 @@ export const EventStreamRail: React.FC = () => {
         </div>
 
         {/* Forecast Value & Confidence Hero Readout */}
-        <div className="flex items-baseline justify-between pt-0.5">
+        <div className="flex items-baseline justify-between pt-0.5 relative z-10">
           <div>
             <span className="text-overline text-text-muted block">
               Blended Consensus
             </span>
             <div className="flex items-baseline gap-1 mt-0.5">
-              <span className="text-3xl font-black font-mono tabular-nums tracking-tight text-text-primary">
+              <span className="text-3xl font-black font-numeric font-mono tabular-nums tracking-tight text-text-primary">
                 {calibratedVal !== undefined ? calibratedVal : "--"}
               </span>
               <span className="text-xs font-bold font-mono text-text-muted">
@@ -147,7 +149,7 @@ export const EventStreamRail: React.FC = () => {
             </span>
             <div className="mt-0.5">
               <span
-                className={`text-2xl font-black font-mono tabular-nums ${
+                className={`text-2xl font-black font-numeric font-mono tabular-nums ${
                   confPct >= 75
                     ? "text-success"
                     : confPct >= 50

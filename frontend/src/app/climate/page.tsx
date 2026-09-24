@@ -20,6 +20,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { NumberTicker } from "@/components/common/NumberTicker";
 import { pageVariants, fadeUp } from "@/lib/motion";
+import { WeatherContourHeader, WeatherGrid } from "@/components/common/Backgrounds";
 
 export default function ClimatePage() {
   const { theme } = useTheme();
@@ -48,17 +49,20 @@ export default function ClimatePage() {
       className="space-y-4"
     >
       {/* Header */}
-      <div className="border-b border-border pb-3 min-w-0 space-y-1">
-        <div className="badge-scientific text-overline bg-info/10 text-info border border-info/30">
-          <Compass className="h-3 w-3 text-info shrink-0" />
-          <span>Long-Term Climatological Benchmarking</span>
+      <div className="relative border-b border-border pb-3 min-w-0 space-y-1">
+        <WeatherContourHeader />
+        <div className="relative z-10 space-y-1">
+          <div className="badge-scientific text-overline bg-info/10 text-info border border-info/30">
+            <Compass className="h-3 w-3 text-info shrink-0" />
+            <span>Long-Term Climatological Benchmarking</span>
+          </div>
+          <h1 className="text-2xl sm:text-3xl font-black text-text-primary tracking-tight mt-1 font-display">
+            Climate Context
+          </h1>
+          <p className="text-xs text-text-muted font-medium">
+            Measure how unusual the current forecast is against historical climate (ERA5 1991–2020 baseline).
+          </p>
         </div>
-        <h1 className="text-2xl sm:text-3xl font-black text-text-primary tracking-tight mt-1">
-          Climate Context
-        </h1>
-        <p className="text-xs text-text-muted font-medium">
-          Measure how unusual the current forecast is against historical climate (ERA5 1991–2020 baseline).
-        </p>
       </div>
 
       {climate ? (
@@ -73,7 +77,7 @@ export default function ClimatePage() {
                     Current Forecast (24h)
                   </span>
                   <div className="flex items-baseline gap-1 mt-1 font-mono tabular-nums">
-                    <span className="text-4xl font-black text-text-primary tracking-tight">
+                    <span className="text-4xl font-black font-numeric text-text-primary tracking-tight">
                       {currentVal !== undefined ? (
                         <NumberTicker value={currentVal} decimals={1} />
                       ) : (
@@ -97,7 +101,7 @@ export default function ClimatePage() {
                     Climate Normal
                   </span>
                   <div className="flex items-baseline gap-1 mt-1 font-mono tabular-nums">
-                    <span className="text-4xl font-black text-text-primary tracking-tight">
+                    <span className="text-4xl font-black font-numeric text-text-primary tracking-tight">
                       <NumberTicker value={climate.climate_normal} decimals={1} />
                     </span>
                     <span className="text-xs font-bold font-mono text-text-muted ml-1">{getUnit()}</span>
@@ -117,7 +121,7 @@ export default function ClimatePage() {
                     Anomaly
                   </span>
                   <div className="flex items-baseline gap-1 mt-1 font-mono tabular-nums">
-                    <span className={`text-4xl font-black tracking-tight ${climate.anomaly >= 0 ? "text-success" : "text-warning"}`}>
+                    <span className={`text-4xl font-black font-numeric tracking-tight ${climate.anomaly >= 0 ? "text-success" : "text-warning"}`}>
                       {climate.anomaly >= 0 ? "+" : ""}
                       <NumberTicker value={climate.anomaly} decimals={1} />
                     </span>
@@ -140,7 +144,7 @@ export default function ClimatePage() {
                     Historical Percentile
                   </span>
                   <div className="flex items-baseline gap-1 mt-1 font-mono tabular-nums">
-                    <span className="text-4xl font-black text-accent tracking-tight">
+                    <span className="text-4xl font-black font-numeric text-accent tracking-tight">
                       <NumberTicker value={climate.percentile} decimals={0} suffix="th" />
                     </span>
                   </div>

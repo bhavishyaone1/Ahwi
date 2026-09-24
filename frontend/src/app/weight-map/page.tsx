@@ -12,6 +12,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { pageVariants, fadeUp } from "@/lib/motion";
+import { WeatherContourHeader } from "@/components/common/Backgrounds";
 
 export default function WeightMapPage() {
   const { variable, setVariable, leadTimeHours, setLeadTimeHours, setSelectedLocation } =
@@ -188,8 +189,9 @@ export default function WeightMapPage() {
       className="space-y-4"
     >
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-border pb-3 min-w-0">
-        <div className="min-w-0 space-y-1">
+      <div className="relative flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-border pb-3 min-w-0">
+        <WeatherContourHeader />
+        <div className="min-w-0 space-y-1 relative z-10">
           <div className="flex flex-wrap items-center gap-2">
             <div className="badge-scientific text-overline bg-info/10 text-info border border-info/30">
               <Layers className="h-3 w-3 text-info" />
@@ -200,7 +202,7 @@ export default function WeightMapPage() {
               <span className="font-mono tabular-nums">{weightPoints.length} Indian Reference Stations</span>
             </div>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-black text-text-primary tracking-tight mt-1">
+          <h1 className="text-2xl sm:text-3xl font-black text-text-primary tracking-tight mt-1 font-display">
             Spatial Model Contribution Map
           </h1>
           <p className="text-xs text-text-muted font-medium">

@@ -6,6 +6,7 @@ import { useAetherData } from "@/context/AetherDataContext";
 import { WeatherMap } from "@/components/map/WeatherMap";
 import { EventStreamRail } from "@/components/layout/EventStreamRail";
 import { ForecastStrip } from "@/components/common/ForecastStrip";
+import { WeatherContourHeader } from "@/components/common/Backgrounds";
 import { pageVariants, fadeUp } from "@/lib/motion";
 import { Sparkles, Activity, Layers } from "lucide-react";
 
@@ -31,8 +32,9 @@ export default function OverviewPage() {
       className="space-y-4"
     >
       {/* Overview Situation Room Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-border min-w-0">
-        <div className="min-w-0 space-y-1.5">
+      <div className="relative flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-border min-w-0">
+        <WeatherContourHeader />
+        <div className="min-w-0 space-y-1.5 relative z-10">
           <div className="flex flex-wrap items-center gap-2">
             <div className="badge-scientific text-overline text-text-muted bg-surface-2 border border-border">
               <Sparkles className="h-3 w-3 text-accent shrink-0" />
@@ -59,7 +61,7 @@ export default function OverviewPage() {
               </div>
             )}
           </div>
-          <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-text-primary">
+          <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-text-primary font-display">
             AETHER Meteorological Intelligence
           </h1>
           <p className="text-xs text-text-muted font-medium">

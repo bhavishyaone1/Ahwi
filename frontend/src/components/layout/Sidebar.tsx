@@ -22,6 +22,8 @@ import {
   Sparkles,
 } from "lucide-react";
 import { useTheme } from "@/context/ThemeContext";
+import { Logo } from "@/components/common/Logo";
+import { WeatherGrid } from "@/components/common/Backgrounds";
 
 export interface NavGroup {
   group: string;
@@ -93,7 +95,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       )}
 
       <aside
-        className={`fixed top-0 bottom-0 left-0 z-50 flex flex-col bg-surface border-r border-border transition-all duration-300 select-none ${
+        className={`fixed top-0 bottom-0 left-0 h-dvh z-50 flex flex-col bg-surface border-r border-border transition-all duration-300 select-none ${
           collapsed ? "w-18" : "w-64"
         } ${
           mobileOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
@@ -106,13 +108,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
             onClick={onCloseMobile}
             className="flex items-center gap-2.5 overflow-hidden group"
           >
-            <div className="h-9 w-9 rounded-xl bg-gradient-to-tr from-amber-500 to-rose-500 flex items-center justify-center text-white font-black text-lg shadow-sm shadow-amber-500/20 shrink-0 group-hover:scale-105 transition-transform">
-              <CloudSun className="h-5 w-5 text-white" />
-            </div>
+            <Logo size={36} />
             {!collapsed && (
               <div className="flex flex-col truncate">
                 <div className="flex items-center gap-1.5">
-                  <span className="text-base font-black tracking-tight text-text-primary">
+                  <span className="text-base font-black tracking-tight text-text-primary font-display">
                     AETHER
                   </span>
                   <span className="text-[9px] font-mono uppercase font-bold px-1.5 py-0.5 rounded bg-accent/15 text-accent border border-accent/30">
@@ -159,57 +159,101 @@ export const Sidebar: React.FC<SidebarProps> = ({
           </div>
         )}
 
-        {/* Navigation Items */}
-        <div className="flex-1 overflow-y-auto px-2.5 py-2 space-y-4">
-          {NAV_GROUPS.map((grp) => (
-            <div key={grp.group} className="space-y-1">
-              {!collapsed && (
-                <span className="px-2.5 text-[10px] font-bold text-text-muted uppercase tracking-[0.1em] block font-mono">
-                  {grp.group}
-                </span>
-              )}
-              <div className="space-y-0.5">
-                {grp.items.map((item) => {
-                  const isActive = pathname === item.href;
-                  const Icon = item.icon;
+        {/* Navigation & Operational Status */}
+        <div className="flex-1 min-h-0 flex flex-col justify-between overflow-y-auto px-2.5 py-2">
+          {/* Nav Groups */}
+          <div className="space-y-4">
+            {NAV_GROUPS.map((grp) => (
+              <div key={grp.group} className="space-y-1">
+                {!collapsed && (
+                  <span className="px-2.5 text-[10px] font-bold text-text-muted uppercase tracking-[0.1em] block font-mono">
+                    {grp.group}
+                  </span>
+                )}
+                <div className="space-y-0.5">
+                  {grp.items.map((item) => {
+                    const isActive = pathname === item.href;
+                    const Icon = item.icon;
 
-                  return (
-                    <Link
-                      key={item.name}
-                      href={item.href}
-                      onClick={onCloseMobile}
-                      title={collapsed ? item.name : undefined}
-                      className={`relative flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold transition-all duration-200 ${
-                        isActive
-                          ? "text-accent font-bold"
-                          : "text-text-secondary hover:text-text-primary hover:bg-surface-secondary hover:-translate-y-0.5 hover:shadow-sm"
-                      } ${collapsed ? "justify-center px-0" : ""}`}
-                    >
-                      {isActive && (
-                        <motion.div
-                          layoutId="sidebar-active-pill"
-                          className="absolute inset-0 rounded-xl bg-accent/15 dark:bg-accent/20 border border-accent/40 -z-10 shadow-md shadow-accent/25"
-                          transition={
-                            shouldReduceMotion
-                              ? { duration: 0 }
-                              : { type: "spring", stiffness: 450, damping: 32 }
-                          }
-                        />
-                      )}
-                      <Icon
-                        className={`h-4 w-4 shrink-0 ${
+                    return (
+                      <Link
+                        key={item.name}
+                        href={item.href}
+                        onClick={onCloseMobile}
+                        title={collapsed ? item.name : undefined}
+                        className={`relative flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold transition-all duration-200 ${
                           isActive
-                            ? "text-accent"
-                            : "text-text-muted group-hover:text-text-primary"
-                        }`}
-                      />
-                      {!collapsed && <span className="truncate">{item.name}</span>}
-                    </Link>
-                  );
-                })}
+                            ? "text-accent font-bold"
+                            : "text-text-secondary hover:text-text-primary hover:bg-surface-secondary hover:-translate-y-0.5 hover:shadow-sm"
+                        } ${collapsed ? "justify-center px-0" : ""}`}
+                      >
+                        {isActive && (
+                          <motion.div
+                            layoutId="sidebar-active-pill"
+                            className="absolute inset-0 rounded-xl bg-accent/15 dark:bg-accent/20 border border-accent/40 -z-10 shadow-md shadow-accent/25"
+                            transition={
+                              shouldReduceMotion
+                                ? { duration: 0 }
+                                : { type: "spring", stiffness: 450, damping: 32 }
+                            }
+                          />
+                        )}
+                        <Icon
+                          className={`h-4 w-4 shrink-0 ${
+                            isActive
+                              ? "text-accent"
+                              : "text-text-muted group-hover:text-text-primary"
+                          }`}
+                        />
+                        {!collapsed && <span className="truncate">{item.name}</span>}
+                      </Link>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Centered System Status Card (Operation Situation Room) */}
+          {!collapsed && (
+            <div className="flex-1 flex flex-col justify-center my-3 relative">
+              <div className="relative overflow-hidden rounded-xl bg-surface-2/80 border border-border p-3 space-y-2.5 shadow-xs">
+                <WeatherGrid className="opacity-[0.04]" />
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-bold text-text-muted uppercase tracking-[0.1em] font-mono">
+                    System Status
+                  </span>
+                  <span className="flex items-center gap-1.5 text-[10px] font-mono text-success font-bold">
+                    <span className="h-1.5 w-1.5 rounded-full bg-success animate-pulse" />
+                    NOMINAL
+                  </span>
+                </div>
+                <div className="space-y-1.5 font-mono text-[11px]">
+                  <div className="flex items-center justify-between text-text-secondary">
+                    <span className="flex items-center gap-1.5">
+                      <span className="h-1.5 w-1.5 rounded-full bg-success" />
+                      <span>Pipeline</span>
+                    </span>
+                    <span className="font-semibold text-text-primary">Active</span>
+                  </div>
+                  <div className="flex items-center justify-between text-text-secondary">
+                    <span className="flex items-center gap-1.5">
+                      <span className="h-1.5 w-1.5 rounded-full bg-accent" />
+                      <span>Active Models</span>
+                    </span>
+                    <span className="font-semibold text-text-primary">3 / 3</span>
+                  </div>
+                  <div className="flex items-center justify-between text-text-secondary">
+                    <span className="flex items-center gap-1.5">
+                      <span className="h-1.5 w-1.5 rounded-full bg-info" />
+                      <span>Last Sync</span>
+                    </span>
+                    <span className="font-semibold text-text-primary">2m ago</span>
+                  </div>
+                </div>
               </div>
             </div>
-          ))}
+          )}
         </div>
 
         {/* Highlight Action CTA: Ask AETHER Assistant */}

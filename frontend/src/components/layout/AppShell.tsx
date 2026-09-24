@@ -63,8 +63,8 @@ export const AppShell: React.FC<{ children: React.ReactNode }> = ({ children }) 
       >
         {/* Operational DEMO vs REAL Mode Banner (Visually load-bearing for situation room) */}
         {isDemoMode && (
-          <div className="sticky top-0 z-40 bg-amber-500/15 border-b border-amber-500/30 px-3 py-1 text-center font-mono text-[10px] text-amber-600 dark:text-amber-400 font-bold flex items-center justify-center gap-2 backdrop-blur-md">
-            <AlertTriangle className="h-3 w-3 text-amber-500 shrink-0 animate-pulse" />
+          <div className="sticky top-0 z-40 bg-warning/15 border-b border-warning/30 px-3 py-1 text-center font-mono text-[10px] text-warning font-bold flex items-center justify-center gap-2 backdrop-blur-md">
+            <AlertTriangle className="h-3 w-3 text-warning shrink-0 animate-pulse" />
             <span className="uppercase tracking-wider">
               OPERATIONAL ADVISORY: DEMO / SYNTHETIC SCENARIO MODE ACTIVE &bull; SATELLITE & NWP REPLAY DATA
             </span>

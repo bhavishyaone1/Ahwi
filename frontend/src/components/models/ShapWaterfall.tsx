@@ -48,10 +48,10 @@ export function ShapWaterfall({
           </div>
           <div className="flex items-center gap-3 text-[10px] font-mono text-text-muted">
             <span className="flex items-center gap-1">
-              <span className="h-2 w-2 rounded-xs bg-emerald-500" /> + Weight
+              <span className="h-2 w-2 rounded-sm bg-success" /> + Weight
             </span>
             <span className="flex items-center gap-1">
-              <span className="h-2 w-2 rounded-xs bg-rose-500" /> - Weight
+              <span className="h-2 w-2 rounded-sm bg-danger" /> - Weight
             </span>
           </div>
         </div>
@@ -76,7 +76,7 @@ export function ShapWaterfall({
                     )}
                     <span
                       className={`font-semibold ${
-                        isPositive ? "text-emerald-500" : "text-rose-500"
+                        isPositive ? "text-success" : "text-danger"
                       }`}
                     >
                       {isPositive ? "+" : ""}
@@ -86,7 +86,7 @@ export function ShapWaterfall({
                 </div>
 
                 {/* Bidirectional Zero-Axis Bar */}
-                <div className="relative flex h-3 w-full items-center rounded-sm bg-surface-secondary overflow-hidden">
+                <div className="relative flex h-3 w-full items-center rounded-sm bg-surface-2 overflow-hidden">
                   {/* Center vertical reference line */}
                   <div className="absolute left-1/2 top-0 bottom-0 w-[1px] bg-border z-10" />
 
@@ -97,7 +97,7 @@ export function ShapWaterfall({
                         initial={{ width: 0 }}
                         animate={{ width: `${pct / 2}%` }}
                         transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                        className="h-full rounded-r-xs bg-emerald-500 group-hover:bg-emerald-600 transition-colors"
+                        className="h-full rounded-r-sm bg-success group-hover:brightness-110 transition-all"
                       />
                     </div>
                   ) : (
@@ -107,7 +107,7 @@ export function ShapWaterfall({
                         initial={{ width: 0 }}
                         animate={{ width: `${pct / 2}%` }}
                         transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                        className="h-full rounded-l-xs bg-rose-500 group-hover:bg-rose-600 transition-colors"
+                        className="h-full rounded-l-sm bg-danger group-hover:brightness-110 transition-all"
                       />
                     </div>
                   )}

@@ -33,7 +33,7 @@ export const SystemHealthModal: React.FC<SystemHealthModalProps> = ({ isOpen, on
           <Dialog.Close asChild>
             <button
               onClick={onClose}
-              className="absolute top-4 right-4 p-1 rounded-full text-text-muted hover:text-text-primary hover:bg-surface-secondary transition"
+              className="absolute top-4 right-4 p-1 rounded-full text-text-muted hover:text-text-primary hover:bg-surface-2 transition"
               aria-label="Close"
             >
               <X className="w-5 h-5" />
@@ -58,7 +58,7 @@ export const SystemHealthModal: React.FC<SystemHealthModalProps> = ({ isOpen, on
             {feeds.map((f, i) => {
               const Icon = f.icon;
               return (
-                <div key={i} className="p-3 flex items-center justify-between text-xs hover:bg-surface-secondary/50 transition">
+                <div key={i} className="p-3 flex items-center justify-between text-xs hover:bg-surface-2/60 transition">
                   <div className="flex items-center space-x-2.5">
                     <Icon className="w-4 h-4 text-text-muted" />
                     <div>
@@ -70,8 +70,8 @@ export const SystemHealthModal: React.FC<SystemHealthModalProps> = ({ isOpen, on
                     <span
                       className={`inline-flex items-center space-x-1 px-2 py-0.5 rounded-full text-[10px] font-bold ${
                         f.status === "UNAVAILABLE"
-                          ? "bg-surface-secondary text-text-muted"
-                          : "bg-emerald-500/10 text-emerald-500 border border-emerald-500/20"
+                          ? "bg-surface-2 text-text-muted"
+                          : "bg-success/10 text-success border border-success/30"
                       }`}
                     >
                       {f.status === "UNAVAILABLE" ? "○ UNAVAILABLE" : "● " + f.status}

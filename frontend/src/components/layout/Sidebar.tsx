@@ -138,9 +138,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
         {/* User Profile Pill */}
         {!collapsed && (
           <div className="px-3 pt-3 pb-1">
-            <div className="flex items-center justify-between p-2 rounded-xl bg-surface-secondary/70 border border-border">
+            <div className="flex items-center justify-between p-2 rounded-xl bg-surface-2 border border-border">
               <div className="flex items-center gap-2.5 min-w-0">
-                <div className="h-8 w-8 rounded-full bg-gradient-to-tr from-accent to-accent-hover text-slate-950 flex items-center justify-center text-xs font-black shadow-xs shrink-0">
+                <div className="h-8 w-8 rounded-full bg-gradient-to-tr from-accent to-accent-hover text-slate-950 flex items-center justify-center text-xs font-black shadow-sm shrink-0">
                   IMD
                 </div>
                 <div className="flex flex-col min-w-0">

@@ -3,19 +3,19 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const alertVariants = cva(
-  "relative w-full rounded-md border p-3 text-xs leading-relaxed [&>svg~*]:pl-6 [&>svg+div]:translate-y-[-3px] [&>svg]:absolute [&>svg]:left-3 [&>svg]:top-3 [&>svg]:text-slate-950",
+  "relative w-full rounded-xl border p-3 text-xs leading-relaxed [&>svg~*]:pl-6 [&>svg+div]:translate-y-[-3px] [&>svg]:absolute [&>svg]:left-3 [&>svg]:top-3 [&>svg]:text-text-primary",
   {
     variants: {
       variant: {
-        default: "bg-white text-slate-900 border-slate-200",
+        default: "bg-surface text-text-primary border-border",
         destructive:
-          "border-rose-200 bg-rose-50/70 text-rose-900 [&>svg]:text-rose-600",
+          "border-danger/30 bg-danger/10 text-danger [&>svg]:text-danger",
         warning:
-          "border-amber-200 bg-amber-50/70 text-amber-900 [&>svg]:text-amber-600",
+          "border-warning/30 bg-warning/10 text-warning [&>svg]:text-warning",
         info:
-          "border-sky-200 bg-sky-50/70 text-sky-900 [&>svg]:text-sky-600",
+          "border-info/30 bg-info/10 text-info [&>svg]:text-info",
         scientific:
-          "border-slate-300 bg-slate-50 text-slate-800 font-mono text-[11px]",
+          "border-border bg-surface-2 text-text-primary font-mono text-[11px]",
       },
     },
     defaultVariants: {

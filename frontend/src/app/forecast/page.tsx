@@ -76,7 +76,7 @@ export default function ForecastPage() {
           <select
             value={variable}
             onChange={(e) => setVariable(e.target.value)}
-            className="h-8 bg-surface border border-border rounded-lg px-2.5 text-xs font-semibold text-text-primary shadow-sm focus:ring-1 focus:ring-info focus:outline-none transition"
+            className="h-8 bg-surface border border-border rounded-xl px-2.5 text-xs font-semibold text-text-primary shadow-sm focus:ring-1 focus:ring-accent focus:outline-none transition"
           >
             <option value="rainfall_mm">Rainfall (mm)</option>
             <option value="temperature_c">Temperature (°C)</option>
@@ -97,7 +97,7 @@ export default function ForecastPage() {
                 });
               }
             }}
-            className="h-8 bg-surface border border-border rounded-lg px-2.5 text-xs font-semibold text-text-primary shadow-sm focus:ring-1 focus:ring-info focus:outline-none transition"
+            className="h-8 bg-surface border border-border rounded-xl px-2.5 text-xs font-semibold text-text-primary shadow-sm focus:ring-1 focus:ring-accent focus:outline-none transition"
           >
             {INDIAN_STATIONS.map((s) => (
               <option key={s.name} value={s.name}>
@@ -110,7 +110,7 @@ export default function ForecastPage() {
           <select
             value={leadTimeHours}
             onChange={(e) => setLeadTimeHours(Number(e.target.value))}
-            className="h-8 bg-surface border border-border rounded-lg px-2.5 text-xs font-semibold text-text-primary shadow-sm focus:ring-1 focus:ring-info focus:outline-none transition"
+            className="h-8 bg-surface border border-border rounded-xl px-2.5 text-xs font-semibold text-text-primary shadow-sm focus:ring-1 focus:ring-accent focus:outline-none transition"
           >
             <option value={6}>6 hours</option>
             <option value={12}>12 hours</option>
@@ -217,7 +217,7 @@ export default function ForecastPage() {
                         type="monotone"
                         dataKey="AETHER"
                         stroke="none"
-                        fill="#0284C7"
+                        fill="#f97316"
                         fillOpacity={0.12}
                         name="AETHER Calibrated Interval"
                       />
@@ -225,17 +225,17 @@ export default function ForecastPage() {
                       <Line
                         type="monotone"
                         dataKey="ECMWF"
-                        stroke="#2563EB"
+                        stroke="#0ea5e9"
                         strokeWidth={1.5}
-                        dot={{ r: 3, fill: "#2563EB" }}
+                        dot={{ r: 3, fill: "#0ea5e9" }}
                         name="ECMWF IFS"
                       />
                       <Line
                         type="monotone"
                         dataKey="AIFS"
-                        stroke="#0284C7"
+                        stroke="#f59e0b"
                         strokeWidth={2}
-                        dot={{ r: 3.5, fill: "#0284C7" }}
+                        dot={{ r: 3.5, fill: "#f59e0b" }}
                         name="ECMWF AIFS"
                       />
                       <Line
@@ -250,9 +250,9 @@ export default function ForecastPage() {
                       <Line
                         type="monotone"
                         dataKey="AETHER"
-                        stroke={theme === "dark" ? "#38BDF8" : "#0F172A"}
+                        stroke="#f97316"
                         strokeWidth={3}
-                        dot={{ r: 4.5, fill: theme === "dark" ? "#38BDF8" : "#0F172A" }}
+                        dot={{ r: 4.5, fill: "#f97316" }}
                         name="AETHER Blend"
                       />
                     </ComposedChart>
@@ -264,7 +264,7 @@ export default function ForecastPage() {
                 <div className="overflow-x-auto">
                   <table className="w-full text-left text-xs">
                     <thead>
-                      <tr className="border-b border-border text-overline text-text-muted bg-surface-secondary/50">
+                      <tr className="border-b border-border text-overline text-text-muted bg-surface-2">
                         <th className="py-2.5 px-3">Horizon</th>
                         <th className="py-2.5 px-3">ECMWF IFS</th>
                         <th className="py-2.5 px-3">ECMWF AIFS</th>
@@ -274,7 +274,7 @@ export default function ForecastPage() {
                     </thead>
                     <tbody className="divide-y divide-border font-mono tabular-nums">
                       {chartData.map((pt) => (
-                        <tr key={pt.lead_time} className="hover:bg-surface-secondary/50">
+                        <tr key={pt.lead_time} className="hover:bg-surface-2/60">
                           <td className="py-2.5 px-3 font-semibold text-text-primary">
                             {pt.lead_time}
                           </td>
@@ -292,7 +292,7 @@ export default function ForecastPage() {
               )}
 
               {activeTab === "uncertainty" && (
-                <div className="p-4 bg-surface-secondary/60 rounded-xl space-y-3 border border-border">
+                <div className="p-4 bg-surface-2 rounded-xl space-y-3 border border-border">
                   <div className="flex items-center justify-between">
                     <span className="text-xs font-semibold text-text-primary">
                       Gaussian Calibrated Spread (σ)

@@ -143,10 +143,10 @@ export function WeatherContourHeader({ className = "" }: { className?: string })
 export function DataPulse({ status = "live" }: { status?: "live" | "demo" | "updating" }) {
   const color =
     status === "live"
-      ? "bg-emerald-500 ring-emerald-200"
+      ? "bg-success ring-success/30"
       : status === "demo"
-      ? "bg-amber-500 ring-amber-200"
-      : "bg-sky-500 ring-sky-200";
+      ? "bg-warning ring-warning/30"
+      : "bg-info ring-info/30";
 
   return (
     <span className="relative flex h-2 w-2">

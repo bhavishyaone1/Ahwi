@@ -321,14 +321,14 @@ export const EventStreamRail: React.FC = () => {
                       key={ev.id}
                       initial={shouldReduceMotion ? false : { opacity: 0, y: 6 }}
                       animate={{ opacity: 1, y: 0 }}
-                      className={`p-3 rounded-xl space-y-1.5 shadow-xs hover:shadow-md transition-all ${
+                      className={`p-3 rounded-xl space-y-1.5 shadow-sm hover:shadow-md transition-all ${
                         isTrigger
-                          ? "bg-warning/10 dark:bg-amber-950/20 border-l-4 border-l-warning border border-warning/30"
+                          ? "bg-warning/10 border-l-4 border-l-warning border border-warning/30"
                           : isCritical
-                          ? "bg-danger/10 dark:bg-rose-950/20 border-l-4 border-l-danger border border-danger/30"
+                          ? "bg-danger/10 border-l-4 border-l-danger border border-danger/30"
                           : isAlert
-                          ? "bg-info/5 dark:bg-sky-950/15 border-l-2 border-l-info border border-border/80"
-                          : "bg-surface-secondary/60 border-l border-l-border border border-border/70"
+                          ? "bg-info/10 border-l-2 border-l-info border border-border/80"
+                          : "bg-surface-2 border-l border-l-border border border-border/70"
                       }`}
                     >
                       <div className="flex items-center justify-between text-[11px]">

@@ -15,16 +15,16 @@ interface ModelFlowBeamProps {
 
 export function ModelFlowBeam({ weights, className = "" }: ModelFlowBeamProps) {
   const models = [
-    { id: "ecmwf", name: "ECMWF IFS", weight: weights.ecmwf, color: "#2563EB", delay: 0 },
-    { id: "aifs", name: "ECMWF AIFS", weight: weights.aifs, color: "#0284C7", delay: 0.2 },
-    { id: "gfs", name: "NOAA GFS", weight: weights.gfs, color: "#64748B", delay: 0.4 },
+    { id: "aifs", name: "ECMWF AIFS", weight: weights.aifs, color: "#f97316", delay: 0 },
+    { id: "ecmwf", name: "ECMWF IFS", weight: weights.ecmwf, color: "#0ea5e9", delay: 0.2 },
+    { id: "gfs", name: "NOAA GFS", weight: weights.gfs, color: "#64748b", delay: 0.4 },
   ];
 
   return (
     <div className={`relative overflow-hidden rounded-2xl border border-border bg-surface p-4 shadow-sm hover:shadow-md card-interactive ${className}`}>
       <div className="flex items-center justify-between pb-3 border-b border-border mb-3">
         <div className="flex items-center gap-2">
-          <Cpu className="h-4 w-4 text-aether-sky" />
+          <Cpu className="h-4 w-4 text-accent" />
           <span className="text-xs font-semibold text-text-primary">
             Multi-Model Fusion DAG
           </span>
@@ -44,7 +44,7 @@ export function ModelFlowBeam({ weights, className = "" }: ModelFlowBeamProps) {
             <motion.div
               key={m.id}
               whileHover={{ scale: 1.01 }}
-              className="flex items-center justify-between rounded-md border border-border bg-surface-secondary/70 px-3 py-2 text-xs"
+              className="flex items-center justify-between rounded-xl border border-border bg-surface-2 px-3 py-2 text-xs"
             >
               <div className="flex items-center gap-2">
                 <span
@@ -61,29 +61,28 @@ export function ModelFlowBeam({ weights, className = "" }: ModelFlowBeamProps) {
         </div>
 
         {/* Center: AETHER Adaptive Weighting Engine */}
-        <div className="flex flex-col items-center justify-center p-3 rounded-lg border border-aether-sky/20 bg-aether-sky/10 text-center relative">
+        <div className="flex flex-col items-center justify-center p-3 rounded-xl border border-accent/25 bg-accent/10 text-center relative">
           <motion.div
             animate={{
               scale: [1, 1.04, 1],
-              borderColor: ["#BAE6FD", "#38BDF8", "#BAE6FD"],
             }}
             transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-            className="flex h-10 w-10 items-center justify-center rounded-full bg-surface border-2 border-aether-sky/50 shadow-sm mb-2"
+            className="flex h-10 w-10 items-center justify-center rounded-full bg-surface border-2 border-accent/50 shadow-sm mb-2"
           >
-            <Sparkles className="h-5 w-5 text-aether-sky" />
+            <Sparkles className="h-5 w-5 text-accent" />
           </motion.div>
           <span className="text-xs font-bold text-text-primary">
             AETHER Core Engine
           </span>
-          <span className="text-[10px] text-aether-sky mt-0.5">
+          <span className="text-[10px] text-accent mt-0.5 font-medium">
             2-Layer LSTM + XGBoost Reliability
           </span>
 
           <div className="mt-2 flex flex-wrap justify-center gap-1">
-            <span className="rounded bg-aether-sky/20 px-1.5 py-0.5 text-[9px] font-mono text-aether-sky">
+            <span className="rounded-md bg-accent/15 px-1.5 py-0.5 text-[9px] font-mono text-accent font-semibold">
               Regime-Aware
             </span>
-            <span className="rounded bg-aether-sky/20 px-1.5 py-0.5 text-[9px] font-mono text-aether-sky">
+            <span className="rounded-md bg-accent/15 px-1.5 py-0.5 text-[9px] font-mono text-accent font-semibold">
               Spatially Adaptive
             </span>
           </div>
@@ -96,14 +95,14 @@ export function ModelFlowBeam({ weights, className = "" }: ModelFlowBeamProps) {
           </p>
           <motion.div
             whileHover={{ scale: 1.01 }}
-            className="rounded-md border border-emerald-500/20 bg-emerald-500/10 p-3"
+            className="rounded-xl border border-success/30 bg-success/10 p-3"
           >
             <div className="flex items-center justify-between mb-1">
-              <span className="text-xs font-bold text-emerald-500 flex items-center gap-1.5">
+              <span className="text-xs font-bold text-success flex items-center gap-1.5">
                 <CheckCircle2 className="h-3.5 w-3.5" />
                 AETHER Blend
               </span>
-              <span className="rounded bg-emerald-500/20 px-1.5 py-0.5 text-[10px] font-semibold text-emerald-500">
+              <span className="rounded-md bg-success/20 px-1.5 py-0.5 text-[10px] font-semibold text-success">
                 Optimal Skill
               </span>
             </div>

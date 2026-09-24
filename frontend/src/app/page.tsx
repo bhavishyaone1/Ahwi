@@ -34,11 +34,11 @@ export default function OverviewPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-border min-w-0">
         <div className="min-w-0 space-y-1.5">
           <div className="flex flex-wrap items-center gap-2">
-            <div className="badge-scientific text-overline text-text-muted bg-surface-secondary/80 border border-border">
+            <div className="badge-scientific text-overline text-text-muted bg-surface-2 border border-border">
               <Sparkles className="h-3 w-3 text-accent shrink-0" />
               <span>Operational Situation Room</span>
             </div>
-            <div className="badge-scientific text-overline text-text-muted bg-surface-secondary/80 border border-border">
+            <div className="badge-scientific text-overline text-text-muted bg-surface-2 border border-border">
               <span className="radar-telemetry-dot shrink-0" />
               <span className="font-mono tabular-nums">
                 {selectedLocation.latitude.toFixed(2)}°N, {selectedLocation.longitude.toFixed(2)}°E • {selectedLocation.region.toUpperCase()}
@@ -71,7 +71,7 @@ export default function OverviewPage() {
         <div className="flex items-center gap-2 shrink-0">
           <button
             onClick={openTraceDrawer}
-            className="card-interactive flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface border border-border/90 text-text-primary text-xs font-semibold hover:bg-surface-secondary shadow-sm hover:shadow-md transition"
+            className="card-interactive flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-surface border border-border/90 text-text-primary text-xs font-semibold hover:bg-surface-2 shadow-sm hover:shadow-md transition"
           >
             <Activity className="h-3.5 w-3.5 text-accent" />
             <span className="font-mono text-overline text-text-primary">Trace Execution DAG</span>

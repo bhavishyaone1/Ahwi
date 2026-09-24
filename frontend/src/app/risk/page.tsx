@@ -72,13 +72,13 @@ export default function ExtremeRiskPage() {
         </div>
 
         {/* Sub-tabs */}
-        <div className="flex bg-surface-secondary/70 p-0.5 rounded-lg border border-border text-xs font-semibold shrink-0">
+        <div className="flex bg-surface-2 p-0.5 rounded-xl border border-border text-xs font-semibold shrink-0">
           {(["overview", "details", "map"] as const).map((tab) => (
             <button
               key={tab}
               type="button"
               onClick={() => setSubTab(tab)}
-              className={`px-3 py-1 rounded-md capitalize transition-all ${
+              className={`px-3 py-1 rounded-lg capitalize transition-all ${
                 subTab === tab
                   ? "bg-surface text-text-primary shadow-sm font-bold"
                   : "text-text-muted hover:text-text-primary"
@@ -165,7 +165,7 @@ export default function ExtremeRiskPage() {
               </div>
 
               {/* Mandatory Disclaimer */}
-              <div className="p-2.5 rounded-xl bg-warning/10 border border-warning/20 text-[10px] text-warning space-y-1">
+              <div className="p-2.5 rounded-xl bg-warning/10 border border-warning/30 text-[10px] text-warning space-y-1">
                 <span className="font-bold block text-overline text-warning">
                   Operational Safety Disclaimer
                 </span>

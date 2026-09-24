@@ -52,7 +52,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
           label="AETHER Operational Command Palette"
           className="w-full flex flex-col focus:outline-none"
         >
-          <div className="flex items-center gap-2.5 px-4 py-3 border-b border-border bg-surface-secondary/50">
+          <div className="flex items-center gap-2.5 px-4 py-3 border-b border-border bg-surface-2">
             <Search className="h-4 w-4 text-accent shrink-0" />
             <Command.Input
               placeholder="Search station, operational layer, or page... (ESC to close)"
@@ -61,7 +61,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
             />
             <button
               onClick={() => onOpenChange(false)}
-              className="p-1 rounded-md text-text-muted hover:text-text-primary hover:bg-surface-secondary transition"
+              className="p-1 rounded-lg text-text-muted hover:text-text-primary hover:bg-surface-2 transition"
             >
               <X className="h-3.5 w-3.5" />
             </button>
@@ -152,7 +152,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
             </Command.Group>
           </Command.List>
 
-          <div className="flex items-center justify-between px-3 py-1.5 border-t border-border bg-surface-secondary/70 text-[10px] font-mono text-text-muted">
+          <div className="flex items-center justify-between px-3 py-1.5 border-t border-border bg-surface-2 text-[10px] font-mono text-text-muted">
             <span>&uarr;&darr; Navigate</span>
             <span>&crarr; Select</span>
             <span>ESC Close</span>

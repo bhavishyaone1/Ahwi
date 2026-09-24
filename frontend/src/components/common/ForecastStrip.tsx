@@ -14,23 +14,23 @@ export const ForecastStrip: React.FC = () => {
   const getWeatherIcon = (val: number, idx: number) => {
     if (variable === "rainfall_mm") {
       return val > 15 ? (
-        <CloudRain className="h-4 w-4 text-sky-500" />
+        <CloudRain className="h-4 w-4 text-info" />
       ) : val > 2 ? (
-        <CloudSun className="h-4 w-4 text-amber-500/80" />
+        <CloudSun className="h-4 w-4 text-accent/80" />
       ) : idx % 2 === 0 ? (
-        <Moon className="h-4 w-4 text-amber-300" />
+        <Moon className="h-4 w-4 text-accent-hover" />
       ) : (
-        <CloudSun className="h-4 w-4 text-amber-500" />
+        <CloudSun className="h-4 w-4 text-accent" />
       );
     }
     if (variable === "temperature_c") {
       return val > 35 ? (
-        <Sun className="h-4 w-4 text-amber-500" />
+        <Sun className="h-4 w-4 text-accent" />
       ) : (
-        <CloudSun className="h-4 w-4 text-sky-400" />
+        <CloudSun className="h-4 w-4 text-info" />
       );
     }
-    return <Wind className="h-4 w-4 text-slate-400" />;
+    return <Wind className="h-4 w-4 text-text-muted" />;
   };
 
   // Convert lead time to formatted hour column e.g. 12:00, 18:00, etc.
@@ -59,7 +59,7 @@ export const ForecastStrip: React.FC = () => {
                     className={`py-2 px-3 text-center cursor-pointer transition rounded-t-lg font-mono ${
                       isActive
                         ? "bg-accent/15 text-accent font-bold border-b-2 border-accent"
-                        : "hover:bg-surface-secondary text-text-secondary"
+                        : "hover:bg-surface-2 text-text-secondary"
                     }`}
                   >
                     <div className="text-xs font-bold tracking-tight">{getHorizonTimeLabel(h.lead_time, h.horizon_hours)}</div>
@@ -71,7 +71,7 @@ export const ForecastStrip: React.FC = () => {
           </thead>
           <tbody className="divide-y divide-border/50">
             {/* Row 1: Weather Condition Icon */}
-            <tr className="hover:bg-surface-secondary/40 transition">
+            <tr className="hover:bg-surface-2/40 transition">
               <td className="py-2.5 px-3 font-semibold text-text-secondary flex items-center gap-2">
                 <CloudSun className="h-4 w-4 text-text-muted shrink-0" />
                 <span className="font-sans text-[11px]">Sky Condition</span>
@@ -95,7 +95,7 @@ export const ForecastStrip: React.FC = () => {
             </tr>
 
             {/* Row 2: Convective Advisory */}
-            <tr className="hover:bg-surface-secondary/40 transition font-mono">
+            <tr className="hover:bg-surface-2/40 transition font-mono">
               <td className="py-2 px-3 text-text-secondary flex items-center gap-2">
                 <AlertCircle className="h-4 w-4 text-text-muted shrink-0" />
                 <span className="font-sans text-[11px] font-semibold">Advisory Tier</span>
@@ -124,7 +124,7 @@ export const ForecastStrip: React.FC = () => {
             </tr>
 
             {/* Row 3: Blended Consensus */}
-            <tr className="hover:bg-surface-secondary/40 transition font-mono tabular-nums">
+            <tr className="hover:bg-surface-2/40 transition font-mono tabular-nums">
               <td className="py-2.5 px-3 font-bold text-text-primary flex items-center gap-2">
                 <span className="h-2 w-2 rounded-full bg-accent shrink-0" />
                 <span className="font-sans text-[11px]">
@@ -150,7 +150,7 @@ export const ForecastStrip: React.FC = () => {
             </tr>
 
             {/* Row 4: Relative Humidity % */}
-            <tr className="hover:bg-surface-secondary/40 transition font-mono tabular-nums text-[11px]">
+            <tr className="hover:bg-surface-2/40 transition font-mono tabular-nums text-[11px]">
               <td className="py-2 px-3 text-text-muted flex items-center gap-2">
                 <span className="h-1.5 w-1.5 rounded-full bg-slate-400 shrink-0" />
                 <span className="font-sans text-[11px]">Relative Humidity (%)</span>

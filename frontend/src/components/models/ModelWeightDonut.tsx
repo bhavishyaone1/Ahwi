@@ -15,9 +15,9 @@ interface ModelWeightDonutProps {
 
 export function ModelWeightDonut({ weights, className = "" }: ModelWeightDonutProps) {
   const data = [
-    { name: "ECMWF AIFS", value: Math.round(weights.aifs * 100), color: "#0284C7" },
-    { name: "ECMWF IFS", value: Math.round(weights.ecmwf * 100), color: "#2563EB" },
-    { name: "NOAA GFS", value: Math.round(weights.gfs * 100), color: "#64748B" },
+    { name: "ECMWF AIFS", value: Math.round(weights.aifs * 100), color: "#f97316" },
+    { name: "ECMWF IFS", value: Math.round(weights.ecmwf * 100), color: "#0ea5e9" },
+    { name: "NOAA GFS", value: Math.round(weights.gfs * 100), color: "#64748b" },
   ];
 
   return (
@@ -41,11 +41,11 @@ export function ModelWeightDonut({ weights, className = "" }: ModelWeightDonutPr
             <Tooltip
               formatter={(val: any) => [`${val}%`, "Weight"]}
               contentStyle={{
-                backgroundColor: "#0F172A",
+                backgroundColor: "#18181b",
                 color: "#FFFFFF",
-                borderRadius: "6px",
+                borderRadius: "8px",
                 fontSize: "11px",
-                border: "none",
+                border: "1px solid rgba(255,255,255,0.1)",
                 padding: "6px 10px",
               }}
               itemStyle={{ color: "#FFFFFF" }}

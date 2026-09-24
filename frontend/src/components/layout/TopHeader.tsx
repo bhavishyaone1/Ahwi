@@ -156,12 +156,12 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
           <button
             type="button"
             onClick={onOpenCommandPalette}
-            className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-surface border border-border/80 hover:bg-surface-secondary text-text-muted hover:text-text-primary transition shadow-xs text-xs"
+            className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-surface border border-border/80 hover:bg-surface-2 text-text-muted hover:text-text-primary transition shadow-sm text-xs"
             title="Open Command Palette (Cmd+K / Ctrl+K)"
           >
             <Search className="h-3.5 w-3.5 text-accent" />
             <span className="font-sans text-[11px] font-medium hidden md:inline text-text-muted">Command Palette</span>
-            <kbd className="font-mono text-[9px] font-bold px-1.5 py-0.5 rounded bg-surface-secondary border border-border text-text-muted">
+            <kbd className="font-mono text-[9px] font-bold px-1.5 py-0.5 rounded bg-surface-2 border border-border text-text-muted">
               ⌘K
             </kbd>
           </button>
@@ -171,7 +171,7 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
       {/* Center / Right Metadata & Status Bar */}
       <div className="flex items-center gap-2 sm:gap-2.5">
         {/* Date / Timestamp */}
-        <div className="hidden md:flex items-center gap-1.5 text-[11px] text-text-muted font-mono bg-surface-secondary/80 border border-border/80 px-3 py-1 rounded-full shadow-xs">
+        <div className="hidden md:flex items-center gap-1.5 text-[11px] text-text-muted font-mono bg-surface-2 border border-border/80 px-3 py-1 rounded-full shadow-sm">
           <Calendar className="h-3.5 w-3.5 text-text-muted shrink-0" />
           <span className="font-bold tracking-tight">{currentTime || "23 Sep 2026 • 00:00 UTC"}</span>
         </div>
@@ -179,16 +179,16 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
         {/* Status Pill */}
         <div
           onClick={onOpenHealthModal}
-          className={`cursor-pointer flex items-center gap-1.5 px-3 py-1 rounded-full border text-[10px] font-mono font-bold tracking-wider uppercase transition shadow-xs ${
+          className={`cursor-pointer flex items-center gap-1.5 px-3 py-1 rounded-full border text-[10px] font-mono font-bold tracking-wider uppercase transition shadow-sm ${
             isReal
-              ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/30"
-              : "bg-amber-500/10 text-amber-500 border-amber-500/30"
+              ? "bg-success/10 text-success border-success/30"
+              : "bg-warning/10 text-warning border-warning/30"
           }`}
           title="Click to view telemetry & data mode health"
         >
           <span
             className={`h-1.5 w-1.5 rounded-full ${
-              isReal ? "bg-emerald-500 animate-pulse" : "bg-amber-500"
+              isReal ? "bg-success animate-pulse" : "bg-warning"
             }`}
           />
           <span>{isReal ? "LIVE INGESTION" : "DEMO REPLAY"}</span>
@@ -197,9 +197,9 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
         {/* Forecast Trace CTA Button */}
         <button
           onClick={openTraceDrawer}
-          className="hidden sm:flex items-center gap-1.5 px-3 py-1 rounded-full bg-sky-500/10 dark:bg-sky-950/50 border border-sky-400/30 text-sky-600 dark:text-sky-400 text-[10px] font-mono font-bold tracking-wider uppercase hover:bg-sky-500/20 transition shadow-xs"
+          className="hidden sm:flex items-center gap-1.5 px-3 py-1 rounded-full bg-info/10 border border-info/30 text-info text-[10px] font-mono font-bold tracking-wider uppercase hover:bg-info/20 transition shadow-sm"
         >
-          <Activity className="h-3 w-3 text-sky-500" />
+          <Activity className="h-3 w-3 text-info" />
           <span>Trace DAG</span>
         </button>
 
@@ -216,9 +216,9 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
             }
           }}
           title="Refresh forecast pipeline"
-          className="p-1.5 rounded-lg border border-border text-text-muted hover:text-text-primary hover:bg-surface-secondary transition"
+          className="p-1.5 rounded-lg border border-border text-text-muted hover:text-text-primary hover:bg-surface-2 transition"
         >
-          <RefreshCw className={`h-4 w-4 ${loading ? "animate-spin text-sky-500" : ""}`} />
+          <RefreshCw className={`h-4 w-4 ${loading ? "animate-spin text-accent" : ""}`} />
         </button>
       </div>
     </header>

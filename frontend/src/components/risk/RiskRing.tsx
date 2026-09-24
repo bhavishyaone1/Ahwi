@@ -23,16 +23,16 @@ export function RiskRing({
   const getTierColors = () => {
     switch (tier) {
       case "EXTREME":
-        return { stroke: "#DC2626", text: "text-rose-500", bg: "bg-rose-500/10", badge: "bg-rose-500/10 text-rose-500 border-rose-500/20" };
+        return { stroke: "#dc2626", text: "text-danger", bg: "bg-danger/10", badge: "bg-danger/10 text-danger border-danger/30" };
       case "HIGH":
-        return { stroke: "#EF4444", text: "text-rose-500", bg: "bg-rose-500/10", badge: "bg-rose-500/10 text-rose-500 border-rose-500/20" };
+        return { stroke: "#dc2626", text: "text-danger", bg: "bg-danger/10", badge: "bg-danger/10 text-danger border-danger/30" };
       case "WATCH":
       case "MEDIUM":
-        return { stroke: "#F59E0B", text: "text-amber-500", bg: "bg-amber-500/10", badge: "bg-amber-500/10 text-amber-500 border-amber-500/20" };
+        return { stroke: "#f59e0b", text: "text-warning", bg: "bg-warning/10", badge: "bg-warning/10 text-warning border-warning/30" };
       case "LOW":
       case "NORMAL":
       default:
-        return { stroke: "#10B981", text: "text-emerald-500", bg: "bg-emerald-500/10", badge: "bg-emerald-500/10 text-emerald-500 border-emerald-500/20" };
+        return { stroke: "#10b981", text: "text-success", bg: "bg-success/10", badge: "bg-success/10 text-success border-success/30" };
     }
   };
 
@@ -58,7 +58,7 @@ export function RiskRing({
             cx="48"
             cy="48"
             r={radius}
-            className="stroke-slate-200 dark:stroke-slate-800"
+            className="stroke-border"
             strokeWidth="6"
             fill="none"
           />

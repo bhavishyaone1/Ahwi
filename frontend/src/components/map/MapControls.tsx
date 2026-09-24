@@ -101,8 +101,8 @@ export function MapControls({
             <button
               type="button"
               onClick={onToggleLayersVisible}
-              className={`p-1.5 rounded-full text-text-muted hover:text-text-primary hover:bg-surface-secondary transition ${
-                !layersVisible ? "text-amber-500" : ""
+              className={`p-1.5 rounded-full text-text-muted hover:text-text-primary hover:bg-surface-2 transition ${
+                !layersVisible ? "text-accent" : ""
               }`}
               title={layersVisible ? "Hide overlay layer" : "Show overlay layer"}
             >
@@ -113,7 +113,7 @@ export function MapControls({
             <button
               type="button"
               onClick={onToggleFullscreen}
-              className="p-1.5 rounded-full text-text-muted hover:text-text-primary hover:bg-surface-secondary transition"
+              className="p-1.5 rounded-full text-text-muted hover:text-text-primary hover:bg-surface-2 transition"
               title={isFullscreen ? "Exit Fullscreen" : "Fullscreen map"}
             >
               <Maximize2 className="h-3.5 w-3.5" />
@@ -132,7 +132,7 @@ export function MapControls({
               placeholder="Name or zip code..."
               value={searchQuery}
               onChange={(e) => onSearchChange(e.target.value)}
-              className="h-8 w-full pl-9 pr-3 rounded-full text-xs bg-surface/90 dark:bg-[#18181b]/90 border border-border/80 text-text-primary placeholder:text-text-muted/70 backdrop-blur-md shadow-md focus:outline-none focus:ring-1 focus:ring-orange-500"
+              className="h-8 w-full pl-9 pr-3 rounded-full text-xs bg-surface/90 dark:bg-[#18181b]/90 border border-border/80 text-text-primary placeholder:text-text-muted/70 backdrop-blur-md shadow-md focus:outline-none focus:ring-1 focus:ring-accent"
             />
           </div>
         )}
@@ -142,7 +142,7 @@ export function MapControls({
           <button
             type="button"
             onClick={onZoomIn}
-            className="flex h-8 w-8 items-center justify-center text-text-secondary hover:text-text-primary hover:bg-surface-secondary border-b border-border/60 transition"
+            className="flex h-8 w-8 items-center justify-center text-text-secondary hover:text-text-primary hover:bg-surface-2 border-b border-border/60 transition"
             title="Zoom In"
           >
             <Plus className="h-3.5 w-3.5" />
@@ -150,7 +150,7 @@ export function MapControls({
           <button
             type="button"
             onClick={onZoomOut}
-            className="flex h-8 w-8 items-center justify-center text-text-secondary hover:text-text-primary hover:bg-surface-secondary transition"
+            className="flex h-8 w-8 items-center justify-center text-text-secondary hover:text-text-primary hover:bg-surface-2 transition"
             title="Zoom Out"
           >
             <Minus className="h-3.5 w-3.5" />
@@ -158,7 +158,7 @@ export function MapControls({
           <button
             type="button"
             onClick={onResetView}
-            className="flex h-8 w-8 items-center justify-center text-text-secondary hover:text-text-primary hover:bg-surface-secondary border-t border-border/60 transition"
+            className="flex h-8 w-8 items-center justify-center text-text-secondary hover:text-text-primary hover:bg-surface-2 border-t border-border/60 transition"
             title="Reset India View"
           >
             <RotateCcw className="h-3 w-3" />

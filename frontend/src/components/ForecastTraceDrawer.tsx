@@ -79,10 +79,10 @@ export const ForecastTraceDrawer: React.FC = () => {
               className="w-screen max-w-md bg-surface shadow-2xl border-l border-border text-text-primary flex flex-col elevated-glow"
             >
               {/* Header */}
-              <div className="p-4 border-b border-border flex items-center justify-between bg-surface-secondary/50">
+              <div className="p-4 border-b border-border flex items-center justify-between bg-surface-2">
                 <div>
                   <div className="flex items-center gap-1.5">
-                    <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+                    <span className="h-2 w-2 rounded-full bg-success animate-pulse" />
                     <span className="font-mono text-[10px] font-semibold uppercase tracking-wider text-text-muted">
                       Operational Lineage
                     </span>
@@ -99,7 +99,7 @@ export const ForecastTraceDrawer: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setIsTraceOpen(false)}
-                  className="p-1 rounded-md text-text-muted hover:text-text-primary hover:bg-surface-secondary transition"
+                  className="p-1 rounded-lg text-text-muted hover:text-text-primary hover:bg-surface-2 transition"
                   aria-label="Close trace drawer"
                 >
                   <X className="w-4 h-4" />
@@ -110,11 +110,11 @@ export const ForecastTraceDrawer: React.FC = () => {
               <div className="flex-1 overflow-y-auto p-4 space-y-4">
                 {loadingTrace ? (
                   <div className="py-12 text-center space-y-3">
-                    <div className="w-6 h-6 border-2 border-aether-sky border-t-transparent rounded-full animate-spin mx-auto" />
+                    <div className="w-6 h-6 border-2 border-accent border-t-transparent rounded-full animate-spin mx-auto" />
                     <p className="text-xs text-text-muted">Querying active execution steps...</p>
                   </div>
                 ) : traceData ? (
-                  <div className="relative border-l-2 border-aether-sky/20 ml-3 space-y-5">
+                  <div className="relative border-l-2 border-accent/25 ml-3 space-y-5">
                     {traceData.steps.map((s, idx) => (
                       <div key={idx} className="relative pl-5">
                         {/* Node Dot */}
@@ -122,7 +122,7 @@ export const ForecastTraceDrawer: React.FC = () => {
                           {getStepIcon(idx)}
                         </div>
 
-                        <div className="bg-surface-secondary/60 rounded-lg p-3 border border-border hover:border-aether-sky/50 transition">
+                        <div className="bg-surface-2 rounded-xl p-3 border border-border hover:border-accent/50 transition">
                           <div className="flex items-center justify-between">
                             <span className="text-[10px] font-bold text-text-muted uppercase tracking-wider">
                               Step {s.step}
@@ -154,7 +154,7 @@ export const ForecastTraceDrawer: React.FC = () => {
               </div>
 
               {/* Footer */}
-              <div className="p-3 border-t border-border bg-surface-secondary/50 text-[11px] text-text-muted flex items-center justify-between">
+              <div className="p-3 border-t border-border bg-surface-2 text-[11px] text-text-muted flex items-center justify-between">
                 <span className="font-mono text-[10px]">MoES / NCMRWF PS 26081</span>
                 <Button
                   variant="default"

@@ -130,8 +130,8 @@ export const WeatherMap: React.FC<WeatherMapProps> = ({
               paint: {
                 "raster-opacity": isDark ? 0.95 : 0.85,
                 "raster-saturation": isDark ? -1.0 : -0.6,
-                "raster-contrast": isDark ? 0.65 : 0.1,
-                "raster-brightness-max": isDark ? 0.28 : 0.85,
+                "raster-contrast": isDark ? 0.80 : 0.1,
+                "raster-brightness-max": isDark ? 0.18 : 0.85,
                 "raster-brightness-min": isDark ? 0.02 : 0.0,
               },
             },
@@ -203,7 +203,7 @@ export const WeatherMap: React.FC<WeatherMapProps> = ({
           // Scientific Observation Tooltip Hover Callout
           const tooltip = document.createElement("div");
           tooltip.className = "pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 hidden group-hover:flex flex-col items-center z-50 whitespace-nowrap bg-slate-950/95 text-white border border-border/80 px-2 py-1 rounded-md text-[10px] font-mono shadow-xl backdrop-blur-md";
-          tooltip.innerHTML = `<span class="font-bold text-accent">STN_${st.name.toUpperCase().replace(/\\s+/g, "_")}</span><span class="text-[9px] text-slate-400">${st.region} • ${st.lat.toFixed(1)}°N, ${st.lon.toFixed(1)}°E</span>`;
+          tooltip.innerHTML = `<span class="font-bold text-accent">STN_${st.name.toUpperCase().replace(/\\s+/g, "_")}</span><span class="text-[9px] text-slate-300 font-sans">${st.region} • ${st.lat.toFixed(1)}°N, ${st.lon.toFixed(1)}°E</span><span class="text-[8px] text-emerald-400">● LIVE TELEMETRY</span>`;
           el.appendChild(tooltip);
 
           el.addEventListener("click", () => {
@@ -257,8 +257,8 @@ export const WeatherMap: React.FC<WeatherMapProps> = ({
     try {
       mapRef.current.setPaintProperty("osm-tiles", "raster-opacity", isDark ? 0.95 : 0.85);
       mapRef.current.setPaintProperty("osm-tiles", "raster-saturation", isDark ? -1.0 : -0.6);
-      mapRef.current.setPaintProperty("osm-tiles", "raster-contrast", isDark ? 0.6 : 0.1);
-      mapRef.current.setPaintProperty("osm-tiles", "raster-brightness-max", isDark ? 0.22 : 0.85);
+      mapRef.current.setPaintProperty("osm-tiles", "raster-contrast", isDark ? 0.80 : 0.1);
+      mapRef.current.setPaintProperty("osm-tiles", "raster-brightness-max", isDark ? 0.18 : 0.85);
       mapRef.current.setPaintProperty("osm-tiles", "raster-brightness-min", isDark ? 0.02 : 0.0);
     } catch (err) {
       // Ignore if style layer not ready
@@ -504,7 +504,7 @@ export const WeatherMap: React.FC<WeatherMapProps> = ({
 
       {/* Floating Selected Station Observation Card (Operational Meteorological Workstation) */}
       <motion.div
-        key={selectedStation.name}
+        key={`${selectedStation.name}-${activeLayer}`}
         initial={{ opacity: 0, scale: 0.96 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.2, ease: "easeOut" }}
@@ -592,34 +592,34 @@ export const WeatherMap: React.FC<WeatherMapProps> = ({
                     <span className="text-overline text-text-muted font-bold">
                       Dominant
                     </span>
-                    <span className="px-2 py-0.5 mt-0.5 rounded-md font-mono text-[10px] font-black tracking-tight bg-accent/15 text-accent border border-accent/30 shadow-xs">
+                    <span className="px-2 py-0.5 mt-0.5 rounded-md font-mono text-[10px] font-black tracking-tight bg-accent/15 text-accent border border-accent/30 shadow-sm">
                       {domClean}
                     </span>
                   </div>
                 </div>
 
                 {/* MULTI-MODEL BLENDING DISTRIBUTION (Visible Blending Stack) */}
-                <div className="p-2 rounded-xl bg-surface-secondary/50 border border-border/60 space-y-1.5">
+                <div className="p-2 rounded-xl bg-surface-2 border border-border/60 space-y-1.5">
                   <div className="flex items-center justify-between text-overline text-text-muted">
                     <span className="font-semibold">Adaptive Model Blend</span>
                     <span className="font-mono">Weight Distribution</span>
                   </div>
                   <div className="grid grid-cols-3 gap-1 text-center font-mono text-[9px] tabular-nums">
-                    <div className="py-0.5 px-1 rounded-md bg-amber-500/10 border border-amber-500/25 text-amber-600 dark:text-amber-400 font-bold">
+                    <div className="py-0.5 px-1 rounded-md bg-accent/10 border border-accent/25 text-accent font-bold">
                       AIFS {aifsWeight}%
                     </div>
-                    <div className="py-0.5 px-1 rounded-md bg-sky-500/10 border border-sky-500/25 text-sky-600 dark:text-sky-400 font-bold">
+                    <div className="py-0.5 px-1 rounded-md bg-info/10 border border-info/25 text-info font-bold">
                       IFS {ifsWeight}%
                     </div>
-                    <div className="py-0.5 px-1 rounded-md bg-slate-500/10 border border-slate-500/25 text-text-secondary font-bold">
+                    <div className="py-0.5 px-1 rounded-md bg-surface border border-border text-text-secondary font-bold">
                       GFS {gfsWeight}%
                     </div>
                   </div>
                   {/* Proportional Stacked Bar */}
                   <div className="w-full h-1.5 rounded-full overflow-hidden flex bg-border/80">
-                    <div style={{ width: `${aifsWeight}%` }} className="bg-amber-500" title={`AIFS ${aifsWeight}%`} />
-                    <div style={{ width: `${ifsWeight}%` }} className="bg-sky-500" title={`IFS ${ifsWeight}%`} />
-                    <div style={{ width: `${gfsWeight}%` }} className="bg-slate-400" title={`GFS ${gfsWeight}%`} />
+                    <div style={{ width: `${aifsWeight}%` }} className="bg-accent" title={`AIFS ${aifsWeight}%`} />
+                    <div style={{ width: `${ifsWeight}%` }} className="bg-info" title={`IFS ${ifsWeight}%`} />
+                    <div style={{ width: `${gfsWeight}%` }} className="bg-text-muted/40" title={`GFS ${gfsWeight}%`} />
                   </div>
                 </div>
               </div>

@@ -224,9 +224,9 @@ export default function ClimatePage() {
                         <Line
                           type="monotone"
                           dataKey="normal"
-                          stroke="#0284C7"
+                          stroke="#0ea5e9"
                           strokeWidth={2}
-                          dot={{ r: 3, fill: "#0284C7" }}
+                          dot={{ r: 3, fill: "#0ea5e9" }}
                           name="Climate Normal"
                         />
 
@@ -234,9 +234,9 @@ export default function ClimatePage() {
                         <Line
                           type="monotone"
                           dataKey="current"
-                          stroke="#DC2626"
+                          stroke="#f97316"
                           strokeWidth={0}
-                          dot={{ r: 6, fill: "#DC2626", stroke: "#FFFFFF", strokeWidth: 2 }}
+                          dot={{ r: 6, fill: "#f97316", stroke: "#FFFFFF", strokeWidth: 2 }}
                           name="Current Forecast"
                         />
                       </ComposedChart>
@@ -258,37 +258,37 @@ export default function ClimatePage() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="p-4 space-y-3 text-xs">
-                  <div className="flex items-center justify-between p-2.5 rounded-lg bg-surface-secondary/70 border border-border">
+                  <div className="flex items-center justify-between p-2.5 rounded-xl bg-surface-2 border border-border">
                     <div className="flex items-center gap-2">
-                      <Thermometer className="h-4 w-4 text-rose-500" />
+                      <Thermometer className="h-4 w-4 text-danger" />
                       <span className="font-medium text-text-secondary">Temperature Anomaly:</span>
                     </div>
-                    <span className="font-mono font-bold text-rose-600 dark:text-rose-400">
+                    <span className="font-mono font-bold text-danger">
                       +{climate.temp_anomaly_c}°C
                     </span>
                   </div>
 
-                  <div className="flex items-center justify-between p-2.5 rounded-lg bg-surface-secondary/70 border border-border">
+                  <div className="flex items-center justify-between p-2.5 rounded-xl bg-surface-2 border border-border">
                     <div className="flex items-center gap-2">
-                      <CloudRain className="h-4 w-4 text-sky-600 dark:text-sky-400" />
+                      <CloudRain className="h-4 w-4 text-info" />
                       <span className="font-medium text-text-secondary">Seasonal Anomaly:</span>
                     </div>
-                    <span className="font-mono font-bold text-sky-700 dark:text-sky-300">
+                    <span className="font-mono font-bold text-info">
                       +{climate.seasonal_anomaly_pct}%
                     </span>
                   </div>
 
-                  <div className="flex items-center justify-between p-2.5 rounded-lg bg-surface-secondary/70 border border-border">
+                  <div className="flex items-center justify-between p-2.5 rounded-xl bg-surface-2 border border-border">
                     <div className="flex items-center gap-2">
-                      <AlertCircle className="h-4 w-4 text-amber-500" />
+                      <AlertCircle className="h-4 w-4 text-warning" />
                       <span className="font-medium text-text-secondary">Extreme Frequency:</span>
                     </div>
-                    <span className="font-mono font-bold text-amber-700 dark:text-amber-300">
+                    <span className="font-mono font-bold text-warning">
                       {climate.extreme_multiplier}× Baseline
                     </span>
                   </div>
 
-                  <div className="flex items-center justify-between p-2.5 rounded-lg bg-surface-secondary/70 border border-border">
+                  <div className="flex items-center justify-between p-2.5 rounded-xl bg-surface-2 border border-border">
                     <div className="flex items-center gap-2">
                       <TrendingUp className="h-4 w-4 text-text-muted" />
                       <span className="font-medium text-text-secondary">Decadal Trend:</span>

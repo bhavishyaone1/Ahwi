@@ -69,7 +69,7 @@ export default function ModelIntelligencePage() {
         </div>
 
         {/* Sub-Tabs with Motion active indicator */}
-        <div className="flex items-center gap-1 border border-border bg-surface-secondary/70 p-0.5 rounded-lg text-xs shrink-0">
+        <div className="flex items-center gap-1 border border-border bg-surface-2 p-0.5 rounded-xl text-xs shrink-0">
           {(["weights", "performance", "shap"] as const).map((tab) => {
             const isActive = activeTab === tab;
             return (
@@ -77,14 +77,14 @@ export default function ModelIntelligencePage() {
                 key={tab}
                 type="button"
                 onClick={() => setActiveTab(tab)}
-                className={`relative px-3 py-1.5 rounded-md text-xs font-semibold transition-all ${
+                className={`relative px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
                   isActive ? "text-text-primary font-bold shadow-sm" : "text-text-muted hover:text-text-primary"
                 }`}
               >
                 {isActive && (
                   <motion.div
                     layoutId="model-subtab-pill"
-                    className="absolute inset-0 rounded-md bg-surface shadow-sm"
+                    className="absolute inset-0 rounded-lg bg-surface shadow-sm"
                     transition={{ type: "spring", stiffness: 450, damping: 32 }}
                   />
                 )}
@@ -148,7 +148,7 @@ export default function ModelIntelligencePage() {
             <CardContent className="p-4">
               <div className="overflow-x-auto">
                 <table className="w-full text-xs text-left">
-                  <thead className="bg-surface-secondary/50 text-text-muted text-overline border-b border-border">
+                  <thead className="bg-surface-2 text-text-muted text-overline border-b border-border">
                     <tr>
                       <th className="p-2.5 px-3">Model</th>
                       <th className="p-2.5 px-3">MAE (mm)</th>
@@ -159,19 +159,19 @@ export default function ModelIntelligencePage() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-border font-mono tabular-nums">
-                    <tr className="hover:bg-surface-secondary/40">
+                    <tr className="hover:bg-surface-2/60">
                       <td className="p-2.5 px-3 font-semibold text-text-primary">ECMWF IFS</td>
                       <td className="p-2.5 px-3 text-text-secondary">5.42</td>
                       <td className="p-2.5 px-3 text-text-secondary">8.76</td>
                       <td className="p-2.5 px-3 text-danger">-1.22</td>
                       <td className="p-2.5 px-3 font-semibold text-text-secondary">0.68</td>
                       <td className="p-2.5 px-3">
-                        <Badge variant="outline" className="text-success bg-success/10 border-success/20">
+                        <Badge variant="outline" className="text-success bg-success/10 border-success/30">
                           Active
                         </Badge>
                       </td>
                     </tr>
-                    <tr className="hover:bg-surface-secondary/40 bg-accent/10">
+                    <tr className="hover:bg-surface-2/60 bg-accent/10">
                       <td className="p-2.5 px-3 font-bold text-accent flex items-center gap-1.5">
                         <Award className="h-3.5 w-3.5" />
                         ECMWF AIFS
@@ -184,19 +184,19 @@ export default function ModelIntelligencePage() {
                         <Badge variant="scientific">Dominant</Badge>
                       </td>
                     </tr>
-                    <tr className="hover:bg-surface-secondary/40">
+                    <tr className="hover:bg-surface-2/60">
                       <td className="p-2.5 px-3 font-semibold text-text-primary">NOAA GFS</td>
                       <td className="p-2.5 px-3 text-text-secondary">6.87</td>
                       <td className="p-2.5 px-3 text-text-secondary">11.23</td>
                       <td className="p-2.5 px-3 text-danger">-2.14</td>
                       <td className="p-2.5 px-3 font-semibold text-text-secondary">0.54</td>
                       <td className="p-2.5 px-3">
-                        <Badge variant="outline" className="text-success bg-success/10 border-success/20">
+                        <Badge variant="outline" className="text-success bg-success/10 border-success/30">
                           Active
                         </Badge>
                       </td>
                     </tr>
-                    <tr className="bg-surface-secondary font-bold border-t-2 border-border text-text-primary">
+                    <tr className="bg-surface-2 font-bold border-t-2 border-border text-text-primary">
                       <td className="p-2.5 px-3 font-black text-accent">AETHER (Blend)</td>
                       <td className="p-2.5 px-3 font-black text-accent">3.82</td>
                       <td className="p-2.5 px-3 font-black text-accent">6.12</td>
@@ -242,7 +242,7 @@ export default function ModelIntelligencePage() {
                         {f.attribution.toFixed(2)}
                       </span>
                     </div>
-                    <div className="w-full bg-surface-secondary rounded-full h-2 overflow-hidden">
+                    <div className="w-full bg-surface-2 rounded-full h-2 overflow-hidden">
                       <div
                         className={`h-full rounded-full transition-all duration-500 ${
                           f.attribution >= 0 ? "bg-accent" : "bg-danger"
@@ -276,7 +276,7 @@ export default function ModelIntelligencePage() {
       </div>
 
       {/* Mandatory IMD Meteorological Disclaimer */}
-      <div className="p-3 bg-warning/10 border border-warning/20 rounded-xl flex items-center gap-2 text-xs text-warning">
+      <div className="p-3 bg-warning/10 border border-warning/30 rounded-xl flex items-center gap-2 text-xs text-warning">
         <AlertTriangle className="h-4 w-4 text-warning shrink-0" />
         <span>
           <strong>AETHER MODEL RISK NOTICE:</strong> This intelligence is computed algorithmically via the AETHER multi-model fusion pipeline. It does not constitute an official warning from the India Meteorological Department (IMD).

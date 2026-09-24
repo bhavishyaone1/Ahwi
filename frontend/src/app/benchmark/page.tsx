@@ -80,7 +80,7 @@ export default function BenchmarkPage() {
               <Award className="h-3 w-3 text-info" />
               <span>SIH Problem Statement 26081 Verification</span>
             </div>
-            <div className="badge-scientific text-overline bg-surface-secondary text-text-muted border border-border">
+            <div className="badge-scientific text-overline bg-surface-2 text-text-muted border border-border">
               <Database className="h-3 w-3" />
               <span>Out-of-Sample Chronological Splits</span>
             </div>
@@ -98,7 +98,7 @@ export default function BenchmarkPage() {
           <select
             value={variable}
             onChange={(e) => setVariable(e.target.value)}
-            className="h-8 bg-surface border border-border rounded-lg px-2.5 text-xs font-semibold text-text-primary shadow-sm focus:ring-1 focus:ring-info focus:outline-none transition"
+            className="h-8 bg-surface border border-border rounded-xl px-2.5 text-xs font-semibold text-text-primary shadow-sm focus:ring-1 focus:ring-accent focus:outline-none transition"
           >
             <option value="rainfall_mm">Precipitation (mm)</option>
             <option value="temperature_c">Temperature (°C)</option>
@@ -108,7 +108,7 @@ export default function BenchmarkPage() {
           <select
             value={leadTime}
             onChange={(e) => setLeadTime(Number(e.target.value))}
-            className="h-8 bg-surface border border-border rounded-lg px-2.5 text-xs font-semibold text-text-primary shadow-sm focus:ring-1 focus:ring-info focus:outline-none transition"
+            className="h-8 bg-surface border border-border rounded-xl px-2.5 text-xs font-semibold text-text-primary shadow-sm focus:ring-1 focus:ring-accent focus:outline-none transition"
           >
             <option value={6}>+6h Horizon</option>
             <option value={12}>+12h Horizon</option>
@@ -120,7 +120,7 @@ export default function BenchmarkPage() {
           <select
             value={regime}
             onChange={(e) => setRegime(e.target.value)}
-            className="h-8 bg-surface border border-border rounded-lg px-2.5 text-xs font-semibold text-text-primary shadow-sm focus:ring-1 focus:ring-info focus:outline-none transition"
+            className="h-8 bg-surface border border-border rounded-xl px-2.5 text-xs font-semibold text-text-primary shadow-sm focus:ring-1 focus:ring-accent focus:outline-none transition"
           >
             <option value="ALL">All Regimes</option>
             <option value="HEAVY_RAIN">Heavy Rain</option>
@@ -190,7 +190,7 @@ export default function BenchmarkPage() {
             <CardContent className="p-0">
               <div className="overflow-x-auto">
                 <table className="w-full text-xs text-left border-collapse">
-                  <thead className="bg-surface-secondary/80 text-text-muted text-overline border-b border-border font-mono">
+                  <thead className="bg-surface-2 text-text-muted text-overline border-b border-border font-mono">
                     <tr>
                       <th className="p-2.5 px-3">Model</th>
                       <th className="p-2.5 px-3 text-right">MAE</th>
@@ -208,7 +208,7 @@ export default function BenchmarkPage() {
                         return (
                           <tr
                             key={row.model_name}
-                            className={`transition hover:bg-surface-secondary/50 ${
+                            className={`transition hover:bg-surface-2/60 ${
                               isAether
                                 ? "bg-accent/10 border-l-2 border-l-accent font-bold"
                                 : ""
@@ -328,30 +328,30 @@ export default function BenchmarkPage() {
                     <Line
                       type="monotone"
                       dataKey="IFS"
-                      stroke="#2563EB"
+                      stroke="#0ea5e9"
                       strokeWidth={1.5}
                       dot={{ r: 2.5 }}
                     />
                     <Line
                       type="monotone"
                       dataKey="AIFS"
-                      stroke="#0284C7"
+                      stroke="#f59e0b"
                       strokeWidth={1.5}
                       dot={{ r: 2.5 }}
                     />
                     <Line
                       type="monotone"
                       dataKey="GFS"
-                      stroke="#14B8A6"
+                      stroke="#64748b"
                       strokeWidth={1.5}
                       dot={{ r: 2.5 }}
                     />
                     <Line
                       type="monotone"
                       dataKey="AETHER"
-                      stroke={theme === "dark" ? "#38BDF8" : "#0284C7"}
+                      stroke="#f97316"
                       strokeWidth={3}
-                      dot={{ r: 4, fill: theme === "dark" ? "#38BDF8" : "#0284C7" }}
+                      dot={{ r: 4, fill: "#f97316" }}
                     />
                   </LineChart>
                 </ResponsiveContainer>

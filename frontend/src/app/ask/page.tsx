@@ -160,7 +160,7 @@ export default function AskAetherPage() {
                   key={i}
                   type="button"
                   onClick={() => handleSend(sq)}
-                  className="w-full text-left p-2.5 rounded-lg border border-border bg-surface-secondary/60 hover:bg-accent/10 hover:border-accent/40 text-xs text-text-secondary hover:text-text-primary font-medium transition flex items-center justify-between group"
+                  className="w-full text-left p-2.5 rounded-xl border border-border bg-surface-2 hover:bg-accent/10 hover:border-accent/40 text-xs text-text-secondary hover:text-text-primary font-medium transition flex items-center justify-between group"
                 >
                   <span className="line-clamp-2">{sq}</span>
                   <ChevronRight className="h-3.5 w-3.5 text-text-muted group-hover:text-accent shrink-0 ml-1.5 transition-transform group-hover:translate-x-0.5" />
@@ -177,12 +177,12 @@ export default function AskAetherPage() {
         {/* Right 8 Cols: Grounded Intelligence Feed */}
         <motion.div variants={fadeUp} className="lg:col-span-8 min-w-0 flex flex-col space-y-3">
           {/* Chat Container */}
-          <Card className="shadow-sm border-border bg-surface-secondary/30 rounded-2xl p-4 space-y-4 min-h-[380px] max-h-[480px] overflow-y-auto">
+          <Card className="shadow-sm border-border bg-surface-2/40 rounded-2xl p-4 space-y-4 min-h-[380px] max-h-[480px] overflow-y-auto">
             {chatHistory.map((msg, i) => {
               if (msg.sender === "user") {
                 return (
                   <div key={i} className="flex justify-end">
-                    <div className="bg-accent text-slate-950 text-xs font-bold px-3.5 py-2 rounded-xl rounded-tr-xs shadow-sm max-w-md">
+                    <div className="bg-accent text-slate-950 text-xs font-bold px-3.5 py-2 rounded-2xl rounded-tr-sm shadow-sm max-w-md">
                       {msg.content}
                     </div>
                   </div>
@@ -193,11 +193,11 @@ export default function AskAetherPage() {
 
               return (
                 <div key={i} className="flex justify-start">
-                  <div className="bg-surface border border-border rounded-xl rounded-tl-xs p-4 shadow-sm max-w-xl space-y-3 text-xs border-l-4 border-l-accent">
+                  <div className="bg-surface border border-border rounded-2xl rounded-tl-sm p-4 shadow-sm max-w-xl space-y-3 text-xs border-l-4 border-l-accent">
                     {/* Bot header */}
                     <div className="flex items-center justify-between border-b border-border pb-2">
                       <div className="flex items-center gap-1.5">
-                        <div className="h-5 w-5 rounded bg-accent text-slate-950 font-black text-[10px] flex items-center justify-center">
+                        <div className="h-5 w-5 rounded-md bg-accent text-slate-950 font-black text-[10px] flex items-center justify-center">
                           Æ
                         </div>
                         <span className="font-bold text-text-primary text-xs">AETHER</span>
@@ -240,7 +240,7 @@ export default function AskAetherPage() {
 
                     {/* EVIDENCE */}
                     {models && (
-                      <div className="p-2.5 bg-surface-secondary/70 rounded-xl border border-border space-y-1.5">
+                      <div className="p-2.5 bg-surface-2 rounded-xl border border-border space-y-1.5">
                         <span className="text-overline text-text-muted block font-semibold">
                           SOURCE NWP / AI TELEMETRY
                         </span>
@@ -293,13 +293,13 @@ export default function AskAetherPage() {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && handleSend()}
-              className="h-10 text-xs bg-surface border-border text-text-primary placeholder:text-text-muted"
+              className="h-10 text-xs bg-surface border-border text-text-primary placeholder:text-text-muted rounded-xl"
             />
             <Button
               variant="default"
               onClick={() => handleSend()}
               disabled={loading || !query.trim()}
-              className="h-10 px-4 gap-1.5 bg-accent hover:bg-accent-hover text-slate-950 font-black text-xs shrink-0 shadow-sm hover:shadow-md transition-all duration-200"
+              className="h-10 px-4 gap-1.5 bg-accent hover:bg-accent-hover text-slate-950 font-black text-xs shrink-0 shadow-sm hover:shadow-md transition-all duration-200 rounded-xl"
             >
               <Send className="h-3.5 w-3.5" />
               <span>Query</span>

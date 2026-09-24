@@ -7,11 +7,11 @@ const Progress = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof ProgressPrimitive.Root> & {
     indicatorColor?: string;
   }
->(({ className, value, indicatorColor = "bg-sky-600", ...props }, ref) => (
+>(({ className, value, indicatorColor = "bg-accent", ...props }, ref) => (
   <ProgressPrimitive.Root
     ref={ref}
     className={cn(
-      "relative h-2 w-full overflow-hidden rounded-full bg-slate-100 border border-slate-200/50",
+      "relative h-2 w-full overflow-hidden rounded-full bg-surface-2 border border-border/50",
       className
     )}
     {...props}

@@ -2,6 +2,13 @@
 
 > **Meteorological AI that learns when to trust each weather model.**
 
+[![Live Workstation](https://img.shields.io/badge/Live%20Workstation-ahwi--inky.vercel.app-f97316?style=for-the-badge&logo=vercel)](https://ahwi-inky.vercel.app/)
+[![Backend API](https://img.shields.io/badge/Backend%20API-ahwi.onrender.com-0ea5e9?style=for-the-badge&logo=fastapi)](https://ahwi.onrender.com/api/docs)
+[![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg?style=for-the-badge)](https://opensource.org/licenses/Apache-2.0)
+
+* **🌐 Live Workstation**: [https://ahwi-inky.vercel.app/](https://ahwi-inky.vercel.app/)
+* **⚡ Live Backend API & Swagger Docs**: [https://ahwi.onrender.com/api/docs](https://ahwi.onrender.com/api/docs)
+
 AETHER is an adaptive meteorological intelligence platform for dynamic multi-model NWP & AI blending over the Indian subcontinent.
 
 Unlike traditional static averaging or single-model reliance, AETHER dynamically evaluates physics-based NWP models (ECMWF IFS, NOAA GFS) alongside cutting-edge AI forecast models (ECMWF AIFS). By learning historical forecast errors across regions, seasons, lead times (6h–72h), and synoptic weather regimes, AETHER computes dynamic model weights, generates calibrated blended predictions, quantifies uncertainty, assesses extreme weather risks, and provides explainable SHAP guidance.

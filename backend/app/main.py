@@ -36,6 +36,8 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
+from fastapi.responses import RedirectResponse
+
 # CORS Middleware allowing Next.js local frontend and production domains
 app.add_middleware(
     CORSMiddleware,
@@ -44,6 +46,12 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+@app.get("/", include_in_schema=False)
+def root():
+    """Redirect root path to interactive Swagger API docs."""
+    return RedirectResponse(url="/api/docs")
 
 
 @app.get(f"{settings.API_PREFIX}/status", tags=["System"])

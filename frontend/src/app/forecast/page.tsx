@@ -66,7 +66,7 @@ export default function ForecastPage() {
             Forecast Exploration
           </h1>
           <p className="text-xs text-text-muted font-medium">
-            Adaptive multi-model NWP & AI blending engine — compare ECMWF IFS, AIFS, and NOAA GFS across lead times (MoES PS 26081).
+            Adaptive multi-model NWP & AI blending engine — compare ECMWF IFS, AIFS, and NOAA GFS across lead times.
           </p>
         </div>
 

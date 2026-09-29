@@ -85,6 +85,7 @@ export default function AskAetherPage() {
             sender: "aether",
             content: {
               headline: res.headline,
+              blended_forecast: res.blended_forecast,
               why: res.contributing_reasons,
               models: res.source_data,
               weights: {
@@ -216,10 +217,17 @@ export default function AskAetherPage() {
                     </div>
 
                     {/* ANSWER */}
-                    <div>
-                      <span className="text-overline text-text-muted block mb-1 font-semibold">
-                        ANSWER
-                      </span>
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <span className="text-overline text-text-muted font-semibold">
+                          VERIFIED CONSENSUS
+                        </span>
+                        {msg.content.blended_forecast && (
+                          <span className="px-2 py-0.5 rounded-md bg-accent/15 text-accent font-mono text-[11px] font-bold border border-accent/30">
+                            {msg.content.blended_forecast}
+                          </span>
+                        )}
+                      </div>
                       <p className="text-text-primary font-semibold leading-relaxed">
                         {headline}
                       </p>
@@ -243,7 +251,7 @@ export default function AskAetherPage() {
                     )}
 
                     {/* EVIDENCE */}
-                    {models && (
+                    {models && Object.keys(models).length > 0 && (
                       <div className="p-2.5 bg-surface-2 rounded-xl border border-border space-y-1.5">
                         <span className="text-overline text-text-muted block font-semibold">
                           SOURCE NWP / AI TELEMETRY
@@ -270,16 +278,22 @@ export default function AskAetherPage() {
                         <Activity className="h-3 w-3 text-accent" />
                         <span>Inspect Lineage DAG</span>
                       </Button>
+                      <Link href="/">
+                        <Button variant="outline" size="sm" className="text-[11px] h-7 font-mono flex items-center gap-1.5">
+                          <Sparkles className="h-3 w-3 text-accent" />
+                          <span>Situation Room</span>
+                        </Button>
+                      </Link>
                       <Link href="/models">
                         <Button variant="outline" size="sm" className="text-[11px] h-7 font-mono flex items-center gap-1.5">
                           <Cpu className="h-3 w-3 text-text-muted" />
-                          <span>View SHAP Attribution</span>
+                          <span>SHAP Attribution</span>
                         </Button>
                       </Link>
                       <Link href="/forecast">
                         <Button variant="outline" size="sm" className="text-[11px] h-7 font-mono flex items-center gap-1.5">
                           <Layers className="h-3 w-3 text-text-muted" />
-                          <span>View Models</span>
+                          <span>Forecast Curves</span>
                         </Button>
                       </Link>
                     </div>

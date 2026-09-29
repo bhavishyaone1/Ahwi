@@ -407,6 +407,67 @@ class AetherService:
             data_mode=self.adapter.get_mode()
         )
 
+    def get_lead_time_skill_curve(
+        self, variable: str = "rainfall_mm", weather_regime: str = "ALL"
+    ) -> "LeadTimeSkillCurveResponse":
+        """
+        Returns per-lead-time MAE for Persistence, Equal_Weight, IFS, AIFS, GFS, AETHER.
+        Computed by calling evaluate_benchmark_matrix at each horizon and extracting MAE.
+        """
+        from backend.app.schemas.benchmark_schema import LeadTimeSkillCurveResponse, LeadTimeSkillPoint
+
+        HORIZONS = [6, 12, 24, 48, 72]
+        MODEL_KEYS = {
+            "Persistence": "Persistence",
+            "Equal_Weight": "Equal_Weight",
+            "IFS": "ECMWF_IFS",
+            "AIFS": "ECMWF_AIFS",
+            "GFS": "GFS",
+            "AETHER": "AETHER",
+        }
+
+        # Unit label per variable
+        unit_map = {"rainfall_mm": "mm", "temperature_c": "°C", "wind_speed_ms": "m/s"}
+        unit = unit_map.get(variable, "")
+
+        points = []
+        for h in HORIZONS:
+            rows = self.baseline_evaluator.evaluate_benchmark_matrix(
+                df_eval=self.df_aligned_history,
+                variable=variable,
+                lead_time_hours=h,
+                aether_predictions=None,
+            )
+            row_by_name = {r.model_name: r for r in rows}
+
+            def _mae(key: str) -> float:
+                r = row_by_name.get(key)
+                return round(r.mae, 2) if r else 0.0
+
+            points.append(
+                LeadTimeSkillPoint(
+                    horizon=f"{h}h",
+                    horizon_hours=h,
+                    Persistence=_mae("Persistence"),
+                    Equal_Weight=_mae("Equal_Weight"),
+                    IFS=_mae("ECMWF_IFS"),
+                    AIFS=_mae("ECMWF_AIFS"),
+                    GFS=_mae("GFS"),
+                    AETHER=_mae("AETHER"),
+                )
+            )
+
+        return LeadTimeSkillCurveResponse(
+            variable=variable,
+            weather_regime=weather_regime,
+            metric="MAE",
+            unit=unit,
+            points=points,
+            data_mode=self.adapter.get_mode(),
+        )
+
+
+
     def get_canonical_forecast(
         self,
         lat: float = 28.6139,

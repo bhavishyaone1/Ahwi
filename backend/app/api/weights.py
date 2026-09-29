@@ -39,6 +39,6 @@ def get_geographic_weight_map(
 ) -> List[Dict[str, Any]]:
     """
     Returns spatial model contribution map across Indian meteorological stations/grid.
-    Directly satisfies SIH PS 26081 requirement for model weight maps.
+    Provides geographic model weight allocations across 0.25° grid subdivisions.
     """
     return aether_service.get_geographic_weight_grid(variable=var, lead_time_hours=horizon)

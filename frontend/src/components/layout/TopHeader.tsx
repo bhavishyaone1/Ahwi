@@ -8,15 +8,11 @@ import { fetchSystemStatus } from "@/lib/api";
 import {
   MapPin,
   Calendar,
-  Clock,
   RefreshCw,
   Menu,
   ChevronDown,
   Activity,
-  Layers,
-  Radio,
   Search,
-  Command as CommandIcon,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -62,17 +58,12 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
     const updateClock = () => {
       const d = new Date();
       setCurrentTime(
-        d.toLocaleDateString("en-GB", {
-          day: "2-digit",
-          month: "short",
-          year: "numeric",
-        }) +
-          " • " +
-          d.toTimeString().slice(0, 5) +
-          " UTC"
+        d.toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }) +
+        " · " +
+        d.toTimeString().slice(0, 5) +
+        " IST"
       );
     };
-
     updateClock();
     const interval = setInterval(updateClock, 10000);
     return () => clearInterval(interval);
@@ -81,32 +72,32 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
   const isReal = status?.data_mode === "REAL";
 
   return (
-    <header className="sticky top-0 z-30 h-16 bg-surface/90 backdrop-blur-md border-b border-border px-4 sm:px-6 flex items-center justify-between transition-colors">
-      <div className="flex items-center gap-3">
-        {/* Mobile menu trigger */}
+    <header className="sticky top-0 z-30 h-14 bg-surface/90 dark:bg-[#0b0d12]/90 backdrop-blur-xl border-b border-border px-4 sm:px-5 flex items-center justify-between transition-colors shadow-[0_1px_0_var(--border)]">
+      {/* Left: mobile trigger + location */}
+      <div className="flex items-center gap-2.5 min-w-0">
         <button
           onClick={onToggleMobileSidebar}
-          className="lg:hidden p-1.5 rounded-lg border border-border text-text-muted hover:text-text-primary hover:bg-surface-secondary transition"
+          className="lg:hidden p-1.5 rounded-lg text-text-muted hover:text-text-primary hover:bg-surface-2 transition"
           title="Open menu"
         >
-          <Menu className="h-5 w-5" />
+          <Menu className="h-4.5 w-4.5" />
         </button>
 
-        {/* Location Dropdown selector (Station: Location ▼) */}
+        {/* Location dropdown */}
         <div className="relative">
           <button
             type="button"
             onClick={() => setDropdownOpen(!dropdownOpen)}
-            className="flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-surface border border-border/90 hover:bg-surface-secondary text-text-primary transition-all shadow-sm hover:shadow group"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-surface-2/70 border border-border/80 hover:border-border hover:bg-surface-2 text-text-primary transition-all group"
           >
-            <MapPin className="h-3.5 w-3.5 text-accent shrink-0" />
-            <span className="text-[10px] font-mono uppercase tracking-wider font-bold text-text-muted hidden sm:inline">
+            <MapPin className="h-3 w-3 text-accent shrink-0" />
+            <span className="hidden sm:inline text-[9.5px] font-mono uppercase tracking-wider font-bold text-text-muted">
               Station:
             </span>
-            <span className="text-xs sm:text-sm font-bold tracking-tight text-text-primary">
+            <span className="text-[11.5px] font-bold tracking-tight text-text-primary">
               {selectedLocation.name}
             </span>
-            <ChevronDown className="h-3 w-3 text-accent group-hover:translate-y-0.5 transition-transform" />
+            <ChevronDown className="h-3 w-3 text-text-muted group-hover:translate-y-0.5 transition-transform shrink-0" />
           </button>
 
           {dropdownOpen && (
@@ -115,110 +106,99 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
                 className="fixed inset-0 z-20"
                 onClick={() => setDropdownOpen(false)}
               />
-              <div className="elevated-glow absolute left-0 mt-2 w-64 rounded-2xl bg-surface border border-border shadow-2xl py-2 z-30 text-xs font-medium max-h-80 overflow-y-auto">
-                <span className="px-3.5 py-1.5 text-[10px] font-bold text-text-muted uppercase tracking-[0.08em] block font-mono border-b border-border/50">
-                  Observation Stations (MoES Grid)
+              <div className="elevated-glow absolute left-0 top-full mt-1.5 w-64 rounded-2xl bg-surface/98 dark:bg-[#0e1118]/98 backdrop-blur-2xl border border-border shadow-[var(--shadow-panel)] py-1.5 z-30 text-xs max-h-80 overflow-y-auto">
+                <span className="px-3.5 py-1.5 text-[9px] font-bold text-text-muted uppercase tracking-[0.1em] block font-mono border-b border-border/50 mb-1">
+                  MoES Observation Grid
                 </span>
-                <div className="py-1">
-                  {INDIAN_STATIONS.map((st) => (
-                    <button
-                      key={st.name}
-                      type="button"
-                      onClick={() => {
-                        setSelectedLocation({
-                          name: st.name,
-                          latitude: st.lat,
-                          longitude: st.lon,
-                          region: st.region,
-                        });
-                        setDropdownOpen(false);
-                      }}
-                      className={`w-full text-left px-3.5 py-2 flex items-center justify-between hover:bg-surface-secondary transition ${
-                        selectedLocation.name === st.name
-                          ? "text-accent font-bold bg-accent/10"
-                          : "text-text-secondary"
-                      }`}
-                    >
-                      <span className="font-semibold text-text-primary">{st.name}</span>
-                      <span className="text-[10px] font-mono text-text-muted">
-                        {st.lat.toFixed(1)}°N, {st.lon.toFixed(1)}°E
-                      </span>
-                    </button>
-                  ))}
-                </div>
+                {INDIAN_STATIONS.map((st) => (
+                  <button
+                    key={st.name}
+                    type="button"
+                    onClick={() => {
+                      setSelectedLocation({ name: st.name, latitude: st.lat, longitude: st.lon, region: st.region });
+                      setDropdownOpen(false);
+                    }}
+                    className={`w-full text-left px-3.5 py-2 flex items-center justify-between hover:bg-surface-2/80 transition ${
+                      selectedLocation.name === st.name
+                        ? "text-accent font-bold bg-accent/8"
+                        : "text-text-secondary"
+                    }`}
+                  >
+                    <span className="font-semibold text-text-primary text-[11.5px]">{st.name}</span>
+                    <span className="text-[9px] font-mono text-text-muted">
+                      {st.lat.toFixed(1)}°N {st.lon.toFixed(1)}°E
+                    </span>
+                  </button>
+                ))}
               </div>
             </>
           )}
         </div>
 
-        {/* Command Palette Quick Trigger */}
+        {/* Command palette trigger */}
         {onOpenCommandPalette && (
           <button
             type="button"
             onClick={onOpenCommandPalette}
-            className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-surface border border-border/80 hover:bg-surface-2 text-text-muted hover:text-text-primary transition shadow-sm text-xs"
-            title="Open Command Palette (Cmd+K / Ctrl+K)"
+            className="hidden md:flex items-center gap-2 px-2.5 py-1.5 rounded-xl bg-surface-2/60 border border-border/70 hover:bg-surface-2 hover:border-border text-text-muted hover:text-text-primary transition text-[11px] group"
+            title="Command Palette (Cmd+K)"
           >
-            <Search className="h-3.5 w-3.5 text-accent" />
-            <span className="font-sans text-[11px] font-medium hidden md:inline text-text-muted">Command Palette</span>
-            <kbd className="font-mono text-[9px] font-bold px-1.5 py-0.5 rounded bg-surface-2 border border-border text-text-muted">
+            <Search className="h-3 w-3 text-accent shrink-0" />
+            <span className="hidden lg:inline font-medium text-[10.5px]">Search…</span>
+            <kbd className="font-mono text-[8.5px] font-bold px-1.5 py-0.5 rounded bg-surface-2 border border-border text-text-muted">
               ⌘K
             </kbd>
           </button>
         )}
       </div>
 
-      {/* Center / Right Metadata & Status Bar */}
-      <div className="flex items-center gap-2 sm:gap-2.5">
-        {/* Date / Timestamp */}
-        <div className="hidden md:flex items-center gap-1.5 text-[11px] text-text-muted font-mono bg-surface-2 border border-border/80 px-3 py-1 rounded-full shadow-sm">
-          <Calendar className="h-3.5 w-3.5 text-text-muted shrink-0" />
-          <span className="font-bold tracking-tight">{currentTime || "23 Sep 2026 • 00:00 UTC"}</span>
+      {/* Right: metadata + controls */}
+      <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+        {/* Clock */}
+        <div className="hidden lg:flex items-center gap-1.5 text-[10px] text-text-muted font-mono bg-surface-2/60 border border-border/70 px-2.5 py-1 rounded-full">
+          <Calendar className="h-3 w-3 text-text-muted shrink-0" />
+          <span className="font-semibold tracking-tight">{currentTime || "—"}</span>
         </div>
 
-        {/* Status Pill */}
-        <div
-          onClick={onOpenHealthModal}
-          className={`cursor-pointer flex items-center gap-1.5 px-3 py-1 rounded-full border text-[10px] font-mono font-bold tracking-wider uppercase transition shadow-sm ${
-            isReal
-              ? "bg-success/10 text-success border-success/30"
-              : "bg-warning/10 text-warning border-warning/30"
-          }`}
-          title="Click to view telemetry & data mode health"
-        >
-          <span
-            className={`h-1.5 w-1.5 rounded-full ${
-              isReal ? "bg-success animate-pulse" : "bg-warning"
-            }`}
-          />
-          <span>{isReal ? "LIVE INGESTION" : "DEMO REPLAY"}</span>
-        </div>
-
-        {/* Forecast Trace CTA Button */}
+        {/* Data mode badge */}
         <button
-          onClick={openTraceDrawer}
-          className="hidden sm:flex items-center gap-1.5 px-3 py-1 rounded-full bg-info/10 border border-info/30 text-info text-[10px] font-mono font-bold tracking-wider uppercase hover:bg-info/20 transition shadow-sm"
+          onClick={onOpenHealthModal}
+          className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full border text-[9.5px] font-mono font-bold tracking-wider uppercase transition cursor-pointer ${
+            isReal
+              ? "bg-success/10 text-success border-success/30 hover:bg-success/15"
+              : "bg-warning/10 text-warning border-warning/30 hover:bg-warning/15"
+          }`}
+          title="View telemetry health"
         >
-          <Activity className="h-3 w-3 text-info" />
-          <span>Trace DAG</span>
+          <span className={`h-1.5 w-1.5 rounded-full shrink-0 ${isReal ? "bg-success animate-pulse" : "bg-warning"}`} />
+          <span>{isReal ? "LIVE" : "DEMO"}</span>
         </button>
 
-        {/* Refresh pipeline with Sonner Toast */}
+        {/* Trace DAG */}
+        <button
+          onClick={openTraceDrawer}
+          className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-info/8 border border-info/25 text-info text-[9.5px] font-mono font-bold tracking-wider uppercase hover:bg-info/15 transition"
+        >
+          <Activity className="h-3 w-3" />
+          <span className="hidden md:inline">Trace</span>
+        </button>
+
+        {/* Refresh */}
         <button
           onClick={async () => {
             try {
               await refresh();
-              toast.success("Telemetry pipeline re-assimilated", {
-                description: `Refreshed multi-model blend for ${selectedLocation.name}`,
+              toast.success("Pipeline refreshed", {
+                description: `Re-assimilated blend for ${selectedLocation.name}`,
               });
             } catch {
-              toast.error("Failed to refresh forecast pipeline");
+              toast.error("Failed to refresh pipeline");
             }
           }}
           title="Refresh forecast pipeline"
-          className="p-1.5 rounded-lg border border-border text-text-muted hover:text-text-primary hover:bg-surface-2 transition"
+          className="p-1.5 rounded-lg text-text-muted hover:text-text-primary hover:bg-surface-2 transition"
         >
-          <RefreshCw className={`h-4 w-4 ${loading ? "animate-spin text-accent" : ""}`} />
+          <RefreshCw className={`h-3.5 w-3.5 ${loading ? "animate-spin text-accent" : ""}`} />
         </button>
       </div>
     </header>

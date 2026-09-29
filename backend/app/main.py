@@ -1,6 +1,6 @@
 """
 AETHER FastAPI Application Entrypoint
-MoES / NCMRWF Problem Statement 26081: Hybrid AI–NWP Multi-Model Forecast Blending System
+Adaptive Multi-Model NWP & AI Blending Engine for Meteorological Intelligence
 """
 from datetime import datetime
 from contextlib import asynccontextmanager

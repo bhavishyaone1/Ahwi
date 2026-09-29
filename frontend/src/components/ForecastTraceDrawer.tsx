@@ -155,7 +155,7 @@ export const ForecastTraceDrawer: React.FC = () => {
 
               {/* Footer */}
               <div className="p-3 border-t border-border bg-surface-2 text-[11px] text-text-muted flex items-center justify-between">
-                <span className="font-mono text-[10px]">MoES / NCMRWF PS 26081</span>
+                <span className="font-mono text-[10px]">MoES / NCMRWF Pipeline</span>
                 <Button
                   variant="default"
                   size="xs"

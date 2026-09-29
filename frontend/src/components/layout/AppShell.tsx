@@ -24,27 +24,44 @@ export const AppShell: React.FC<{ children: React.ReactNode }> = ({ children }) 
 
   useEffect(() => {
     fetchSystemStatus()
-      .then((st) => {
-        setIsDemoMode(st?.data_mode !== "REAL");
-      })
-      .catch(() => {
-        setIsDemoMode(true);
-      });
+      .then((st) => { setIsDemoMode(st?.data_mode !== "REAL"); })
+      .catch(() => { setIsDemoMode(true); });
+  }, []);
+
+  // Global keyboard shortcut for command palette
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+        e.preventDefault();
+        setCommandPaletteOpen((o) => !o);
+      }
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
   }, []);
 
   return (
     <div className="min-h-screen bg-background text-text-primary flex antialiased">
-      {/* Background Isobars / Coordinate Grid */}
       <AtmosphericBackground />
 
       {/* Global Toast Notifications */}
-      <Toaster position="top-right" theme="dark" richColors closeButton />
+      <Toaster
+        position="top-right"
+        theme="dark"
+        richColors
+        closeButton
+        toastOptions={{
+          style: {
+            background: "var(--surface-elevated)",
+            border: "1px solid var(--border)",
+            color: "var(--text-primary)",
+            fontSize: "12px",
+          },
+        }}
+      />
 
       {/* Global Command Palette */}
-      <CommandPalette
-        open={commandPaletteOpen}
-        onOpenChange={setCommandPaletteOpen}
-      />
+      <CommandPalette open={commandPaletteOpen} onOpenChange={setCommandPaletteOpen} />
 
       {/* Persistent Left Sidebar */}
       <Sidebar
@@ -58,38 +75,36 @@ export const AppShell: React.FC<{ children: React.ReactNode }> = ({ children }) 
       {/* Main Workstation Column */}
       <div
         className={`flex-1 flex flex-col min-w-0 transition-all duration-300 ${
-          sidebarCollapsed ? "lg:pl-18" : "lg:pl-64"
+          sidebarCollapsed ? "lg:pl-[4.5rem]" : "lg:pl-64"
         }`}
       >
-        {/* Operational DEMO vs REAL Mode Banner (Visually load-bearing for situation room) */}
+        {/* Demo mode banner — slim, tasteful */}
         {isDemoMode && (
-          <div className="sticky top-0 z-40 bg-warning/15 border-b border-warning/30 px-3 py-1 text-center font-mono text-[10px] text-warning font-bold flex items-center justify-center gap-2 backdrop-blur-md">
-            <AlertTriangle className="h-3 w-3 text-warning shrink-0 animate-pulse" />
-            <span className="uppercase tracking-wider">
-              OPERATIONAL ADVISORY: DEMO / SYNTHETIC SCENARIO MODE ACTIVE &bull; SATELLITE & NWP REPLAY DATA
-            </span>
+          <div className="sticky top-0 z-40 flex items-center justify-center gap-2 bg-warning/8 dark:bg-warning/10 border-b border-warning/20 px-4 py-1 font-mono text-[9.5px] text-warning font-bold tracking-wider uppercase backdrop-blur-md">
+            <AlertTriangle className="h-3 w-3 text-warning shrink-0" />
+            <span>Demo Mode · Synthetic NWP Replay · Not Operational IMD Data</span>
           </div>
         )}
 
-        {/* Compact Workstation Top Header */}
+        {/* Top Header */}
         <TopHeader
           onToggleMobileSidebar={() => setMobileSidebarOpen(true)}
           onOpenHealthModal={() => setHealthModalOpen(true)}
           onOpenCommandPalette={() => setCommandPaletteOpen(true)}
         />
 
-        {/* Main Workspace Body with Smooth Page Transitions */}
+        {/* Page Body */}
         <main className="flex-1 w-full max-w-[1600px] mx-auto p-3 sm:p-5 lg:p-6 min-w-0">
           <AnimatePresence mode="wait">
             <motion.div
               key={pathname}
-              initial={shouldReduceMotion ? false : { opacity: 0, y: 6 }}
+              initial={shouldReduceMotion ? false : { opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               exit={shouldReduceMotion ? undefined : { opacity: 0, y: -6 }}
               transition={
                 shouldReduceMotion
                   ? { duration: 0 }
-                  : { duration: 0.16, ease: "easeOut" }
+                  : { duration: 0.18, ease: [0.16, 1, 0.3, 1] }
               }
             >
               {children}
@@ -97,20 +112,20 @@ export const AppShell: React.FC<{ children: React.ReactNode }> = ({ children }) 
           </AnimatePresence>
         </main>
 
-        {/* Workstation Footer */}
-        <footer className="border-t border-border py-4 px-6 bg-surface/50 text-center text-xs text-text-muted hidden lg:block">
-          <div className="max-w-[1600px] mx-auto flex items-center justify-between">
-            <p>
-              AETHER Meteorological Decision Support &copy; {new Date().getFullYear()} &bull; SIH Problem Statement 26081
-            </p>
-            <p className="font-mono text-[11px] text-text-muted">
-              ECMWF IFS &bull; ECMWF AIFS &bull; NOAA GFS &bull; PyTorch LSTM &bull; Causal XGBoost &bull; SHAP
-            </p>
+        {/* Footer */}
+        <footer className="hidden lg:block border-t border-border/60 py-3 px-6 bg-surface/30 dark:bg-[#080a0e]/50">
+          <div className="max-w-[1600px] mx-auto flex items-center justify-between text-[10px] text-text-muted">
+            <span className="font-medium">
+              AETHER Meteorological Decision Support &copy; {new Date().getFullYear()}
+            </span>
+            <span className="font-mono">
+              ECMWF IFS · ECMWF AIFS · NOAA GFS · PyTorch LSTM · Causal XGBoost · SHAP
+            </span>
           </div>
         </footer>
       </div>
 
-      {/* Global Drawers & Modals */}
+      {/* Modals & Drawers */}
       <SystemHealthModal isOpen={healthModalOpen} onClose={() => setHealthModalOpen(false)} />
       <ForecastTraceDrawer />
     </div>

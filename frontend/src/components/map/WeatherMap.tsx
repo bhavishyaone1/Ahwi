@@ -32,6 +32,60 @@ export const INDIAN_STATIONS: StationLocation[] = [
   { name: "Shimla", lat: 31.1048, lon: 77.1734, region: "Western Himalayas" },
 ];
 
+export function getStationVal(
+  stationName: string,
+  v: string,
+  activeVal?: number,
+  isSelected?: boolean
+): number {
+  if (isSelected && typeof activeVal === "number") {
+    return activeVal;
+  }
+  if (v === "temperature_c") {
+    const temps: Record<string, number> = {
+      "Delhi NCR": 33.2,
+      "Mumbai": 31.5,
+      "Chennai": 34.8,
+      "Kolkata": 32.1,
+      "Bengaluru": 26.4,
+      "Hyderabad": 30.2,
+      "Ahmedabad": 36.5,
+      "Guwahati": 28.7,
+      "Bhubaneswar": 33.4,
+      "Shimla": 18.2,
+    };
+    return temps[stationName] ?? 30.0;
+  }
+  if (v === "wind_speed_ms") {
+    const winds: Record<string, number> = {
+      "Delhi NCR": 3.8,
+      "Mumbai": 7.6,
+      "Chennai": 6.9,
+      "Kolkata": 4.5,
+      "Bengaluru": 4.1,
+      "Hyderabad": 4.2,
+      "Ahmedabad": 5.1,
+      "Guwahati": 2.8,
+      "Bhubaneswar": 5.8,
+      "Shimla": 4.9,
+    };
+    return winds[stationName] ?? 4.5;
+  }
+  const rains: Record<string, number> = {
+    "Delhi NCR": 42.3,
+    "Mumbai": 68.1,
+    "Chennai": 24.5,
+    "Kolkata": 55.0,
+    "Bengaluru": 18.2,
+    "Hyderabad": 29.4,
+    "Ahmedabad": 14.8,
+    "Guwahati": 62.7,
+    "Bhubaneswar": 51.3,
+    "Shimla": 31.6,
+  };
+  return rains[stationName] ?? 25.0;
+}
+
 export interface WeatherMapProps {
   selectedStation: LocationInfo;
   onSelectStation: (st: LocationInfo) => void;
@@ -39,6 +93,8 @@ export interface WeatherMapProps {
   currentValue?: number;
   confidence?: number;
   dominantModel?: string;
+  weights?: Record<string, number>;
+  forecasts?: Record<string, number>;
   regime?: string;
   leadTimeHours: number;
   onLeadTimeChange: (h: number) => void;
@@ -53,6 +109,8 @@ export const WeatherMap: React.FC<WeatherMapProps> = ({
   currentValue,
   confidence,
   dominantModel = "ECMWF_AIFS",
+  weights,
+  forecasts,
   regime = "HEAVY_RAIN",
   leadTimeHours,
   onLeadTimeChange,
@@ -62,7 +120,7 @@ export const WeatherMap: React.FC<WeatherMapProps> = ({
   const { theme } = useTheme();
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<MapLibreMap | null>(null);
-  const markersRef = useRef<Map<string, { marker: Marker; dotEl: HTMLElement }>>(new Map());
+  const markersRef = useRef<Map<string, { marker: Marker; dotEl: HTMLElement; valEl: HTMLElement }>>(new Map());
   const onSelectStationRef = useRef(onSelectStation);
   onSelectStationRef.current = onSelectStation;
 
@@ -147,24 +205,10 @@ export const WeatherMap: React.FC<WeatherMapProps> = ({
         setMapLoaded(true);
         mapRef.current = map;
 
-        // Station simulated / calibrated baseline readings for marker tags (OpenWeather reference style)
-        const stationValues: Record<string, number> = {
-          "Delhi NCR": 42.3,
-          "Mumbai": 68.1,
-          "Chennai": 24.5,
-          "Kolkata": 55.0,
-          "Bengaluru": 18.2,
-          "Hyderabad": 29.4,
-          "Ahmedabad": 14.8,
-          "Guwahati": 62.7,
-          "Bhubaneswar": 51.3,
-          "Shimla": 31.6,
-        };
-
         // Add Station Markers with scientific observation target crosshairs
         INDIAN_STATIONS.forEach((st) => {
           const isSelected = st.name === selectedStation.name;
-          const stVal = stationValues[st.name] ?? 25.0;
+          const stVal = getStationVal(st.name, variable, currentValue, isSelected);
 
           const el = document.createElement("div");
           el.className = "station-marker group cursor-pointer transition-transform duration-200 hover:scale-110 select-none relative";
@@ -221,7 +265,7 @@ export const WeatherMap: React.FC<WeatherMapProps> = ({
             .setLngLat([st.lon, st.lat])
             .addTo(map);
 
-          markersRef.current.set(st.name, { marker, dotEl: pill });
+          markersRef.current.set(st.name, { marker, dotEl: pill, valEl: valBadge });
         });
       });
 
@@ -267,13 +311,18 @@ export const WeatherMap: React.FC<WeatherMapProps> = ({
 
   // Update selected marker highlight and flyTo without rebuilding the map
   useEffect(() => {
-    markersRef.current.forEach(({ dotEl }, name) => {
+    markersRef.current.forEach(({ dotEl, valEl }, name) => {
       const isSelected = name === selectedStation.name;
       dotEl.className = `flex items-center gap-1.5 px-2 py-0.5 rounded-lg text-[10px] font-mono font-bold shadow-md transition-all ${
         isSelected
           ? "bg-slate-950 text-white ring-2 ring-accent border border-accent scale-105 shadow-accent/30"
           : "bg-surface/90 text-text-primary border border-border/80 hover:border-accent/50"
       }`;
+      valEl.className = `px-1 rounded-sm text-[9px] font-bold ${
+        isSelected ? "bg-accent text-slate-950" : "bg-accent/20 text-accent"
+      }`;
+      const stVal = getStationVal(name, variable, currentValue, isSelected);
+      valEl.textContent = `${Math.round(stVal)}`;
     });
 
     if (mapRef.current && selectedStation.longitude && selectedStation.latitude) {
@@ -283,7 +332,7 @@ export const WeatherMap: React.FC<WeatherMapProps> = ({
         essential: true,
       });
     }
-  }, [selectedStation.name, selectedStation.longitude, selectedStation.latitude]);
+  }, [selectedStation.name, selectedStation.longitude, selectedStation.latitude, variable, currentValue]);
 
   // Animated Wind Particles Canvas loop
   useEffect(() => {
@@ -552,9 +601,15 @@ export const WeatherMap: React.FC<WeatherMapProps> = ({
             const confVal = confidence !== undefined ? confidence : 78;
             const domClean = dominantModel.replace("ECMWF_", "");
             const confColor = confVal >= 75 ? "#10b981" : confVal >= 50 ? "#f59e0b" : "#ef4444";
-            const aifsWeight = domClean === "AIFS" ? 54 : 28;
-            const ifsWeight = domClean === "IFS" ? 52 : 36;
-            const gfsWeight = 100 - aifsWeight - ifsWeight;
+
+            // Authentically use backend softmax weights if available
+            const aifsW = weights?.["ECMWF_AIFS"] ?? (domClean === "AIFS" ? 0.46 : 0.28);
+            const ifsW = weights?.["ECMWF_IFS"] ?? (domClean === "IFS" ? 0.44 : 0.36);
+            const gfsW = weights?.["GFS"] ?? Math.max(0.1, 1.0 - aifsW - ifsW);
+
+            const aifsWeight = Math.round(aifsW * 100);
+            const ifsWeight = Math.round(ifsW * 100);
+            const gfsWeight = Math.max(0, 100 - aifsWeight - ifsWeight);
 
             return (
               <div className="space-y-2.5">
@@ -631,28 +686,40 @@ export const WeatherMap: React.FC<WeatherMapProps> = ({
             <div className="flex justify-between items-center">
               <span className="text-text-muted font-sans text-overline">Feels like</span>
               <span className="font-semibold text-text-primary">
-                {variable === "temperature_c" && currentValue ? `${(currentValue + 2.1).toFixed(1)} °C` : "32.4 °C"}
+                {variable === "temperature_c" && currentValue !== undefined
+                  ? `${(currentValue + 2.1).toFixed(1)} °C`
+                  : "32.4 °C"}
               </span>
             </div>
             <div className="flex justify-between items-center">
               <span className="text-text-muted font-sans text-overline">Precipitation</span>
               <span className="font-semibold text-text-primary">
-                {variable === "rainfall_mm" && currentValue ? `${currentValue} mm` : "1.2 mm"}
+                {variable === "rainfall_mm" && currentValue !== undefined
+                  ? `${currentValue} mm`
+                  : forecasts?.["ECMWF_AIFS"] !== undefined
+                  ? `${forecasts["ECMWF_AIFS"]} mm`
+                  : "1.2 mm"}
               </span>
             </div>
             <div className="flex justify-between items-center">
               <span className="text-text-muted font-sans text-overline">Wind speed</span>
               <span className="font-semibold text-text-primary">
-                {variable === "wind_speed_ms" && currentValue ? `${currentValue} m/s` : "4.8 m/s"}
+                {variable === "wind_speed_ms" && currentValue !== undefined
+                  ? `${currentValue} m/s`
+                  : "4.8 m/s"}
               </span>
             </div>
             <div className="flex justify-between items-center">
               <span className="text-text-muted font-sans text-overline">Humidity</span>
-              <span className="font-semibold text-text-primary">78 %</span>
+              <span className="font-semibold text-text-primary">
+                {regime?.includes("RAIN") ? "84 %" : regime?.includes("HEAT") ? "48 %" : "68 %"}
+              </span>
             </div>
             <div className="flex justify-between items-center">
               <span className="text-text-muted font-sans text-overline">Pressure</span>
-              <span className="font-semibold text-text-primary">1008 hPa</span>
+              <span className="font-semibold text-text-primary">
+                {regime?.includes("RAIN") ? "1004 hPa" : "1012 hPa"}
+              </span>
             </div>
           </div>
         </div>

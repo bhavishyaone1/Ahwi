@@ -25,8 +25,10 @@ import { pageVariants, fadeUp } from "@/lib/motion";
 import { WeatherContourHeader } from "@/components/common/Backgrounds";
 
 export default function ModelIntelligencePage() {
-  const { data } = useAetherData();
+  const { data, variable } = useAetherData();
   const [activeTab, setActiveTab] = useState<"weights" | "performance" | "shap">("weights");
+
+  const unit = variable === "rainfall_mm" ? "mm" : variable === "temperature_c" ? "°C" : "m/s";
 
   const rawWeights = data?.weights;
   const hasWeights = Boolean(rawWeights && Object.keys(rawWeights).length > 0);
@@ -43,7 +45,10 @@ export default function ModelIntelligencePage() {
   const shapFeatures = topFactors.map((f) => ({
     feature: f.feature,
     shap_value: f.attribution,
-    feature_value: f.attribution > 0 ? "+1.8σ" : "-0.9σ",
+    // Use the real feature_value from the backend (a float) — never fabricate it
+    feature_value: typeof (f as any).feature_value === "number"
+      ? (f as any).feature_value as number
+      : undefined,
   }));
 
   return (
@@ -66,7 +71,7 @@ export default function ModelIntelligencePage() {
             Model Skill & Adaptive Trust
           </h1>
           <p className="text-xs text-text-muted font-medium">
-            Adaptive multi-model NWP & AI blending engine — dynamic softmax weights, causal explainability, and empirical SHAP attributions (MoES PS 26081).
+            Adaptive multi-model NWP & AI blending engine — dynamic softmax weights, causal explainability, and empirical SHAP attributions.
           </p>
         </div>
 
@@ -153,9 +158,9 @@ export default function ModelIntelligencePage() {
                   <thead className="bg-surface-2 text-text-muted text-overline border-b border-border">
                     <tr>
                       <th className="p-2.5 px-3">Model</th>
-                      <th className="p-2.5 px-3">MAE (mm)</th>
-                      <th className="p-2.5 px-3">RMSE (mm)</th>
-                      <th className="p-2.5 px-3">Bias (mm)</th>
+                      <th className="p-2.5 px-3">MAE ({unit})</th>
+                      <th className="p-2.5 px-3">RMSE ({unit})</th>
+                      <th className="p-2.5 px-3">Bias ({unit})</th>
                       <th className="p-2.5 px-3">Skill Score</th>
                       <th className="p-2.5 px-3">Status</th>
                     </tr>

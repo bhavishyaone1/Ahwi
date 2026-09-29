@@ -53,7 +53,7 @@ export default function ExtremeRiskPage() {
           </span>
         </div>
         <span className="text-overline hidden sm:inline text-text-muted">
-          MoES / IMD Hazard Protocol (PS 26081)
+          MoES / IMD Hazard Protocol
         </span>
       </div>
 
@@ -69,7 +69,7 @@ export default function ExtremeRiskPage() {
             Extreme Weather Risk Early Warning
           </h1>
           <p className="text-xs text-text-muted font-medium">
-            Adaptive multi-model NWP & AI blending engine — probabilistic hazard evaluation for convective precipitation, extreme heat, and gale winds (MoES PS 26081).
+            Adaptive multi-model NWP & AI blending engine — probabilistic hazard evaluation for convective precipitation, extreme heat, and gale winds.
           </p>
         </div>
 

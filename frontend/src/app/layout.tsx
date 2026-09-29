@@ -26,7 +26,7 @@ const jetbrainsMono = JetBrains_Mono({
 export const metadata: Metadata = {
   title: "AETHER — Meteorological Intelligence Workstation",
   description:
-    "Dynamic Multi-Model Meteorological Blending, Confidence & Extreme Weather Decision Support (MoES PS 26081)",
+    "Dynamic Multi-Model Meteorological Blending, Confidence & Extreme Weather Decision Support",
   icons: {
     icon: "/favicon.svg",
   },

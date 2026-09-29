@@ -32,12 +32,13 @@ export default function ClimatePage() {
 
   const monthlyRange = climate?.historical_range || [];
 
+  const currentMonthShort = new Date().toLocaleString("en-US", { month: "short" });
   const chartData = monthlyRange.map((m) => ({
     month: m.month,
     normal: m.normal,
     min: m.min_range,
     max: m.max_range,
-    current: m.month === "Oct" ? currentVal : null,
+    current: m.month.toLowerCase().slice(0, 3) === currentMonthShort.toLowerCase().slice(0, 3) ? currentVal : null,
   }));
 
   return (

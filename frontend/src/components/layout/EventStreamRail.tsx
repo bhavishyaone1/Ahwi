@@ -28,15 +28,24 @@ interface EventItem {
 }
 
 export const EventStreamRail: React.FC = () => {
-  const { data, selectedLocation, leadTimeHours, openTraceDrawer } = useAetherData();
+  const { data, selectedLocation, leadTimeHours, openTraceDrawer, variable } = useAetherData();
   const [filter, setFilter] = useState<FilterCategory>("all");
   const shouldReduceMotion = useReducedMotion();
 
   const rainRisk = data?.risk?.heavy_rain?.probability_pct ?? 0;
+  const heatRisk = data?.risk?.heat?.probability_pct ?? 0;
+  const windRisk = data?.risk?.high_wind?.probability_pct ?? 0;
+  const unit = data?.aether_forecast?.unit || (variable === "rainfall_mm" ? "mm" : variable === "temperature_c" ? "°C" : "m/s");
+
   const rainLevel = data?.risk?.heavy_rain?.level || "NORMAL";
   const dominantModel = data?.explanations?.model?.replace("ECMWF_", "") || "AIFS";
   const calibratedVal = data?.aether_forecast?.calibrated_value;
   const confPct = data?.confidence?.pct ?? 78;
+
+  const now = new Date();
+  const todayStr = now.toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" });
+  const yestDate = new Date(now.getTime() - 86400000);
+  const yestStr = yestDate.toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" });
 
   // Real backend-derived chronological event stream grouped by date
   const allEvents: EventItem[] = [
@@ -45,25 +54,33 @@ export const EventStreamRail: React.FC = () => {
       category: "triggers",
       type: "Trigger Event",
       time: "14:20",
-      dateGroup: "22 Sep, 2026",
-      title: `Precipitation spike detected at ${selectedLocation.name}`,
-      description: `Heavy rain probability evaluated at ${rainRisk}% under current synoptic regime.`,
+      dateGroup: todayStr,
+      title: variable === "temperature_c"
+        ? `Thermal gradient surge detected at ${selectedLocation.name}`
+        : variable === "wind_speed_ms"
+        ? `Boundary layer wind shear detected at ${selectedLocation.name}`
+        : `Precipitation spike detected at ${selectedLocation.name}`,
+      description: variable === "temperature_c"
+        ? `Heat stress probability evaluated at ${heatRisk}% under current synoptic regime.`
+        : variable === "wind_speed_ms"
+        ? `Gale gust probability evaluated at ${windRisk}% under current synoptic regime.`
+        : `Heavy rain probability evaluated at ${rainRisk}% under current synoptic regime.`,
     },
     {
       id: "ev-2",
       category: "alerts",
       type: "Alert",
       time: "11:00",
-      dateGroup: "22 Sep, 2026",
-      title: `${rainLevel} Severe Weather Advisory`,
-      description: `IMD synoptic alert triggered for regional convective zone.`,
+      dateGroup: todayStr,
+      title: `${data?.risk?.overall_level || rainLevel} Regional Meteorological Advisory`,
+      description: `IMD synoptic alert triggered for ${selectedLocation.region || "regional convective zone"}.`,
     },
     {
       id: "ev-3",
       category: "triggers",
       type: "Trigger Event",
       time: "08:30",
-      dateGroup: "21 Sep, 2026",
+      dateGroup: yestStr,
       title: `${dominantModel} Dominant Softmax Weight Reallocated`,
       description: `Dynamic softmax weighting prioritized ${dominantModel} based on 72h sequence error.`,
     },
@@ -72,18 +89,18 @@ export const EventStreamRail: React.FC = () => {
       category: "reports",
       type: "Report",
       time: "11:52",
-      dateGroup: "21 Sep, 2026",
+      dateGroup: yestStr,
       title: `Verification Report: ${selectedLocation.name} Assimilation`,
-      description: `Consensus converged at ${calibratedVal !== undefined ? calibratedVal : "--"} mm with ${confPct}% confidence.`,
+      description: `Consensus converged at ${calibratedVal !== undefined ? calibratedVal : "--"} ${unit} with ${confPct}% confidence.`,
     },
     {
       id: "ev-5",
       category: "cases",
       type: "Critical Event",
       time: "06:00",
-      dateGroup: "20 Sep, 2026",
+      dateGroup: yestStr,
       title: `ECMWF IFS vs AIFS Lead-Time Divergence`,
-      description: `Synoptic boundary layer shift in western disturbance regime.`,
+      description: `Synoptic boundary layer shift in ${data?.weather_regime?.detected || "monsoon"} regime.`,
     },
   ];
 
@@ -101,11 +118,12 @@ export const EventStreamRail: React.FC = () => {
 
   return (
     <div className="w-full lg:w-80 flex flex-col space-y-4 shrink-0 select-none">
-      {/* 1. ADAPTIVE MODEL TRUST & SITUATION SUMMARY (Top 2-3 most visually prominent element) */}
-      <div className="p-4 rounded-2xl bg-surface/95 dark:bg-[#151922]/95 border border-border/90 shadow-xl space-y-4 backdrop-blur-md relative overflow-hidden">
-        <WeatherGrid className="opacity-[0.035]" />
-        {/* Subtle accent corner glow */}
-        <div className="absolute top-0 right-0 w-32 h-32 bg-accent/5 rounded-full blur-2xl pointer-events-none" />
+      {/* 1. ADAPTIVE MODEL TRUST */}
+      <div className="relative p-4 rounded-2xl bg-surface/96 dark:bg-[#0e1118]/96 border border-border shadow-[var(--shadow-elevated)] space-y-4 backdrop-blur-2xl overflow-hidden">
+        <WeatherGrid className="opacity-[0.025] text-sky-500" />
+        {/* Ambient accent glow */}
+        <div className="absolute top-0 right-0 w-40 h-40 bg-accent/6 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-0 left-0 w-24 h-24 bg-sky-500/5 rounded-full blur-2xl pointer-events-none" />
 
         <div className="flex items-center justify-between border-b border-border/70 pb-2.5 relative z-10">
           <div className="space-y-0.5">
@@ -263,12 +281,12 @@ export const EventStreamRail: React.FC = () => {
         </button>
       </div>
 
-      {/* 2. OPERATIONAL SITUATION ROOM EVENT STREAM (Triage Language & Clear Severity Tints) */}
-      <div className="p-4 rounded-2xl bg-surface/90 dark:bg-[#151922]/90 border border-border/80 shadow-md space-y-3.5 backdrop-blur-md">
+      {/* 2. OPERATIONAL SITUATION ROOM EVENT STREAM */}
+      <div className="p-4 rounded-2xl bg-surface/96 dark:bg-[#0e1118]/96 border border-border shadow-[var(--shadow-card)] space-y-3.5 backdrop-blur-2xl">
         {/* Top Date Header */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-1 text-sm font-black text-text-primary">
-            <span>22 September 2026</span>
+            <span>{todayStr}</span>
             <ChevronsRight className="h-4 w-4 text-accent" />
           </div>
           <div className="flex items-center gap-1 text-overline text-text-muted">

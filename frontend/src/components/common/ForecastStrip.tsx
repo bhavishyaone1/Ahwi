@@ -41,9 +41,19 @@ export const ForecastStrip: React.FC = () => {
   };
 
   return (
-    <div className="w-full rounded-2xl border border-border/90 bg-surface/95 dark:bg-[#12161f]/95 shadow-lg shadow-black/20 dark:shadow-black/70 p-4 select-none overflow-x-auto backdrop-blur-xl transition-all">
-      {/* Horizontal Multi-Row Synthesis Matrix matching OpenWeather workstation reference */}
-      <div className="min-w-[550px]">
+    <div className="w-full rounded-2xl border border-border bg-surface/95 dark:bg-[#0e1118]/95 shadow-[var(--shadow-card)] p-0 select-none overflow-hidden backdrop-blur-xl transition-all">
+      <div className="overflow-x-auto">
+        <div className="min-w-[560px]">
+          {/* Strip header */}
+          <div className="flex items-center justify-between px-4 py-2.5 border-b border-border/70">
+            <div>
+              <span className="text-overline text-text-muted block font-bold">Multi-Horizon Synthesis</span>
+              <span className="text-[11px] font-bold text-text-primary">Operational Forecast Strip</span>
+            </div>
+            <span className="text-[9.5px] font-mono text-text-muted bg-surface-2 border border-border px-2 py-0.5 rounded-full">
+              AETHER · Blended Consensus
+            </span>
+          </div>
         <table className="w-full text-xs text-left border-collapse">
           <thead>
             <tr className="border-b border-border/70 text-[11px] text-text-muted font-mono">
@@ -102,7 +112,7 @@ export const ForecastStrip: React.FC = () => {
               </td>
               {horizons.map((h) => {
                 const isActive = leadTimeHours === h.horizon_hours;
-                const hasAlert = h.AETHER > 40;
+                const hasAlert = variable === "rainfall_mm" ? h.AETHER > 40 : variable === "temperature_c" ? h.AETHER > 38 : h.AETHER > 12;
                 return (
                   <td
                     key={h.lead_time}
@@ -113,7 +123,7 @@ export const ForecastStrip: React.FC = () => {
                   >
                     {hasAlert ? (
                       <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-danger/15 text-danger border border-danger/30">
-                        Rain Alert
+                        {variable === "rainfall_mm" ? "Rain Alert" : variable === "temperature_c" ? "Heat Alert" : "Wind Alert"}
                       </span>
                     ) : (
                       <span className="text-text-muted font-bold">-</span>
@@ -128,7 +138,11 @@ export const ForecastStrip: React.FC = () => {
               <td className="py-2.5 px-3 font-bold text-text-primary flex items-center gap-2">
                 <span className="h-2 w-2 rounded-full bg-accent shrink-0" />
                 <span className="font-sans text-[11px]">
-                  {variable === "rainfall_mm" ? "Blended Rain (mm)" : "Blended Temp (°C)"}
+                  {variable === "rainfall_mm"
+                    ? "Blended Rain (mm)"
+                    : variable === "temperature_c"
+                    ? "Blended Temp (°C)"
+                    : "Blended Wind (m/s)"}
                 </span>
               </td>
               {horizons.map((h) => {
@@ -173,6 +187,7 @@ export const ForecastStrip: React.FC = () => {
             </tr>
           </tbody>
         </table>
+        </div>
       </div>
     </div>
   );

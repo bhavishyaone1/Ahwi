@@ -282,6 +282,7 @@ export interface ForecastTraceStep {
   step: number;
   name: string;
   status: string;
+  duration_ms?: number;
   detail: any;
 }
 
@@ -291,5 +292,6 @@ export interface ForecastTrace {
   horizon: string;
   variable: string;
   steps: ForecastTraceStep[];
+  total_latency_ms?: number;
 }
 

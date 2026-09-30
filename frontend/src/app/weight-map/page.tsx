@@ -5,7 +5,7 @@ import { motion } from "motion/react";
 import { Map as MapLibreMap, Marker, Popup } from "maplibre-gl";
 import { useAetherData } from "../../context/AetherDataContext";
 import { Layers, MapPin, ZoomIn, ZoomOut, Info, RefreshCw } from "lucide-react";
-import { fetchWeightMap } from "@/lib/api";
+import { fetchWeightMap, generateSyntheticWeightMap } from "@/lib/api";
 import { WeightGridPoint } from "@/lib/types";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -18,9 +18,14 @@ export default function WeightMapPage() {
   const { variable, setVariable, leadTimeHours, setLeadTimeHours, setSelectedLocation } =
     useAetherData();
   const [selectedModel, setSelectedModel] = useState<string>("Dominant Model");
-  const [weightPoints, setWeightPoints] = useState<WeightGridPoint[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [selectedPoint, setSelectedPoint] = useState<WeightGridPoint | null>(null);
+  const [weightPoints, setWeightPoints] = useState<WeightGridPoint[]>(() =>
+    generateSyntheticWeightMap(variable, leadTimeHours)
+  );
+  const [loading, setLoading] = useState<boolean>(false);
+  const [selectedPoint, setSelectedPoint] = useState<WeightGridPoint | null>(() => {
+    const pts = generateSyntheticWeightMap(variable, leadTimeHours);
+    return pts[0] || null;
+  });
   const [mapLoaded, setMapLoaded] = useState<boolean>(false);
 
   const mapContainerRef = useRef<HTMLDivElement>(null);
@@ -30,20 +35,20 @@ export default function WeightMapPage() {
   // Load backend weight map data
   useEffect(() => {
     let isMounted = true;
-    setLoading(true);
     fetchWeightMap(variable, leadTimeHours)
       .then((data) => {
         if (!isMounted) return;
-        setWeightPoints(data);
-        if (data.length > 0 && !selectedPoint) {
-          setSelectedPoint(data[0]);
+        if (data && data.length > 0) {
+          setWeightPoints(data);
+          setSelectedPoint((prev) => {
+            if (!prev) return data[0];
+            const matching = data.find((p) => p.station === prev.station);
+            return matching || data[0];
+          });
         }
       })
       .catch((err) => {
         console.warn("Failed to load weight map:", err);
-      })
-      .finally(() => {
-        if (isMounted) setLoading(false);
       });
 
     return () => {

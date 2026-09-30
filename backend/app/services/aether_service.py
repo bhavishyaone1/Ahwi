@@ -87,6 +87,7 @@ class AetherService:
         # Pre-seed cache with aligned baseline history
         self._bootstrap_pipeline_memory()
         self._load_trained_models()
+        self._weight_grid_cache: Dict[str, List[Dict[str, Any]]] = {}
 
     def _load_trained_models(self):
         """Loads trained weights for Regime Classifier, LSTM, XGBoost, and Bias Corrector if present."""
@@ -282,6 +283,10 @@ class AetherService:
         Generates geographic model reliability grid across Indian reference stations.
         Directly satisfies the PS requirement for model weight maps.
         """
+        cache_key = f"{variable}_{lead_time_hours}"
+        if cache_key in self._weight_grid_cache:
+            return self._weight_grid_cache[cache_key]
+
         results = []
         for loc in settings.REFERENCE_LOCATIONS:
             resp = self.get_forecast_for_location(
@@ -303,6 +308,7 @@ class AetherService:
                 "regime": resp.detected_regime,
                 "data_mode": resp.data_mode
             })
+        self._weight_grid_cache[cache_key] = results
         return results
 
     def get_extreme_risk(

@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { Toaster } from "sonner";
 import { Sidebar } from "./Sidebar";
 import { TopHeader } from "./TopHeader";
+import { TopTabBar } from "./TopTabBar";
 import { CommandPalette } from "./CommandPalette";
 import { SystemHealthModal } from "../SystemHealthModal";
 import { ForecastTraceDrawer } from "../ForecastTraceDrawer";
@@ -90,6 +91,9 @@ export const AppShell: React.FC<{ children: React.ReactNode }> = ({ children }) 
           onOpenHealthModal={() => setHealthModalOpen(true)}
           onOpenCommandPalette={() => setCommandPaletteOpen(true)}
         />
+
+        {/* Global Responsive Navigation Tab Bar */}
+        <TopTabBar />
 
         {/* Page Body */}
         <main className="flex-1 w-full max-w-[1600px] mx-auto p-3 sm:p-5 lg:p-6 min-w-0">

@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
-import { motion, AnimatePresence, useReducedMotion } from "motion/react";
 import { Toaster } from "sonner";
 import { Sidebar } from "./Sidebar";
 import { TopHeader } from "./TopHeader";
@@ -15,7 +14,6 @@ import { AlertTriangle } from "lucide-react";
 
 export const AppShell: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const pathname = usePathname();
-  const shouldReduceMotion = useReducedMotion();
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
   const [healthModalOpen, setHealthModalOpen] = useState(false);
@@ -95,21 +93,9 @@ export const AppShell: React.FC<{ children: React.ReactNode }> = ({ children }) 
 
         {/* Page Body */}
         <main className="flex-1 w-full max-w-[1600px] mx-auto p-3 sm:p-5 lg:p-6 min-w-0">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={pathname}
-              initial={shouldReduceMotion ? false : { opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={shouldReduceMotion ? undefined : { opacity: 0, y: -6 }}
-              transition={
-                shouldReduceMotion
-                  ? { duration: 0 }
-                  : { duration: 0.18, ease: [0.16, 1, 0.3, 1] }
-              }
-            >
-              {children}
-            </motion.div>
-          </AnimatePresence>
+          <div key={pathname} className="min-w-0 transition-opacity duration-150">
+            {children}
+          </div>
         </main>
 
         {/* Footer */}

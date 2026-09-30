@@ -26,7 +26,7 @@ import { WeatherContourHeader } from "@/components/common/Backgrounds";
 
 export default function ModelIntelligencePage() {
   const { data, variable } = useAetherData();
-  const [activeTab, setActiveTab] = useState<"weights" | "performance" | "shap">("weights");
+  const [activeTab, setActiveTab] = useState<"all" | "weights" | "performance" | "shap">("all");
 
   const unit = variable === "rainfall_mm" ? "mm" : variable === "temperature_c" ? "°C" : "m/s";
 
@@ -77,7 +77,7 @@ export default function ModelIntelligencePage() {
 
         {/* Sub-Tabs with Motion active indicator */}
         <div className="flex items-center gap-1 border border-border bg-surface-2 p-0.5 rounded-xl text-xs shrink-0">
-          {(["weights", "performance", "shap"] as const).map((tab) => {
+          {(["all", "weights", "performance", "shap"] as const).map((tab) => {
             const isActive = activeTab === tab;
             return (
               <button
@@ -96,7 +96,13 @@ export default function ModelIntelligencePage() {
                   />
                 )}
                 <span className="relative z-10">
-                  {tab === "shap" ? "SHAP Attribution" : tab === "weights" ? "Adaptive Model Weights" : "Model Skill (30d)"}
+                  {tab === "all"
+                    ? "All Views"
+                    : tab === "shap"
+                    ? "SHAP Attribution"
+                    : tab === "weights"
+                    ? "Adaptive Weights"
+                    : "Model Skill (30d)"}
                 </span>
               </button>
             );
@@ -105,44 +111,54 @@ export default function ModelIntelligencePage() {
       </div>
 
       {/* Multi-Model Fusion DAG Visual Beam */}
-      {weights ? (
+      {(activeTab === "all" || activeTab === "weights") && weights ? (
         <motion.div variants={fadeUp}>
           <ModelFlowBeam weights={weights} />
         </motion.div>
       ) : null}
 
       {/* Section 1: Donut/Weights Card + 30-Day Skill Table */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
-        {/* Model Weight Donut */}
-        <motion.div variants={fadeUp} className="lg:col-span-4 min-w-0">
-          <Card className="shadow-sm hover:shadow-md card-interactive border-border bg-surface rounded-2xl">
-            <CardHeader className="p-4 pb-2 border-b border-border">
-              <span className="text-overline text-text-muted block font-semibold">
-                Adaptive Model Weights
-              </span>
-              <CardTitle className="text-sm font-bold text-text-primary">
-                Dynamic Softmax Consensus
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="p-4">
-              {weights ? (
-                <>
-                  <ModelWeightDonut weights={weights} />
-                  <p className="text-[10px] text-text-muted mt-4 italic text-center">
-                    * Derived via causal XGBoost trained on chronological ground-truth verification.
-                  </p>
-                </>
-              ) : (
-                <div className="h-48 flex items-center justify-center text-xs text-text-muted italic">
-                  Model weights unavailable.
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        </motion.div>
+      {(activeTab === "all" || activeTab === "weights" || activeTab === "performance") && (
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
+          {/* Model Weight Donut */}
+          {(activeTab === "all" || activeTab === "weights") && (
+            <motion.div
+              variants={fadeUp}
+              className={`${activeTab === "weights" ? "lg:col-span-12" : "lg:col-span-4"} min-w-0`}
+            >
+              <Card className="shadow-sm hover:shadow-md card-interactive border-border bg-surface rounded-2xl">
+                <CardHeader className="p-4 pb-2 border-b border-border">
+                  <span className="text-overline text-text-muted block font-semibold">
+                    Adaptive Model Weights
+                  </span>
+                  <CardTitle className="text-sm font-bold text-text-primary">
+                    Dynamic Softmax Consensus
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="p-4">
+                  {weights ? (
+                    <>
+                      <ModelWeightDonut weights={weights} />
+                      <p className="text-[10px] text-text-muted mt-4 italic text-center">
+                        * Derived via causal XGBoost trained on chronological ground-truth verification.
+                      </p>
+                    </>
+                  ) : (
+                    <div className="h-48 flex items-center justify-center text-xs text-text-muted italic">
+                      Model weights unavailable.
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </motion.div>
+          )}
 
-        {/* Model Performance (Last 30 Days) */}
-        <motion.div variants={fadeUp} className="lg:col-span-8 min-w-0">
+          {/* Model Performance (Last 30 Days) */}
+          {(activeTab === "all" || activeTab === "performance") && (
+            <motion.div
+              variants={fadeUp}
+              className={`${activeTab === "performance" ? "lg:col-span-12" : "lg:col-span-8"} min-w-0`}
+            >
           <Card className="shadow-sm hover:shadow-md card-interactive border-border bg-surface rounded-2xl">
             <CardHeader className="p-4 pb-2 border-b border-border">
               <span className="text-overline text-text-muted block font-semibold">
@@ -219,68 +235,78 @@ export default function ModelIntelligencePage() {
             </CardContent>
           </Card>
         </motion.div>
-      </div>
+          )}
+        </div>
+      )}
 
       {/* Section 2: Why AIFS is Trusted + SHAP Feature Attribution */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
-        {/* Why AIFS is Trusted Bar Chart */}
-        <motion.div variants={fadeUp} className="lg:col-span-6">
-          <Card className="shadow-sm hover:shadow-md card-interactive border-border bg-surface rounded-2xl">
-            <CardHeader className="p-4 pb-2 border-b border-border">
-              <span className="text-overline text-text-muted block font-semibold">
-                Explainability Drivers
-              </span>
-              <CardTitle className="text-sm font-bold text-text-primary">
-                Why AIFS is Trusted (Top Factors)
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="p-4">
-              <div className="space-y-3">
-                {topFactors.map((f) => (
-                  <div key={f.feature} className="space-y-1">
-                    <div className="flex justify-between items-center text-xs">
-                      <span className="text-text-secondary font-medium">{f.feature}</span>
-                      <span
-                        className={`font-mono tabular-nums font-bold ${
-                          f.attribution >= 0 ? "text-success" : "text-danger"
-                        }`}
-                      >
-                        {f.attribution >= 0 ? "+" : ""}
-                        {f.attribution.toFixed(2)}
-                      </span>
+      {(activeTab === "all" || activeTab === "shap") && (
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
+          {/* Why AIFS is Trusted Bar Chart */}
+          <motion.div
+            variants={fadeUp}
+            className={`${activeTab === "shap" ? "lg:col-span-6" : "lg:col-span-6"}`}
+          >
+            <Card className="shadow-sm hover:shadow-md card-interactive border-border bg-surface rounded-2xl">
+              <CardHeader className="p-4 pb-2 border-b border-border">
+                <span className="text-overline text-text-muted block font-semibold">
+                  Explainability Drivers
+                </span>
+                <CardTitle className="text-sm font-bold text-text-primary">
+                  Why AIFS is Trusted (Top Factors)
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="p-4">
+                <div className="space-y-3">
+                  {topFactors.map((f) => (
+                    <div key={f.feature} className="space-y-1">
+                      <div className="flex justify-between items-center text-xs">
+                        <span className="text-text-secondary font-medium">{f.feature}</span>
+                        <span
+                          className={`font-mono tabular-nums font-bold ${
+                            f.attribution >= 0 ? "text-success" : "text-danger"
+                          }`}
+                        >
+                          {f.attribution >= 0 ? "+" : ""}
+                          {f.attribution.toFixed(2)}
+                        </span>
+                      </div>
+                      <div className="w-full bg-surface-2 rounded-full h-2 overflow-hidden">
+                        <div
+                          className={`h-full rounded-full transition-all duration-500 ${
+                            f.attribution >= 0 ? "bg-accent" : "bg-danger"
+                          }`}
+                          style={{ width: `${Math.abs(f.attribution) * 500}%` }}
+                        />
+                      </div>
                     </div>
-                    <div className="w-full bg-surface-2 rounded-full h-2 overflow-hidden">
-                      <div
-                        className={`h-full rounded-full transition-all duration-500 ${
-                          f.attribution >= 0 ? "bg-accent" : "bg-danger"
-                        }`}
-                        style={{ width: `${Math.abs(f.attribution) * 500}%` }}
-                      />
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
 
-        {/* SHAP Waterfall / Feature Attribution */}
-        <motion.div variants={fadeUp} className="lg:col-span-6">
-          <Card className="shadow-sm hover:shadow-md card-interactive border-border bg-surface rounded-2xl">
-            <CardHeader className="p-4 pb-2 border-b border-border">
-              <span className="text-overline text-text-muted block font-semibold">
-                Causal Decision Boundary
-              </span>
-              <CardTitle className="text-sm font-bold text-text-primary">
-                SHAP Attribution Waterfall
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="p-4">
-              <ShapWaterfall features={shapFeatures} modelName="ECMWF AIFS" />
-            </CardContent>
-          </Card>
-        </motion.div>
-      </div>
+          {/* SHAP Waterfall / Feature Attribution */}
+          <motion.div
+            variants={fadeUp}
+            className={`${activeTab === "shap" ? "lg:col-span-6" : "lg:col-span-6"}`}
+          >
+            <Card className="shadow-sm hover:shadow-md card-interactive border-border bg-surface rounded-2xl">
+              <CardHeader className="p-4 pb-2 border-b border-border">
+                <span className="text-overline text-text-muted block font-semibold">
+                  Causal Decision Boundary
+                </span>
+                <CardTitle className="text-sm font-bold text-text-primary">
+                  SHAP Attribution Waterfall
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="p-4">
+                <ShapWaterfall features={shapFeatures} modelName="ECMWF AIFS" />
+              </CardContent>
+            </Card>
+          </motion.div>
+        </div>
+      )}
 
       {/* Mandatory IMD Meteorological Disclaimer */}
       <div className="p-3 bg-warning/10 border border-warning/30 rounded-xl flex items-center gap-2 text-xs text-warning">

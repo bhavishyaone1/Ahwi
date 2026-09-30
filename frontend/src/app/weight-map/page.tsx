@@ -21,6 +21,7 @@ export default function WeightMapPage() {
   const [weightPoints, setWeightPoints] = useState<WeightGridPoint[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [selectedPoint, setSelectedPoint] = useState<WeightGridPoint | null>(null);
+  const [mapLoaded, setMapLoaded] = useState<boolean>(false);
 
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<MapLibreMap | null>(null);
@@ -93,28 +94,44 @@ export default function WeightMapPage() {
 
       map.on("load", () => {
         mapRef.current = map;
+        setMapLoaded(true);
       });
 
       const resizeObserver = new ResizeObserver(() => {
-        if (mapRef.current) mapRef.current.resize();
+        if (mapRef.current) {
+          try {
+            mapRef.current.resize();
+          } catch {}
+        }
       });
       resizeObserver.observe(mapContainerRef.current);
 
       return () => {
-        resizeObserver.disconnect();
-        markersRef.current.forEach((m) => m.remove());
-        markersRef.current = [];
-        map.remove();
-        mapRef.current = null;
+        try {
+          resizeObserver.disconnect();
+          markersRef.current.forEach((m) => {
+            try {
+              m.remove();
+            } catch {}
+          });
+          markersRef.current = [];
+          if (mapRef.current) {
+            mapRef.current.remove();
+            mapRef.current = null;
+          }
+          setMapLoaded(false);
+        } catch (err) {
+          console.warn("MapLibre cleanup warning for weight map:", err);
+        }
       };
     } catch (err) {
       console.warn("MapLibre GL failed to initialize for weight map:", err);
     }
   }, []);
 
-  // Update markers when weightPoints or selectedModel changes
+  // Update markers when weightPoints, selectedModel, or mapLoaded changes
   useEffect(() => {
-    if (!mapRef.current || weightPoints.length === 0) return;
+    if (!mapRef.current || !mapLoaded || weightPoints.length === 0) return;
 
     // Clear previous markers
     markersRef.current.forEach((m) => m.remove());

@@ -281,11 +281,21 @@ export const WeatherMap: React.FC<WeatherMapProps> = ({
       resizeObserver.observe(mapContainerRef.current);
 
       return () => {
-        resizeObserver.disconnect();
-        markersRef.current.forEach(({ marker }) => marker.remove());
-        markersRef.current.clear();
-        map.remove();
-        mapRef.current = null;
+        try {
+          resizeObserver.disconnect();
+          markersRef.current.forEach(({ marker }) => {
+            try {
+              marker.remove();
+            } catch {}
+          });
+          markersRef.current.clear();
+          if (mapRef.current) {
+            mapRef.current.remove();
+            mapRef.current = null;
+          }
+        } catch (err) {
+          console.warn("WeatherMap unmount cleanup:", err);
+        }
       };
     } catch (err) {
       console.warn("MapLibre GL failed to initialize, switching to fallback:", err);
@@ -326,11 +336,15 @@ export const WeatherMap: React.FC<WeatherMapProps> = ({
     });
 
     if (mapRef.current && selectedStation.longitude && selectedStation.latitude) {
-      mapRef.current.flyTo({
-        center: [selectedStation.longitude, selectedStation.latitude],
-        duration: 700,
-        essential: true,
-      });
+      try {
+        mapRef.current.flyTo({
+          center: [selectedStation.longitude, selectedStation.latitude],
+          duration: 700,
+          essential: true,
+        });
+      } catch (err) {
+        // Safe ignore during map teardown/navigation
+      }
     }
   }, [selectedStation.name, selectedStation.longitude, selectedStation.latitude, variable, currentValue]);
 
